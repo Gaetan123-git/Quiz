@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscription</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="inscription.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div id="auth">
+      <h1>Inscription</h1>
+      <input type="text" id="register-username" placeholder="Nom d'utilisateur">
+      <input type="password" id="register-password" placeholder="Mot de passe">
+      <button id="register-button" onclick="register()">S'inscrire</button>
+      <a href="/login">Déjà un compte ? Connectez-vous</a>
+    </div>
+    <div id="notification" class="notification"></div>
+  </div>
+</body>
+</html>

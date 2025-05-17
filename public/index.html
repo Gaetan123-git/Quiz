@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Linguistique</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div id="song-selection" style="display: none;">
+      <h1>Choisissez votre choix</h1>
+      <div id="song-list"></div>
+    </div>
+
+    <div id="game" style="display: none;">
+      <h1>Classement</h1>
+      <div class="game-wrapper">
+        <div class="leaderboard">
+          <h2>Classement</h2>
+          <ul id="leaderboard-list"></ul>
+        </div>
+        <div class="game-content">
+          <div class="progress-bar">
+            <div class="progress"></div>
+          </div>
+          <div id="question-container">
+            <div id="question"></div>
+            <img id="registration-form-img" style="display: none;" alt="">
+          </div>
+          <div id="options"></div>
+          <div id="feedback"></div>
+          <div id="correct-translation" class="correct-translation"></div>
+          <div id="timer">Temps : 0s</div>
+          <div id="return-menu-container" style="display: none;">
+            <button id="return-menu-button">Retour au menu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logout-container">
+      <button onclick="logout()">Déconnexion</button>
+    </div>
+
+    <div id="notification" class="notification"></div>
+  </div>
+</body>
+</html>

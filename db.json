@@ -1,0 +1,169 @@
+{
+  "users": [],
+  "questions": [
+    {
+      "id": 1,
+      "text": "Vous arrivez en retard à votre cours de français à 10h et vous excusez auprès du professeur. Que dites-vous ?",
+      "correctAnswer": "Bonjour, je suis désolé d’être en retard !",
+      "options": [
+        "Bonjour, je suis désolé d’être en retard !",
+        "Salut, je suis content d’être ici !",
+        "Bonsoir, je vais arriver à l’heure !",
+        "Au revoir, je suis fatigué !"
+      ]
+    },
+    {
+      "id": 2,
+      "text": "Voici la fiche d'inscription de Julia pour son école de langue. Quels mots correspondent à la case rouge ?",
+      "correctAnswer": "la date de naissance",
+      "options": [
+        "le nom de famille",
+        "l'adresse",
+        "le numéro de téléphone",
+        "la date de naissance"
+      ],
+      "hasImage": true
+    },
+    {
+      "id": 3,
+      "text": "Excusez-moi, ______ vous où se trouve la gare, s’il vous plaît ?",
+      "correctAnswer": "savez",
+      "options": [
+        "savez",
+        "comprenez",
+        "parlez"
+      ]
+    },
+    {
+      "id": 4,
+      "text": "Vous invitez un collègue à un événement après le travail. Quelle phrase envoyez-vous ?",
+      "correctAnswer": "Bonjour, ça te dirait de nous rejoindre pour un verre après le travail demain ?",
+      "options": [
+        "Bonjour, ça te dirait de nous rejoindre pour un verre après le travail demain ?",
+        "Bonjour, est-ce que tu veux venir travailler chez moi demain soir ?"
+      ]
+    },
+    {
+      "id": 5,
+      "text": "Écoutez. Vous faites vos courses au marché. Quels produits vend le marchand ?",
+      "correctAnswer": "Les fruits (image 2)",
+      "audio": "/audio/5.mp3",
+      "images": [
+        { "src": "/photo/market1.jpg", "correct": false },
+        { "src": "/photo/market2.jpg", "correct": true },
+        { "src": "/photo/market3.jpg", "correct": false }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "Vous préparez un e-mail à une amie pour lui proposer une idée de weekend. Complétez votre message.",
+      "correctAnswer": "Il propose des cabanes dans les arbres.",
+      "options": [
+        "Il propose des cabanes dans les arbres.",
+        "Il n'y a pas de parking.",
+        "On peut louer une chambre pour deux.",
+        "Il doit fermer cet été."
+      ],
+      "hasImage": true
+    },
+    {
+      "id": 7,
+      "text": "Écoutez. Vous écoutez une émission sur RFI. Qu’apprend-on dans ce début de reportage ?",
+      "correctAnswer": "Un jeune homme cherche un premier travail.",
+      "options": [
+        "Un lycéen cherche un stage professionnel.",
+        "Un jeune homme cherche un premier travail.",
+        "Une femme propose de vendre des produits ménagers.",
+        "Une femme propose de garder des enfants."
+      ],
+      "audio": "/audio/1€20.mp3"
+    },
+    {
+      "id": 8,
+      "text": "Vous avez un entretien avec un professeur de l’université. Quelles phrases évoquent vos études et votre parcours scolaire ?",
+      "correctAnswer": "J'ai obtenu une licence d'informatique.",
+      "options": [
+        "J'ai obtenu une licence d'informatique.",
+        "À la fin du lycée, j'ai eu l'équivalent du baccalauréat dans mon pays.",
+        "Pendant que j'étais étudiant, j'ai appris le français.",
+        "Je veux faire du volontariat dans une mairie."
+      ]
+    },
+    {
+      "id": 9,
+      "text": "Écoutez. Vous demandez à une vendeuse les horaires d’ouverture du magasin. À quelle heure ferme le magasin ?",
+      "correctAnswer": "19h30",
+      "options": [
+        "19h30",
+        "17h",
+        "15h"
+      ],
+      "audio": "/audio/vendeuse.mp3"
+    },
+    {
+      "id": 10,
+      "text": "Vous lisez un article sur le site « RFI Musique ». Qu’apprend-on sur Christophe Chassol",
+      "correctAnswer": "Il travaille avec des images et de la musique.",
+      "options": [
+        "Son premier disque a connu un grand succès.",
+        "Il a réalisé des films sur de nombreux musiciens.",
+        "Il travaille avec des images et de la musique."
+      ],
+      "hasImage": true
+    },
+    {
+      "id": 11,
+      "text": "Merci ! Nous ____________ avec plaisir. Tu penses aller au restaurant vers quelle heure ?",
+      "correctAnswer": "acceptons",
+      "options": [
+        "acceptons",
+        "acceptent",
+        "accepte",
+        "acceptez"
+      ]
+    },
+    {
+      "id": 12,
+      "text": "Écoutez. Une amie espagnole achète des billets. Qu’est-ce qu’elle veut aller voir ?",
+      "correctAnswer": "un spectacle",
+      "options": [
+        "un spectacle",
+        "une exposition",
+        "une rencontre sportive"
+      ],
+      "audio": "/audio/billets.mp3"
+    },
+    {
+      "id": 13,
+      "text": "Vous recevez un SMS d’un ami qui vous indique comment venir chez lui. Quel plan correspond aux explications de votre ami ?",
+      "correctAnswer": "question1.png",
+      "options": [
+        { "src": "/photo/question1.png", "correct": true },
+        { "src": "/photo/question2.png", "correct": false }
+      ],
+      "hasImage": true,
+      "image": "/photo/SMS.png"
+    },
+    {
+      "id": 14,
+      "text": "Vous êtes dans le métro à Paris et vous demandez votre chemin. Que faut-il faire pour aller à Montmartre ?",
+      "correctAnswer": "Il faut prendre deux lignes différentes.",
+      "options": [
+        "Il faut prendre une seule ligne.",
+        "Il faut prendre trois lignes différentes.",
+        "Il faut prendre deux lignes différentes."
+      ],
+      "audio": "/audio/chemin.mp3"
+    },
+    {
+      "id": 15,
+      "text": "Vous avez reçu une information de l’université. À quoi ces informations vous servent-elles ?",
+      "correctAnswer": "à préparer un dossier pour vous inscrire à l’université",
+      "options": [
+        "à préparer un dossier pour vous inscrire à l’université",
+        "à s’inscrire à une rencontre d’étudiants à l’université"
+      ],
+      "hasImage": true
+    }
+  ]
+}

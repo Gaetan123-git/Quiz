@@ -1,0 +1,76 @@
+[
+  {
+    "username": "john",
+    "password": "password123",
+    "scores": [],
+    "currentScore": 0,
+    "lastScoreUpdate": null
+  },
+  {
+    "username": "jane",
+    "password": "password456",
+    "scores": [
+      {
+        "questionId": 1,
+        "score": 80,
+        "timeTaken": 20
+      }
+    ],
+    "currentScore": 80,
+    "lastScoreUpdate": "2025-05-04T02:12:44.142Z"
+  },
+  {
+    "username": "francial.velondahisoa3@gmail.com",
+    "password": "R!uQ!9#jP2hy4QG4#@jjQ48@8",
+    "scores": [],
+    "currentScore": 0,
+    "lastScoreUpdate": null
+  },
+  {
+    "username": "Francial",
+    "password": "Franc1998@",
+    "scores": [],
+    "currentScore": 0,
+    "lastScoreUpdate": null
+  },
+  {
+    "username": "Gaetan",
+    "password": "Gaetan",
+    "scores": [
+      {
+        "questionId": 1,
+        "score": 192,
+        "timeTaken": 8
+      },
+      {
+        "questionId": 2,
+        "score": 196,
+        "timeTaken": 4
+      },
+      {
+        "questionId": 3,
+        "score": 197,
+        "timeTaken": 3
+      },
+      {
+        "questionId": 4,
+        "score": 197,
+        "timeTaken": 3
+      },
+      {
+        "questionId": 5,
+        "score": 170,
+        "timeTaken": 31
+      }
+    ],
+    "currentScore": 952,
+    "lastScoreUpdate": "2025-05-17T01:21:51.507Z"
+  },
+  {
+    "username": "Gaetan1",
+    "password": "Gaetan",
+    "scores": [],
+    "currentScore": 0,
+    "lastScoreUpdate": null
+  }
+]

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="login.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div id="auth">
+      <h1>Connexion</h1>
+      <input type="text" id="login-username" placeholder="Nom d'utilisateur">
+      <input type="password" id="login-password" placeholder="Mot de passe">
+      <button id="login-button" onclick="login()">Se connecter</button>
+      <a href="/inscription">Pas de compte ? Inscrivez-vous</a>
+    </div>
+    <div id="notification" class="notification"></div>
+  </div>
+</body>
+</html>

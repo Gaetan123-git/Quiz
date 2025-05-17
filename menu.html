@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu</title>
+  <link rel="stylesheet" href="styles/common.css">
+  <link rel="stylesheet" href="styles/menu.css">
+</head>
+<body>
+  <div id="song-selection" class="container">
+    <h1 data-translate="menu_title">Menu Principal</h1>
+    <div id="notification" class="notification"></div>
+    <div id="song-list"></div>
+    <button onclick="logout()" data-translate="logout">Déconnexion</button>
+    <select id="language-select">
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+  <script src="scripts/common.js"></script>
+  <script src="scripts/menu.js"></script>
+</body>
+</html>

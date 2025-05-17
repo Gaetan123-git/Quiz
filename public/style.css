@@ -1,0 +1,651 @@
+body {
+  font-family: 'Comic Sans MS', 'Arial', sans-serif;
+  background-color: #1a2421;
+  margin: 0;
+  padding: 15px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+}
+
+.notification {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: none;
+  z-index: 1000;
+  font-size: 1em;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in, fadeOut 0.5s ease-out 2.5s;
+}
+
+.notification.info {
+  background: #00cc99;
+}
+
+.notification.success {
+  background: #28a745;
+}
+
+.notification.error {
+  background: #dc3545;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateX(-50%) translateY(0); }
+  to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 15px;
+  width: 95%;
+  max-width: 900px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+#auth h1, #song-selection h1, #game h1, .learn-section h1 {
+  color: #00cc99;
+  text-align: center;
+  font-size: 1.8em;
+  margin-bottom: 15px;
+}
+
+#auth input, #auth button {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 20px;
+  box-sizing: border-box;
+  font-size: 1em;
+}
+
+#auth button, #login-button, #register-button {
+  background-color: #00cc99;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+#auth button:hover, #login-button:hover, #register-button:hover {
+  background-color: #00b386;
+}
+
+#song-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.song-item {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 12px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  transition: transform 0.3s;
+  position: relative;
+}
+
+.song-item.unlocked {
+  background: #00cc99;
+}
+
+.song-item.locked {
+  background: #666;
+  opacity: 0.7;
+}
+
+.song-item.unlocked:hover {
+  transform: scale(1.05);
+}
+
+.song-icon {
+  font-size: 1.8em;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.song-title {
+  font-size: 1.1em;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.song-item button {
+  background: #fff;
+  color: #00cc99;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 10;
+  font-size: 1em;
+}
+
+.song-item button:hover {
+  background: #e0e0e0;
+}
+
+.song-item span {
+  color: #ccc;
+  font-style: italic;
+}
+
+.sub-menu {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 12px;
+  padding: 8px 0;
+}
+
+.sub-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  font-size: 1em;
+}
+
+.sub-menu-item:hover {
+  background: #00b386;
+}
+
+.sub-menu-logo {
+  margin-right: 8px;
+  font-size: 1.1em;
+}
+
+.game-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  position: relative;
+  min-height: 400px;
+}
+
+.leaderboard {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 12px;
+  border-radius: 12px;
+  max-width: 200px;
+}
+
+.leaderboard h2 {
+  color: #00cc99;
+  font-size: 1.3em;
+  margin-bottom: 8px;
+}
+
+#leaderboard-list {
+  list-style: none;
+  padding: 0;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+#leaderboard-list li {
+  padding: 5px 0;
+  color: #fff;
+  font-size: 0.9em;
+}
+
+#leaderboard-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#leaderboard-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+#leaderboard-list::-webkit-scrollbar-thumb {
+  background: #00cc99;
+  border-radius: 10px;
+}
+
+#leaderboard-list::-webkit-scrollbar-thumb:hover {
+  background: #00b386;
+}
+
+.game-content {
+  flex: 3;
+  position: relative;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: #00cc99;
+  width: 0%;
+  transition: width 0.3s;
+}
+
+.character {
+  position: absolute;
+  top: -40px;
+  left: 15px;
+  width: 60px;
+  height: 60px;
+  background: url('https://via.placeholder.com/60?text=Character') no-repeat;
+  background-size: contain;
+}
+
+#question {
+  font-size: 1.3em;
+  color: #fff;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.word {
+  position: relative;
+  cursor: default;
+  color: #00cc99;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: #333;
+  color: white;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  white-space: nowrap;
+  z-index: 10;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 5px;
+  display: none;
+}
+
+.word:hover .tooltip {
+  display: inline-block;
+}
+
+.option-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0;
+  background-color: #00b386;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+  z-index: 10;
+  font-size: 1em;
+  touch-action: manipulation;
+}
+
+.option-btn:hover {
+  background-color: #009670;
+  transform: scale(1.05);
+}
+
+#timer {
+  font-weight: bold;
+  color: #ff4444;
+  margin: 8px 0;
+  text-align: center;
+  font-size: 1em;
+}
+
+#feedback {
+  margin: 8px 0;
+  color: #00cc99;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+#feedback:empty {
+  display: none;
+}
+
+.correct-translation {
+  margin: 8px 0;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+.correct-translation:empty {
+  display: none;
+}
+
+button {
+  background-color: #00cc99;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 100%;
+  margin: 6px 0;
+  transition: background-color 0.3s;
+  z-index: 10;
+  pointer-events: auto;
+  font-size: 1em;
+}
+
+button:hover {
+  background-color: #00b386;
+}
+
+.logout-container {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  display: none;
+}
+
+.logout-container button {
+  width: auto;
+  padding: 10px 15px;
+  font-size: 0.9em;
+}
+
+#return-menu-container {
+  margin-top: 15px;
+}
+
+#return-menu-button {
+  background-color: #00cc99;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+  font-size: 1em;
+  width: auto;
+}
+
+#return-menu-button:hover {
+  background-color: #00b386;
+  transform: scale(1.05);
+}
+
+#question-container {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+#question {
+  flex: 2;
+}
+
+#registration-form-img {
+  flex: 1;
+  max-width: 250px;
+  border: 2px solid #00cc99;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+#registration-form-img::after {
+  content: '';
+  position: absolute;
+  top: 25%;
+  left: 5%;
+  width: 30%;
+  height: 8%;
+  border: 2px solid red;
+  box-sizing: border-box;
+}
+
+.sentence-gap {
+  text-align: center;
+  font-size: 1.5em;
+  margin-bottom: 15px;
+}
+
+.gap {
+  color: #00cc99;
+  font-weight: bold;
+}
+
+.english-hint {
+  font-size: 0.7em;
+  color: #aaa;
+  font-style: italic;
+  margin-top: 8px;
+}
+
+.audio-question {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.audio-question audio {
+  margin: 10px 0;
+  width: 100%;
+  max-width: 250px;
+}
+
+.image-options {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.image-option {
+  cursor: pointer;
+  border: 3px solid transparent;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.image-option:hover {
+  transform: scale(1.05);
+  border-color: #00cc99;
+}
+
+.image-option img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.replay-btn {
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 15px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.3s;
+  font-size: 0.9em;
+}
+
+.replay-btn:hover {
+  background-color: #ff5252;
+}
+
+#question-audio {
+  width: 100%;
+  max-width: 250px;
+  margin: 8px 0;
+}
+
+.learn-section {
+  text-align: center;
+}
+
+.learn-logo {
+  margin-right: 8px;
+  font-size: 1.3em;
+}
+
+/* Media query optimisée pour mobile */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    padding: 10px;
+    width: 100%;
+  }
+
+  #auth h1, #song-selection h1, #game h1, .learn-section h1 {
+    font-size: 1.5em;
+    margin-bottom: 12px;
+  }
+
+  #auth input, #auth button {
+    padding: 10px;
+    font-size: 0.9em;
+  }
+
+  .song-item {
+    width: 95%;
+    padding: 10px;
+  }
+
+  .song-icon {
+    font-size: 1.5em;
+  }
+
+  .song-title {
+    font-size: 1em;
+  }
+
+  .song-item button {
+    padding: 8px 12px;
+    font-size: 0.9em;
+  }
+
+  .sub-menu-item {
+    padding: 8px 12px;
+    font-size: 0.9em;
+  }
+
+  .game-wrapper {
+    flex-direction: column;
+    gap: 10px;
+    min-height: auto;
+  }
+
+  .leaderboard {
+    max-width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+  }
+
+  .leaderboard h2 {
+    font-size: 1.2em;
+  }
+
+  #leaderboard-list li {
+    font-size: 0.85em;
+  }
+
+  #question {
+    font-size: 1.1em;
+  }
+
+  .option-btn {
+    padding: 10px;
+    font-size: 0.9em;
+    margin: 5px 0;
+  }
+
+  button {
+    padding: 10px;
+    font-size: 0.9em;
+  }
+
+  .logout-container {
+    bottom: 10px;
+    right: 10px;
+  }
+
+  #return-menu-button {
+    padding: 8px 12px;
+    font-size: 0.9em;
+  }
+
+  #question-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #registration-form-img {
+    max-width: 100%;
+    margin-top: 10px;
+  }
+
+  .sentence-gap {
+    font-size: 1.3em;
+  }
+
+  .audio-question audio {
+    max-width: 100%;
+  }
+
+  .image-options {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .image-option img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .notification {
+    font-size: 0.9em;
+    padding: 10px 15px;
+    max-width: 90%;
+  }
+}

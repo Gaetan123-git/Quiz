@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz</title>
+  <link rel="stylesheet" href="styles/common.css">
+  <link rel="stylesheet" href="styles/quiz.css">
+</head>
+<body>
+  <div id="game" class="container">
+    <h1 data-translate="quiz_title">Quiz</h1>
+    <div id="notification" class="notification"></div>
+    <div class="progress-bar"><div class="progress"></div></div>
+    <p id="timer">Temps : 0s</p>
+    <div id="question"></div>
+    <img id="registration-form-img" style="display: none;" alt="">
+    <div id="options"></div>
+    <p id="feedback"></p>
+    <p id="correct-translation"></p>
+    <div id="leaderboard">
+      <h2>Classement</h2>
+      <ul id="leaderboard-list"></ul>
+    </div>
+    <button onclick="window.location.href='menu.html'" data-translate="back_to_menu">Retour au Menu</button>
+    <select id="language-select">
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+  <script src="scripts/common.js"></script>
+  <script src="scripts/quiz.js"></script>
+</body>
+</html>

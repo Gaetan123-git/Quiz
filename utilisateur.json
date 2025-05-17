@@ -36,35 +36,9 @@
   {
     "username": "Gaetan",
     "password": "Gaetan",
-    "scores": [
-      {
-        "questionId": 1,
-        "score": 192,
-        "timeTaken": 8
-      },
-      {
-        "questionId": 2,
-        "score": 196,
-        "timeTaken": 4
-      },
-      {
-        "questionId": 3,
-        "score": 197,
-        "timeTaken": 3
-      },
-      {
-        "questionId": 4,
-        "score": 197,
-        "timeTaken": 3
-      },
-      {
-        "questionId": 5,
-        "score": 170,
-        "timeTaken": 31
-      }
-    ],
-    "currentScore": 952,
-    "lastScoreUpdate": "2025-05-17T01:21:51.507Z"
+    "scores": [],
+    "currentScore": 0,
+    "lastScoreUpdate": null
   },
   {
     "username": "Gaetan1",

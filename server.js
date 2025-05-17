@@ -10,10 +10,10 @@ const router = jsonServer.router('db.json');
 
 // Middleware pour gérer les sessions
 app.use(session({
-  secret: 'votre-secret-pour-les-sessions',
+  secret: process.env.SESSION_SECRET || 'x7k9p3m8q2w5z1r4t6y',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false }
+  cookie: { secure: process.env.NODE_ENV === 'production' }
 }));
 
 app.use(bodyParser.json());

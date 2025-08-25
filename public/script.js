@@ -1589,21 +1589,13 @@ async function endQuiz() {
     if (gameContent) gameContent.innerHTML = `<div class="quiz-results"><h2>Validation de la session...</h2></div>`;
 
     try {
-        // << CORRECTION APPLIQUÉE ICI >>
-        // On commence par récupérer les données les plus fraîches de l'utilisateur.
-        const userResponseCheck = await fetch('/check-session');
-        const latestUserData = await userResponseCheck.json();
-        const scoresForThisSession = latestUserData.scores.filter(s => s.session === selectedSession);
-        // On calcule le nombre de bonnes réponses DEPUIS les données fiables du serveur.
-        const reliableCorrectAnswers = scoresForThisSession.filter(s => s.score > 0).length;
-
-        // Maintenant, on envoie cette valeur fiable au serveur pour validation.
         const endSessionResponse = await fetch('/end-quiz-session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 session: selectedSession,
-                correctAnswers: reliableCorrectAnswers, // On utilise la valeur fiable
+                // Note: on envoie les stats du client, mais le serveur va les recalculer pour être sûr.
+                correctAnswers: quizResults.correctAnswersCount,
                 totalQuestions: totalQuizQuestions
             })
         });
@@ -1613,10 +1605,15 @@ async function endQuiz() {
         }
         const endSessionResult = await endSessionResponse.json();
         
-        // On récupère une dernière fois les données pour être sûr d'avoir le statut "completedSessions" à jour.
+        // ====================================================================
+        // ===                      LA CORRECTION EST ICI                   ===
+        // ====================================================================
+        // Juste avant d'afficher, on redemande au serveur les données officielles de l'utilisateur.
+        // C'est la garantie que l'affichage final sera toujours correct.
         const userResponse = await fetch('/check-session');
         const userData = await userResponse.json();
 
+        // On recalcule le nombre de bonnes réponses DEPUIS L'HISTORIQUE OFFICIEL (du serveur) pour cette session.
         const sessionScores = userData.scores.filter(s => s.session === selectedSession);
         const finalCorrectAnswers = sessionScores.filter(s => s.score > 0).length;
 
@@ -1647,6 +1644,8 @@ async function endQuiz() {
                 }
             }
         } else {
+            // Ici, le message s'affichera correctement car il est basé sur `sessionCompleted`, qui vient du serveur.
+            // Et le score affiché (`finalCorrectAnswers`) sera aussi basé sur les données du serveur. L'affichage est donc cohérent.
             if (currentSessionNumber >= 10) {
                 messageHTML = `<p class="congrats-message error">Presque ! Il vous faut 70% de bonnes réponses pour terminer le jeu.</p>`;
             } else {
@@ -3059,4 +3058,3 @@ async function showGameOverScreen() {
 // Exposer les fonctions sur window pour compatibilité SPA
 window.showUserErrorsPage = showUserErrorsPage;
 window.startReplayErrorQuestions = startReplayErrorQuestions;
-

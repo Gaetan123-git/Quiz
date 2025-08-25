@@ -1509,28 +1509,38 @@ app.post('/end-quiz-session', async (req, res) => {
     if (!req.session.user) {
         return res.status(401).json({ error: 'Non connecté.' });
     }
-    const { session, correctAnswers, totalQuestions } = req.body;
+    const { session } = req.body; // On ne récupère que la session, le reste sera calculé ici.
     const user = users.find(u => u.username === req.session.user.username);
     if (!user) {
         return res.status(404).json({ error: 'Utilisateur introuvable.' });
     }
 
+    // ========== AMÉLIORATION DE FIABILITÉ ET SÉCURITÉ ==========
+    // 1. Le serveur récupère le nombre total de questions depuis sa propre source, pas depuis le client.
+    const totalQuestionsInSession = (sessionQuestions[session] || []).length;
+    
+    // 2. Le serveur calcule le nombre de bonnes réponses en se basant sur les scores enregistrés, pas sur ce que le client envoie.
     const sessionScores = user.scores.filter(s => s.session === session);
+    const correctAnswers = sessionScores.filter(s => s.score > 0).length;
+
     const finalScoreForSession = sessionScores.reduce((total, score) => total + score.score, 0);
     user.currentScore = finalScoreForSession;
 
-    const total = Number(totalQuestions) || 0;
-    const successPercentage = total > 0 ? (correctAnswers / total) * 100 : 0;
+    // 3. Le calcul du pourcentage est maintenant basé sur des données 100% fiables (côté serveur).
+    const successPercentage = totalQuestionsInSession > 0 ? (correctAnswers / totalQuestionsInSession) * 100 : 0;
     const SUCCESS_THRESHOLD = 70;
 
     let sessionCompleted = false;
-
-    if (successPercentage >= SUCCESS_THRESHOLD && !user.completedSessions.includes(session)) {
+    // On vérifie aussi si la session n'était pas déjà complétée
+    if (user.completedSessions.includes(session)) {
+        sessionCompleted = true; 
+    } else if (successPercentage >= SUCCESS_THRESHOLD) {
+        // On ne l'ajoute que si le seuil est atteint ET qu'elle n'y était pas déjà
         user.completedSessions.push(session);
         sessionCompleted = true;
     }
 
-    // --- NOUVELLE LOGIQUE DE FIN DE COMPÉTITION ---
+    // --- LOGIQUE DE FIN DE COMPÉTITION (inchangée) ---
     if (session === 'session10' && sessionCompleted && !competitionRules.competitionEnded) {
         const isAlreadyWinner = winners.some(winner => winner.username === user.username);
 
@@ -1550,22 +1560,20 @@ app.post('/end-quiz-session', async (req, res) => {
                 competitionRules.competitionEndTime = new Date().toISOString();
                 await saveCompetitionRules();
 
-                // Envoyer une notification à tous les joueurs connectés
                 userStatusClients.forEach(clientSet => {
                     clientSet.forEach(clientRes => {
                         try {
                             clientRes.write('event: competition-over\n');
                             clientRes.write('data: La compétition est terminée !\n\n');
                         } catch (e) {
-                            // Ignorer les erreurs sur les clients déjà déconnectés
+                            // Ignorer
                         }
                     });
                 });
             }
         }
     }
-    // --- FIN DE LA NOUVELLE LOGIQUE ---
-
+    
     saveUser(user);
     res.json({
         success: true,

@@ -1,0 +1,200 @@
+{
+  "questions": [
+    {
+      "text": "Quel type d'adverbe est \"rapidement\" dans la phrase : \"Il court rapidement\" ?",
+      "options": [
+        "Adverbe de temps",
+        "Adverbe de lieu",
+        "Adverbe de manière",
+        "Adverbe de quantité"
+      ],
+      "correctAnswer": "Adverbe de manière",
+      "englishHint": "What type of adverb is \"rapidly\" in the sentence: \"He runs rapidly\"?",
+      "explanation": "L'adverbe \"rapidement\" décrit la manière dont l'action de courir est effectuée.  C'est donc un adverbe de manière.",
+      "id": "9b7cb0cb9d92815a",
+      "type": "standard"
+    },
+    {
+      "text": "Parmi ces mots, lequel est un adverbe de temps : aujourd'hui, ici, rapidement, beaucoup ?",
+      "options": [
+        "ici",
+        "rapidement",
+        "beaucoup",
+        "aujourd'hui"
+      ],
+      "correctAnswer": "aujourd'hui",
+      "englishHint": "Which of these words is a time adverb: today, here, quickly, much?",
+      "explanation": "L'adverbe \"aujourd'hui\" indique le moment où l'action se déroule. C'est donc un adverbe de temps.",
+      "id": "fcd80c9a834c951f",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe de lieu convient à la phrase : \"Le livre est ______\" ?",
+      "options": [
+        "lentement",
+        "souvent",
+        "ailleurs",
+        "là"
+      ],
+      "correctAnswer": "là",
+      "englishHint": "Which adverb of place suits the sentence: \"The book is ______\"?",
+      "explanation": "L'adverbe \"là\" indique le lieu où se trouve le livre.  C'est donc un adverbe de lieu.",
+      "id": "61c1a132f453ae05",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Elle chante très bien\", quel est le rôle de \"très\" ?",
+      "options": [
+        "Adverbe de lieu",
+        "Adverbe de manière",
+        "Adverbe de quantité",
+        "Adverbe de temps"
+      ],
+      "correctAnswer": "Adverbe de quantité",
+      "englishHint": "In the sentence \"She sings very well\", what is the role of \"very\"?",
+      "explanation": "L'adverbe \"très\" modifie l'adverbe \"bien\" et précise le degré de la qualité du chant, c'est un adverbe de quantité.",
+      "id": "b49566f04b01cb48",
+      "type": "standard"
+    },
+    {
+      "text": "Lequel de ces mots est un adverbe d'affirmation : peut-être, non, oui, jamais ?",
+      "options": [
+        "peut-être",
+        "non",
+        "jamais",
+        "oui"
+      ],
+      "correctAnswer": "oui",
+      "englishHint": "Which of these words is an adverb of affirmation: maybe, no, yes, never?",
+      "explanation": "L'adverbe \"oui\" exprime une affirmation directe. C'est donc un adverbe d'affirmation.",
+      "id": "8ab29aa6cf9bfaec",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe indique le doute : certainement, probablement, malheureusement, rapidement ?",
+      "options": [
+        "certainement",
+        "malheureusement",
+        "rapidement",
+        "probablement"
+      ],
+      "correctAnswer": "probablement",
+      "englishHint": "Which adverb indicates doubt: certainly, probably, unfortunately, quickly?",
+      "explanation": "L'adverbe \"probablement\" exprime une incertitude ou un doute. C'est donc un adverbe de doute.",
+      "id": "fb5a1abf653ae9c1",
+      "type": "standard"
+    },
+    {
+      "text": "Complétez la phrase avec un adverbe de manière approprié : Il mange _______.",
+      "options": [
+        "demain",
+        "ici",
+        "gloutonnement",
+        "beaucoup"
+      ],
+      "correctAnswer": "gloutonnement",
+      "englishHint": "Complete the sentence with a suitable manner adverb: He eats _______.",
+      "explanation": "L'adverbe \"gloutonnement\" décrit la manière dont l'action de manger est réalisée. C'est donc un adverbe de manière.",
+      "id": "ba6bda7e504267e0",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe de temps convient à la phrase : \"Ils arriveront ______\" ?",
+      "options": [
+        "partout",
+        "silencieusement",
+        "demain",
+        "là-bas"
+      ],
+      "correctAnswer": "demain",
+      "englishHint": "Which time adverb suits the sentence: \"They will arrive ______\"?",
+      "explanation": "L'adverbe \"demain\" indique le temps futur de l'arrivée. C'est donc un adverbe de temps.",
+      "id": "5f0f1160a9368fd9",
+      "type": "standard"
+    },
+    {
+      "text": "Choisissez l'adverbe qui complète correctement la phrase : \"Elle est ______ fatiguée\" ?",
+      "options": [
+        "beaucoup",
+        "hier",
+        "rapidement",
+        "là"
+      ],
+      "correctAnswer": "beaucoup",
+      "englishHint": "Choose the adverb that correctly completes the sentence: \"She is ______ tired\"?",
+      "explanation": "L'adverbe \"beaucoup\" précise la quantité de fatigue. C'est donc un adverbe de quantité.",
+      "id": "b0e54ebb61fb8b34",
+      "type": "standard"
+    },
+    {
+      "text": "Quel est l'adverbe de négation dans la phrase : \"Je ne comprends pas\" ?",
+      "options": [
+        "ne...pas",
+        "comprends",
+        "je",
+        "pas"
+      ],
+      "correctAnswer": "ne...pas",
+      "englishHint": "What is the negation adverb in the sentence: \"I don't understand\"?",
+      "explanation": "L'expression \"ne...pas\" est un adverbe de négation qui exprime l'absence de compréhension.",
+      "id": "e0c1585723842726",
+      "type": "standard"
+    },
+    {
+      "text": "Indiquez l'adverbe dans la phrase : \"Ils sont déjà partis\" :",
+      "options": [
+        "sont",
+        "ils",
+        "déjà",
+        "partis"
+      ],
+      "correctAnswer": "déjà",
+      "englishHint": "Indicate the adverb in the sentence: \"They have already left\"",
+      "explanation": "L'adverbe \"déjà\" indique le moment de l'action passée. C'est donc un adverbe de temps.",
+      "id": "65d8ece225aaf0bf",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe pourrait remplacer \"avec soin\" ?",
+      "options": [
+        "rapidement",
+        "prudemment",
+        "joyeusement",
+        "maladroitement"
+      ],
+      "correctAnswer": "prudemment",
+      "englishHint": "Which adverb could replace \"carefully\"?",
+      "explanation": "L'adverbe \"prudemment\" est synonyme de \"avec soin\" et décrit la manière de faire quelque chose avec attention.",
+      "id": "a802b32e5005d8e9",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Il a beaucoup travaillé\", quel est le type d'adverbe utilisé ?",
+      "options": [
+        "Adverbe de lieu",
+        "Adverbe de manière",
+        "Adverbe de quantité",
+        "Adverbe de temps"
+      ],
+      "correctAnswer": "Adverbe de quantité",
+      "englishHint": "In the sentence \"He worked a lot\", what type of adverb is used?",
+      "explanation": "L'adverbe \"beaucoup\" indique une quantité de travail. C'est un adverbe de quantité.",
+      "id": "d2e9ec5b48684926",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe de lieu indique un endroit éloigné : ici, là-bas, près, ici-même ?",
+      "options": [
+        "ici",
+        "près",
+        "ici-même",
+        "là-bas"
+      ],
+      "correctAnswer": "là-bas",
+      "englishHint": "Which adverb of place indicates a distant place: here, there, near, right here?",
+      "explanation": "L'adverbe \"là-bas\" indique un lieu éloigné de celui du locuteur. C'est donc un adverbe de lieu indiquant une distance.",
+      "id": "a750f85d5f9a8d9c",
+      "type": "standard"
+    }
+  ]
+}

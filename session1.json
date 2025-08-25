@@ -1,0 +1,200 @@
+{
+  "questions": [
+    {
+      "text": "Quel est l'adverbe de manière dans la phrase : \"Il a chanté joyeusement.\"",
+      "options": [
+        "Il",
+        "a",
+        "chanté",
+        "joyeusement"
+      ],
+      "correctAnswer": "joyeusement",
+      "englishHint": "What is the adverb of manner in the sentence: \"Il a chanté joyeusement.\"",
+      "explanation": "L'adverbe de manière répond à la question \"comment ?\" et modifie le verbe. Ici, \"joyeusement\" indique comment il a chanté.",
+      "id": "79408f05e2de5d2a",
+      "type": "standard"
+    },
+    {
+      "text": "Indiquez l'adverbe de temps dans la phrase suivante : \"Nous partirons demain.\"",
+      "options": [
+        "Nous",
+        "partirons",
+        "demain",
+        "Nous partirons"
+      ],
+      "correctAnswer": "demain",
+      "englishHint": "Indicate the adverb of time in the following sentence: \"Nous partirons demain.\"",
+      "explanation": "L'adverbe de temps répond à la question \"quand ?\" et modifie le verbe. Ici, \"demain\" indique quand nous partirons.",
+      "id": "abfb083e6d723411",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe de lieu convient à la phrase : \"Le chat dort _______.\"",
+      "options": [
+        "vite",
+        "hier",
+        "ici",
+        "beaucoup"
+      ],
+      "correctAnswer": "ici",
+      "englishHint": "Which adverb of place is suitable for the sentence: \"Le chat dort _______.\"",
+      "explanation": "L'adverbe de lieu répond à la question \"où ?\" Ici, \"ici\" indique l'endroit où le chat dort.",
+      "id": "58d7ae30630c0ce2",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Il mange beaucoup\", quel est le rôle de \"beaucoup\" ?",
+      "options": [
+        "Adverbe de lieu",
+        "Adverbe de temps",
+        "Adverbe de quantité",
+        "Adverbe de manière"
+      ],
+      "correctAnswer": "Adverbe de quantité",
+      "englishHint": "In the sentence \"Il mange beaucoup\", what is the role of \"beaucoup\"?",
+      "explanation": "\"Beaucoup\" indique la quantité de nourriture mangée, c'est donc un adverbe de quantité.",
+      "id": "7b2ddb871882006f",
+      "type": "standard"
+    },
+    {
+      "text": "Laquelle de ces options est un adverbe de négation ?",
+      "options": [
+        "oui",
+        "jamais",
+        "ici",
+        "beaucoup"
+      ],
+      "correctAnswer": "jamais",
+      "englishHint": "Which of these options is an adverb of negation?",
+      "explanation": "Les adverbes de négation expriment la négation. \"jamais\" est un adverbe de négation.",
+      "id": "480266e97926cce1",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe pourrait compléter la phrase : \"Elle est _______ intelligente\" ?",
+      "options": [
+        "rapidement",
+        "là-bas",
+        "très",
+        "demain"
+      ],
+      "correctAnswer": "très",
+      "englishHint": "Which adverb could complete the sentence: \"Elle est _______ intelligente\" ?",
+      "explanation": "Ici, \"très\" modifie l'adjectif \"intelligente\" et amplifie son sens, c'est un adverbe de quantité.",
+      "id": "ca9c7300c5141a5c",
+      "type": "standard"
+    },
+    {
+      "text": "Identifiez l'adverbe dans la phrase : \"Ils sont déjà partis.\"",
+      "options": [
+        "Ils",
+        "sont",
+        "déjà",
+        "partis"
+      ],
+      "correctAnswer": "déjà",
+      "englishHint": "Identify the adverb in the sentence: \"Ils sont déjà partis.\"",
+      "explanation": "L'adverbe \"déjà\" précise le moment du départ, c'est un adverbe de temps.",
+      "id": "a35ef5d25eda3f39",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe d'affirmation est le plus courant ?",
+      "options": [
+        "peut-être",
+        "non",
+        "oui",
+        "jamais"
+      ],
+      "correctAnswer": "oui",
+      "englishHint": "What is the most common adverb of affirmation?",
+      "explanation": "\"Oui\" est un adverbe qui exprime l'affirmation.",
+      "id": "e341e0b4d284572e",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Il travaille lentement\", quel type d'adverbe est \"lentement\" ?",
+      "options": [
+        "Adverbe de temps",
+        "Adverbe de lieu",
+        "Adverbe de quantité",
+        "Adverbe de manière"
+      ],
+      "correctAnswer": "Adverbe de manière",
+      "englishHint": "In the sentence \"Il travaille lentement\", what type of adverb is \"lentement\"?",
+      "explanation": "\"Lentement\" décrit la manière dont il travaille.",
+      "id": "3c20001836783940",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe indique un doute ?",
+      "options": [
+        "certainement",
+        "peut-être",
+        "toujours",
+        "maintenant"
+      ],
+      "correctAnswer": "peut-être",
+      "englishHint": "Which adverb indicates doubt?",
+      "explanation": "\"Peut-être\" exprime un doute ou une incertitude.",
+      "id": "72a8f5dedd45b0c5",
+      "type": "standard"
+    },
+    {
+      "text": "Choisissez l'adverbe qui convient le mieux : \"Elle est arrivée ______ à la réunion.\"",
+      "options": [
+        "hier",
+        "rapidement",
+        "ici",
+        "beaucoup"
+      ],
+      "correctAnswer": "rapidement",
+      "englishHint": "Choose the adverb that fits best: \"Elle est arrivée ______ à la réunion.\"",
+      "explanation": "L'adverbe \"rapidement\" décrit la manière dont elle est arrivée à la réunion.",
+      "id": "85203e3bce8a9f6a",
+      "type": "standard"
+    },
+    {
+      "text": "L'adverbe \"partout\" indique :",
+      "options": [
+        "la manière",
+        "le temps",
+        "le lieu",
+        "la quantité"
+      ],
+      "correctAnswer": "le lieu",
+      "englishHint": "The adverb \"partout\" indicates:",
+      "explanation": "\"Partout\" indique un lieu, répondant à la question \"où ?\"",
+      "id": "00c71f6a21c7382e",
+      "type": "standard"
+    },
+    {
+      "text": "Dans quelle phrase l'adverbe modifie-t-il un adjectif ?",
+      "options": [
+        "Il court vite.",
+        "Elle chante bien.",
+        "Il est très grand.",
+        "Nous partons demain."
+      ],
+      "correctAnswer": "Il est très grand.",
+      "englishHint": "In which sentence does the adverb modify an adjective?",
+      "explanation": "Dans \"Il est très grand\", \"très\" modifie l'adjectif \"grand\".",
+      "id": "c4f6e3be261ed375",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe pourrait remplacer \"avec rapidité\" ?",
+      "options": [
+        "lentement",
+        "rapidement",
+        "aujourd'hui",
+        "ici"
+      ],
+      "correctAnswer": "rapidement",
+      "englishHint": "Which adverb could replace \"avec rapidité\"?",
+      "explanation": "\"Rapidement\" est synonyme d' \"avec rapidité\".",
+      "id": "ca43f90a857e71d8",
+      "type": "standard"
+    }
+  ]
+}

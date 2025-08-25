@@ -1,0 +1,12 @@
+{
+  "avatars": [
+    { "key": "cat.svg", "url": "/avatars/cat.svg", "label": "Chat" },
+    { "key": "dog.svg", "url": "/avatars/dog.svg", "label": "Chien" },
+    { "key": "fox.svg", "url": "/avatars/fox.svg", "label": "Renard" },
+    { "key": "panda.svg", "url": "/avatars/panda.svg", "label": "Panda" },
+    { "key": "lion.svg", "url": "/avatars/lion.svg", "label": "Lion" },
+    { "key": "koala.svg", "url": "/avatars/koala.svg", "label": "Koala" },
+    { "key": "owl.svg", "url": "/avatars/owl.svg", "label": "Hibou" },
+    { "key": "bunny.svg", "url": "/avatars/bunny.svg", "label": "Lapin" }
+  ]
+}

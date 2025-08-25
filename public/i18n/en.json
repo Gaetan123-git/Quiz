@@ -1,0 +1,166 @@
+{
+  "app": {
+    "title": "FrenchQuest - The Quiz Adventure",
+    "name": "FrenchQuest"
+  },
+  "navigation": {
+    "home": "Home",
+    "howToPlay": "How to Play?",
+    "course": "Course",
+    "courseHistory": "Course Archives",
+    "freeBooks": "Free Books",
+    "history": "History",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "greeting": {
+    "hello": "Hello,",
+    "user": "User"
+  },
+  "stats": {
+    "level": "Level",
+    "streak": "Day Streak",
+    "coins": "Coins",
+    "xp": "Total XP",
+    "competitionCoins": "Competition Coins",
+    "correctAnswers": "Correct Answers"
+  },
+  "game": {
+    "chooseChallenge": "Choose Your Challenge",
+    "leaderboard": "Leaderboard",
+    "time": "Time",
+    "continue": "Continue",
+    "getHint": "Get a hint",
+    "hintCost": "Cost: 25 💰",
+    "session": "Session"
+  },
+  "messages": {
+    "congratulations": [
+      "Great work! Keep it up!",
+      "Excellent! You're on the right track!",
+      "Bravo! What a great answer!",
+      "Amazing! You've got this!",
+      "Magnificent! You're making great progress!"
+    ],
+    "encouragement": [
+      "Don't worry, you'll get it!",
+      "No problem, keep learning!",
+      "You can do better, try again!",
+      "No worries, the next one will be right!",
+      "Keep going, you're on the right path!"
+    ]
+  },
+  "history": {
+    "title": "Your Journey",
+    "generalStats": "General Statistics",
+    "quizHistory": "Quiz History",
+    "achievements": "Your Achievements",
+    "myErrors": "My Errors",
+    "returnToMenu": "Return to menu",
+    "returnToHistory": "Return to history",
+    "replayQuestions": "Replay these questions"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "languageDescription": "Choose the interface language",
+    "french": "Français",
+    "english": "English",
+    "avatar": "Profile Avatar",
+    "avatarDescription": "Choose a system avatar. It will be visible in the header and leaderboard.",
+    "currentAvatar": "Your current avatar",
+    "preview": "Preview",
+    "reset": "Reset",
+    "systemAvatars": "System avatars",
+    "clickToSelect": "Click to select",
+    "theme": "Visual Theme",
+    "themeDescription": "Choose the app appearance (light, dark, purple, or AMOLED).",
+    "dark": "Dark",
+    "light": "Light",
+    "purple": "Purple",
+    "amoled": "AMOLED",
+    "fontSize": "Text Size",
+    "fontSizeDescription": "Adjust font size for better readability.",
+    "small": "Small",
+    "normal": "Normal",
+    "large": "Large",
+    "fontFamily": "Text Style",
+    "fontFamilyDescription": "Choose the font that suits you best.",
+    "poppins": "Poppins",
+    "arial": "Arial",
+    "times": "Times New Roman",
+    "georgia": "Georgia",
+    "roboto": "Roboto",
+    "openSans": "Open Sans",
+    "coolJazz": "Cool Jazz",
+    "chocoCooky": "Choco Cooky",
+    "rosemary": "Rosemary",
+    "samsungSharp": "Samsung Sharp",
+    "samsungOne": "Samsung One",
+    "condensed": "Condensed",
+    "uiDesign": "Interface Design",
+    "uiDesignDescription": "Choose the interface style that matches your personality.",
+    "defaultDesign": "Default",
+    "gamerDesign": "Gamer",
+    "devDesign": "Developer",
+    "duolingoDesign": "Duolingo",
+    "appDesign": "Modern App",
+    "returnToMenu": "Return to menu"
+  },
+  "course": {
+    "title": "Learn French",
+    "loading": "Loading course...",
+    "returnToMenu": "Return to menu"
+  },
+  "books": {
+    "title": "Free Library",
+    "subtitle": "Browse and download resources to deepen your learning.",
+    "returnToMenu": "Return to menu"
+  },
+  "courseHistory": {
+    "title": "Course Archives",
+    "subtitle": "Find here the lessons from previous days.",
+    "returnToMenu": "Return to menu"
+  },
+  "howToPlay": {
+    "title": "FrenchQuest Rules",
+    "objective": "Your Objective",
+    "objectiveText": "Welcome to FrenchQuest! Your mission is to prove your French mastery by completing 10 quiz sessions. Each correct answer earns you points, experience (XP) and coins. Level up and unlock all achievements!",
+    "phase1": "Phase 1: Training (Sessions 1 to 3)",
+    "phase1Text": "These first sessions are here to warm you up. You can redo them as many times as you want. The coins 💰 you earn here are training coins. Use them to buy hints!",
+    "phase1Requirement": "You must complete a session with at least 70% correct answers to unlock the next one.",
+    "phase2": "Phase 2: Competition (Sessions 4 to 10)",
+    "phase2Text": "After completing session 3, you access the official competition! The rules change:",
+    "coinsAndHints": "Coins and Hints",
+    "coinsAndHintsText": "Coins  are your currency. Stuck on a question? Buy a hint from AI for 25 coins. Manage your wallet well to complete the adventure!",
+    "goodLuck": "Good luck, and may the best win!"
+  },
+  "competition": {
+    "liveCompetition": "Live Competition",
+    "startsIn": "Starts in",
+    "at": "at",
+    "opensTitle": "Competition open!",
+    "session4Available": "Session 4 is now available!"
+  },
+  "achievements": {
+    "firstWin": "First Victory",
+    "firstWinDesc": "Win your first quiz game!",
+    "tenConsecutive": "Series of 10",
+    "tenConsecutiveDesc": "Answer 10 questions correctly in a row."
+  },
+  "session": {
+    "forceLogoutTitle": "Logout",
+    "forceLogoutMessage": "Your session was opened on another device."
+  },
+  "network": {
+    "online": "Online",
+    "offline": "Offline",
+    "connectionLost": "Connection lost",
+    "tryingReconnect": "Trying to reconnect...",
+    "reconnected": "Connection restored!",
+    "reconnectedMobile": "Connection restored, keep it up!",
+    "disconnected": "Connection interrupted",
+    "reconnectFailed": "Unable to reconnect",
+    "retry": "Retry"
+  }
+}

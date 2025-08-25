@@ -1,0 +1,11 @@
+{
+    "sessions": [
+      { "id": "session4", "durationInMinutes": 1 },
+      { "id": "session5", "durationInMinutes": 2 },
+      { "id": "session6", "durationInMinutes": 3 },
+      { "id": "session7", "durationInMinutes": 24 },
+      { "id": "session8", "durationInMinutes": 24 },
+      { "id": "session9", "durationInMinutes": 24 },
+      { "id": "session10", "durationInMinutes": 48 }
+    ]
+  }

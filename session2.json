@@ -1,0 +1,214 @@
+{
+  "questions": [
+    {
+      "text": "Quel adverbe indique la manière dont on effectue une action ?",
+      "options": [
+        "Demain",
+        "Ici",
+        "Rapidement",
+        "Beaucoup"
+      ],
+      "correctAnswer": "Rapidement",
+      "englishHint": "Which adverb indicates the way an action is performed?",
+      "explanation": "Les adverbes de manière décrivent comment une action est faite. \"Rapidement\" est un exemple d'adverbe de manière.",
+      "id": "8a81e3aadf06892e",
+      "type": "standard"
+    },
+    {
+      "text": "Parmi ces mots, lequel est un adverbe de temps ?",
+      "options": [
+        "Silencieusement",
+        "Dehors",
+        "Hier",
+        "Plus"
+      ],
+      "correctAnswer": "Hier",
+      "englishHint": "Which of these words is an adverb of time?",
+      "explanation": "Les adverbes de temps indiquent quand une action se produit. \"Hier\" indique un moment passé.",
+      "id": "756e5a6b4d9df85d",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe indique un lieu ?",
+      "options": [
+        "Malheureusement",
+        "Souvent",
+        "Partout",
+        "Assez"
+      ],
+      "correctAnswer": "Partout",
+      "englishHint": "Which adverb indicates a place?",
+      "explanation": "Les adverbes de lieu précisent où une action se déroule. \"Partout\" est un exemple d'adverbe de lieu.",
+      "id": "0a56235985aa7f6c",
+      "type": "standard"
+    },
+    {
+      "text": "Choisissez l'adverbe de quantité :",
+      "options": [
+        "Jamais",
+        "Très",
+        "Là",
+        "Maintenant"
+      ],
+      "correctAnswer": "Très",
+      "englishHint": "Choose the adverb of quantity:",
+      "explanation": "Les adverbes de quantité indiquent une quantité ou un degré. \"Très\" amplifie l'adjectif qu'il modifie.",
+      "id": "94628e73e3156316",
+      "type": "standard"
+    },
+    {
+      "text": "Lequel est un adverbe de négation ?",
+      "options": [
+        "Oui",
+        "Peut-être",
+        "Jamais",
+        "Certainement"
+      ],
+      "correctAnswer": "Jamais",
+      "englishHint": "Which one is an adverb of negation?",
+      "explanation": "Les adverbes de négation expriment l'absence ou la négation. \"Jamais\" est un exemple d'adverbe de négation.",
+      "id": "11c625d9f72861a0",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe exprime l'affirmation ?",
+      "options": [
+        "Peut-être",
+        "Non",
+        "Oui",
+        "Probablement"
+      ],
+      "correctAnswer": "Oui",
+      "englishHint": "Which adverb expresses affirmation?",
+      "explanation": "Les adverbes d'affirmation confirment quelque chose. \"Oui\" est un exemple d'adverbe d'affirmation.",
+      "id": "0b43d2de9095559c",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe exprime le doute ?",
+      "options": [
+        "Certainement",
+        "Absolument",
+        "Peut-être",
+        "Toujours"
+      ],
+      "correctAnswer": "Peut-être",
+      "englishHint": "Which adverb expresses doubt?",
+      "explanation": "\"Peut-être\" exprime de l'incertitude ou du doute sur quelque chose.",
+      "id": "27061e8766a137c5",
+      "type": "standard"
+    },
+    {
+      "text": "Dans \"Il chante bien\", quel est le rôle de \"bien\" ?",
+      "options": [
+        "Adjectif",
+        "Verbe",
+        "Adverbe",
+        "Nom"
+      ],
+      "correctAnswer": "Adverbe",
+      "englishHint": "In \"Il chante bien\", what is the role of \"bien\"?",
+      "explanation": "\"Bien\" modifie le verbe \"chante\" et décrit la manière dont il chante, ce qui fait de lui un adverbe.",
+      "id": "b5b8f26c01915ce9",
+      "type": "standard"
+    },
+    {
+      "text": "Dans \"Elle est très grande\", quel est le mot qui modifie l'adjectif ?",
+      "options": [
+        "Elle",
+        "Est",
+        "Grande",
+        "Très"
+      ],
+      "correctAnswer": "Très",
+      "englishHint": "In \"Elle est très grande\", which word modifies the adjective?",
+      "explanation": "L'adverbe \"très\" modifie l'adjectif \"grande\" et en amplifie le sens.",
+      "id": "bedb8d9bb02051ec",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe pourrait remplacer \"avec lenteur\" ?",
+      "options": [
+        "Rapidement",
+        "Lentement",
+        "Doucement",
+        "Fortement"
+      ],
+      "correctAnswer": "Lentement",
+      "englishHint": "Which adverb could replace \"avec lenteur\"?",
+      "explanation": "Lentement est synonyme d'avec lenteur et décrit la manière dont une action est effectuée.",
+      "id": "bb26a1c0de9c256a",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Ils sont déjà partis\", quel est l'adverbe ?",
+      "options": [
+        "Ils",
+        "Sont",
+        "Partis",
+        "Déjà"
+      ],
+      "correctAnswer": "Déjà",
+      "englishHint": "In the sentence \"Ils sont déjà partis\", what is the adverb?",
+      "explanation": "\"Déjà\" est un adverbe de temps qui indique que l'action de partir a déjà eu lieu.",
+      "id": "ce3e50eebeadcddb",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe signifie \"à un endroit opposé à l'intérieur\" ?",
+      "options": [
+        "Dedans",
+        "Dehors",
+        "Ici",
+        "Là"
+      ],
+      "correctAnswer": "Dehors",
+      "englishHint": "Which adverb means \"in a place opposite to the inside\"?",
+      "explanation": "\"Dehors\" indique un lieu extérieur par opposition à l'intérieur.",
+      "id": "241a02cab31dd1d3",
+      "type": "standard"
+    },
+    {
+      "text": "L'adverbe \"aujourd'hui\" indique :",
+      "options": [
+        "Une manière",
+        "Un lieu",
+        "Un temps",
+        "Une quantité"
+      ],
+      "correctAnswer": "Un temps",
+      "englishHint": "The adverb \"aujourd'hui\" indicates:",
+      "explanation": "\"Aujourd'hui\" indique le temps présent.",
+      "id": "ccdc9335a43ca02b",
+      "type": "standard"
+    },
+    {
+      "text": "Dans \"Il a travaillé beaucoup\", \"beaucoup\" est un adverbe de :",
+      "options": [
+        "Manière",
+        "Lieu",
+        "Temps",
+        "Quantité"
+      ],
+      "correctAnswer": "Quantité",
+      "englishHint": "In \"Il a travaillé beaucoup\", \"beaucoup\" is an adverb of:",
+      "explanation": "\"Beaucoup\" précise la quantité de travail effectuée.",
+      "id": "053235aefd6387a9",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe pourrait compléter : \"Elle a couru _______ jusqu'à la maison\" ?",
+      "options": [
+        "lentement",
+        "ici",
+        "jamais",
+        "hier"
+      ],
+      "correctAnswer": "lentement",
+      "englishHint": "Which adverb could complete: \"Elle a couru _______ jusqu'à la maison\"?",
+      "explanation": "Lentement décrit la manière dont elle a couru.",
+      "id": "eae62141da1e7a0f",
+      "type": "standard"
+    }
+  ]
+}

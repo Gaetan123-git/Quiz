@@ -1,0 +1,214 @@
+{
+  "questions": [
+    {
+      "text": "Quel adverbe indique la manière dont on réalise une action ?",
+      "options": [
+        "Aujourd'hui",
+        "Rapidement",
+        "Là-bas",
+        "Beaucoup"
+      ],
+      "correctAnswer": "Rapidement",
+      "englishHint": "Which adverb indicates the way in which an action is performed?",
+      "explanation": "L'adverbe \"rapidement\" précise comment l'action est faite, il décrit la manière.",
+      "id": "d4abd8b5925e0eb6",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe situe une action dans le temps ?",
+      "options": [
+        "Silencieusement",
+        "Partout",
+        "Demain",
+        "Près"
+      ],
+      "correctAnswer": "Demain",
+      "englishHint": "Which adverb locates an action in time?",
+      "explanation": "L'adverbe \"demain\" indique quand l'action aura lieu, il situe l'action dans le temps.",
+      "id": "7f0c0359a19886d1",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe indique l'endroit où se passe une action ?",
+      "options": [
+        "Malheureusement",
+        "Très",
+        "Ici",
+        "Souvent"
+      ],
+      "correctAnswer": "Ici",
+      "englishHint": "Which adverb indicates where an action takes place?",
+      "explanation": "L'adverbe \"ici\" indique le lieu de l'action.",
+      "id": "32a019ddd175d880",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe exprime une quantité ?",
+      "options": [
+        "Hier",
+        "Doucement",
+        "Beaucoup",
+        "Ailleurs"
+      ],
+      "correctAnswer": "Beaucoup",
+      "englishHint": "Which adverb expresses a quantity?",
+      "explanation": "L'adverbe \"beaucoup\" indique une grande quantité.",
+      "id": "eda17c1d1350e12b",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe sert à nier une action ?",
+      "options": [
+        "Oui",
+        "Peut-être",
+        "Jamais",
+        "Certainement"
+      ],
+      "correctAnswer": "Jamais",
+      "englishHint": "Which adverb serves to negate an action?",
+      "explanation": "L'adverbe \"jamais\" exprime la négation d'une action.",
+      "id": "ccdd3c77ee0d0378",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe affirme quelque chose ?",
+      "options": [
+        "Probablement",
+        "Non",
+        "Oui",
+        "Peut-être"
+      ],
+      "correctAnswer": "Oui",
+      "englishHint": "Which adverb affirms something?",
+      "explanation": "L'adverbe \"oui\" sert à affirmer quelque chose.",
+      "id": "3e39986835fe3288",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe exprime un doute ?",
+      "options": [
+        "Absolument",
+        "Certainement",
+        "Peut-être",
+        "Toujours"
+      ],
+      "correctAnswer": "Peut-être",
+      "englishHint": "Which adverb expresses doubt?",
+      "explanation": "L'adverbe \"peut-être\" exprime de l'incertitude ou du doute.",
+      "id": "187c86059df1aebf",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Il mange lentement\", quel est l'adverbe ?",
+      "options": [
+        "Il",
+        "mange",
+        "lentement",
+        "est"
+      ],
+      "correctAnswer": "lentement",
+      "englishHint": "In the sentence \"Il mange lentement\", what is the adverb?",
+      "explanation": "Le mot \"lentement\" est un adverbe car il modifie le verbe \"mange\" en précisant la manière.",
+      "id": "04bffe36b18afd47",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Elle est très grande\", quel mot est l'adverbe ?",
+      "options": [
+        "Elle",
+        "est",
+        "très",
+        "grande"
+      ],
+      "correctAnswer": "très",
+      "englishHint": "In the sentence \"Elle est très grande\", which word is the adverb?",
+      "explanation": "Le mot \"très\" est un adverbe de quantité car il modifie l'adjectif \"grande\".",
+      "id": "66f23c1e722eee20",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe pourrait remplacer \"avec rapidité\" ?",
+      "options": [
+        "Lentement",
+        "Rapidement",
+        "Doucement",
+        "Maladroitement"
+      ],
+      "correctAnswer": "Rapidement",
+      "englishHint": "Which adverb could replace \"avec rapidité\"?",
+      "explanation": "Les deux adverbes ont le même sens, ils décrivent une action effectuée de manière rapide.",
+      "id": "516200bd07868cbd",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Ils sont déjà partis\", quel est l'adverbe ?",
+      "options": [
+        "Ils",
+        "sont",
+        "déjà",
+        "partis"
+      ],
+      "correctAnswer": "déjà",
+      "englishHint": "In the sentence \"Ils sont déjà partis\", what is the adverb?",
+      "explanation": "L'adverbe \"déjà\" précise le moment de l'action, c'est un adverbe de temps.",
+      "id": "828e94b38ad1335d",
+      "type": "standard"
+    },
+    {
+      "text": "L'adverbe \"ici\" indique :",
+      "options": [
+        "Un doute",
+        "Une manière",
+        "Un lieu",
+        "Une quantité"
+      ],
+      "correctAnswer": "Un lieu",
+      "englishHint": "The adverb \"ici\" indicates:",
+      "explanation": "L'adverbe \"ici\" indique un lieu précis.",
+      "id": "8fc086b48b583598",
+      "type": "standard"
+    },
+    {
+      "text": "Dans \"Il a beaucoup travaillé\", \"beaucoup\" est un adverbe de :",
+      "options": [
+        "Manière",
+        "Lieu",
+        "Temps",
+        "Quantité"
+      ],
+      "correctAnswer": "Quantité",
+      "englishHint": "In \"Il a beaucoup travaillé\", \"beaucoup\" is an adverb of:",
+      "explanation": "L'adverbe \"beaucoup\" précise la quantité de travail effectué.",
+      "id": "1c3989bac75fdd97",
+      "type": "standard"
+    },
+    {
+      "text": "Quel type d'adverbe est \"rapidement\" dans la phrase : \"Il court rapidement\" ?",
+      "options": [
+        "De temps",
+        "De lieu",
+        "De manière",
+        "De quantité"
+      ],
+      "correctAnswer": "De manière",
+      "englishHint": "What type of adverb is \"rapidement\" in the sentence: \"Il court rapidement\"?",
+      "explanation": "L'adverbe \"rapidement\" décrit la manière dont il court.",
+      "id": "e108b5baff03dbad",
+      "type": "standard"
+    },
+    {
+      "text": "Parmi ces mots, lequel est un adverbe de temps : aujourd'hui, ici, rapidement, beaucoup ?",
+      "options": [
+        "ici",
+        "rapidement",
+        "beaucoup",
+        "aujourd'hui"
+      ],
+      "correctAnswer": "aujourd'hui",
+      "englishHint": "Among these words, which one is an adverb of time: today, here, quickly, a lot?",
+      "explanation": "L'adverbe \"aujourd'hui\" indique un moment précis dans le temps.",
+      "id": "9edba5d8a8dcfb68",
+      "type": "standard"
+    }
+  ]
+}

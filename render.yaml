@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: french-quest
+    env: node
+    plan: free
+    autoDeploy: true
+    buildCommand: "npm ci && npm rebuild better-sqlite3 --update-binary"
+    startCommand: "node server.js"
+    healthCheckPath: "/api/ping"
+    envVars:
+      - key: GEMINI_API_KEYS
+        sync: false  # Renseignez cette variable dans le dashboard Render après création
+      - key: NODE_VERSION
+        value: "20"

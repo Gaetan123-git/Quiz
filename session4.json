@@ -1,0 +1,214 @@
+{
+  "questions": [
+    {
+      "text": "Quel adverbe indique la manière dont on mange ?",
+      "options": [
+        "vite",
+        "demain",
+        "ici",
+        "beaucoup"
+      ],
+      "correctAnswer": "vite",
+      "englishHint": "Which adverb indicates the manner in which one eats?",
+      "explanation": "L'adverbe \"vite\" précise la manière de manger, par opposition à des adverbes de temps, lieu ou quantité.",
+      "id": "43c4056e6eb93aa3",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe situe une action dans le futur ?",
+      "options": [
+        "hier",
+        "maintenant",
+        "demain",
+        "avant"
+      ],
+      "correctAnswer": "demain",
+      "englishHint": "Which adverb locates an action in the future?",
+      "explanation": "L'adverbe \"demain\" indique un temps futur, contrairement aux autres options qui indiquent le passé ou le présent.",
+      "id": "f5be41b35f8ac7f2",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe indique l'endroit où un événement se produit ?",
+      "options": [
+        "rapidement",
+        "souvent",
+        "là-bas",
+        "plus"
+      ],
+      "correctAnswer": "là-bas",
+      "englishHint": "Which adverb indicates the place where an event occurs?",
+      "explanation": "L'adverbe \"là-bas\" précise le lieu, contrairement aux autres options qui indiquent la manière, la fréquence ou la quantité.",
+      "id": "9a5ca241073b9459",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe exprime une grande quantité ?",
+      "options": [
+        "un peu",
+        "jamais",
+        "beaucoup",
+        "peu"
+      ],
+      "correctAnswer": "beaucoup",
+      "englishHint": "Which adverb expresses a large quantity?",
+      "explanation": "L'adverbe \"beaucoup\" indique une grande quantité, tandis que les autres indiquent une petite quantité, une négation ou une quantité faible.",
+      "id": "0704dfcc48816032",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe sert à nier une action ?",
+      "options": [
+        "oui",
+        "peut-être",
+        "non",
+        "certainement"
+      ],
+      "correctAnswer": "non",
+      "englishHint": "Which adverb serves to negate an action?",
+      "explanation": "L'adverbe \"non\" est utilisé pour nier une action, tandis que les autres expriment l'affirmation, le doute ou l'affirmation certaine.",
+      "id": "14aa17415228ee69",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe affirme quelque chose de façon certaine ?",
+      "options": [
+        "peut-être",
+        "probablement",
+        "certainement",
+        "peut-être que"
+      ],
+      "correctAnswer": "certainement",
+      "englishHint": "Which adverb affirms something with certainty?",
+      "explanation": "L'adverbe \"certainement\" exprime une affirmation absolue, contrairement aux autres qui expriment le doute ou une probabilité.",
+      "id": "9e29c3ad49c51fc9",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe exprime le doute ?",
+      "options": [
+        "toujours",
+        "jamais",
+        "peut-être",
+        "souvent"
+      ],
+      "correctAnswer": "peut-être",
+      "englishHint": "Which adverb expresses doubt?",
+      "explanation": "L'adverbe \"peut-être\" exprime une incertitude ou un doute, contrairement aux autres options qui indiquent des affirmations de certitude ou de fréquence.",
+      "id": "95012308592513bf",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Il parle doucement\", quel est l'adverbe ?",
+      "options": [
+        "Il",
+        "parle",
+        "doucement",
+        "est"
+      ],
+      "correctAnswer": "doucement",
+      "englishHint": "In the sentence \"He speaks softly\", what is the adverb?",
+      "explanation": "L'adverbe \"doucement\" modifie le verbe \"parle\" pour indiquer la manière dont il parle.",
+      "id": "0c08993cd424eca4",
+      "type": "standard"
+    },
+    {
+      "text": "Dans \"Elle est très grande\", quel mot est l'adverbe ?",
+      "options": [
+        "Elle",
+        "est",
+        "très",
+        "grande"
+      ],
+      "correctAnswer": "très",
+      "englishHint": "In \"She is very tall\", which word is the adverb?",
+      "explanation": "L'adverbe \"très\" modifie l'adjectif \"grande\" pour amplifier son sens.",
+      "id": "3d64dc5630481c6c",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe pourrait remplacer \"avec rapidité\" ?",
+      "options": [
+        "lentement",
+        "rapidement",
+        "calmement",
+        "doucement"
+      ],
+      "correctAnswer": "rapidement",
+      "englishHint": "Which adverb could replace \"with speed\"?",
+      "explanation": "L'adverbe \"rapidement\" est synonyme de \"avec rapidité\", exprimant la même idée de vitesse.",
+      "id": "8debd5aae09d8ef6",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe indique un lieu proche ?",
+      "options": [
+        "loin",
+        "ailleurs",
+        "près",
+        "partout"
+      ],
+      "correctAnswer": "près",
+      "englishHint": "Which adverb indicates a nearby place?",
+      "explanation": "L'adverbe \"près\" indique une proximité, contrairement aux autres qui indiquent une distance, un autre lieu ou tous les lieux.",
+      "id": "beb6d56617f35817",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Ils sont déjà partis\", quel est l'adverbe ?",
+      "options": [
+        "Ils",
+        "sont",
+        "déjà",
+        "partis"
+      ],
+      "correctAnswer": "déjà",
+      "englishHint": "In the sentence \"They have already left\", what is the adverb?",
+      "explanation": "L'adverbe \"déjà\" indique un temps antérieur à celui attendu, modifiant le sens de la phrase.",
+      "id": "05bebe197d139ba0",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe signifie \"à un endroit opposé à l'intérieur\" ?",
+      "options": [
+        "dedans",
+        "dehors",
+        "ici",
+        "là"
+      ],
+      "correctAnswer": "dehors",
+      "englishHint": "Which adverb means \"in a place opposite to inside\"?",
+      "explanation": "L'adverbe \"dehors\" indique l'extérieur, contrairement à \"dedans\" qui indique l'intérieur.",
+      "id": "c368330ac0fda68d",
+      "type": "standard"
+    },
+    {
+      "text": "L'adverbe \"aujourd'hui\" indique :",
+      "options": [
+        "le futur",
+        "le passé",
+        "le présent",
+        "l'avenir"
+      ],
+      "correctAnswer": "le présent",
+      "englishHint": "The adverb \"today\" indicates:",
+      "explanation": "L'adverbe \"aujourd'hui\" situe l'action dans le présent.",
+      "id": "36fc302b4bf1ccf8",
+      "type": "standard"
+    },
+    {
+      "text": "Dans \"Il a beaucoup travaillé\", \"beaucoup\" est un adverbe de :",
+      "options": [
+        "manière",
+        "lieu",
+        "temps",
+        "quantité"
+      ],
+      "correctAnswer": "quantité",
+      "englishHint": "In \"He worked a lot\", \"a lot\" is an adverb of:",
+      "explanation": "L'adverbe \"beaucoup\" indique la quantité de travail effectué.",
+      "id": "2d12321e27192b35",
+      "type": "standard"
+    }
+  ]
+}

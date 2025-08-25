@@ -1,0 +1,200 @@
+{
+  "questions": [
+    {
+      "text": "Dans la phrase \"Il marche rapidement\", quel type d'adverbe est \"rapidement\" ?",
+      "options": [
+        "Adverbe de lieu",
+        "Adverbe de temps",
+        "Adverbe de manière",
+        "Adverbe de quantité"
+      ],
+      "correctAnswer": "Adverbe de manière",
+      "englishHint": "In the sentence \"Il marche rapidement\", what type of adverb is \"rapidement\"?",
+      "explanation": "L'adverbe \"rapidement\" indique la manière dont il marche.  C'est donc un adverbe de manière.",
+      "id": "9a59aa20f5a167ce",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe de temps pourrait compléter la phrase : \"Ils viendront ... soir\" ?",
+      "options": [
+        "hier",
+        "maintenant",
+        "partout",
+        "demain"
+      ],
+      "correctAnswer": "demain",
+      "englishHint": "Which adverb of time could complete the sentence: \"Ils viendront ... soir\"?",
+      "explanation": "L'adverbe \"demain\" indique le temps de l'action, précisant quand ils viendront.",
+      "id": "188f92027b28916a",
+      "type": "standard"
+    },
+    {
+      "text": "Où placeriez-vous l'adverbe \"souvent\" dans la phrase: \"Je vais au cinéma\" ?",
+      "options": [
+        "Avant le sujet",
+        "Après le verbe",
+        "Avant le verbe",
+        "Au milieu du verbe"
+      ],
+      "correctAnswer": "Avant le verbe",
+      "englishHint": "Where would you place the adverb \"souvent\" in the sentence: \"Je vais au cinéma\"?",
+      "explanation": "On place généralement l'adverbe avant le verbe. Donc, \"Je vais souvent au cinéma\" est correct.",
+      "id": "24ccbe1d6f782d17",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe de lieu indique un endroit proche ?",
+      "options": [
+        "ailleurs",
+        "là-bas",
+        "près",
+        "partout"
+      ],
+      "correctAnswer": "près",
+      "englishHint": "Which adverb of place indicates a nearby location?",
+      "explanation": "L'adverbe \"près\" indique un lieu proche.  Il pourrait être suivi d'une préposition comme \"de\".",
+      "id": "7642e02bbeaa81ff",
+      "type": "standard"
+    },
+    {
+      "text": "L'adverbe \"jamais\" exprime :",
+      "options": [
+        "l'affirmation",
+        "le doute",
+        "la négation",
+        "la quantité"
+      ],
+      "correctAnswer": "la négation",
+      "englishHint": "The adverb \"jamais\" expresses:",
+      "explanation": "\"Jamais\" est un adverbe de négation qui signifie \"à aucun moment\".",
+      "id": "ba54124a18597bf3",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe pourrait amplifier le sens de l'adjectif \"grand\" dans la phrase: \"Il est ... grand\" ?",
+      "options": [
+        "lentement",
+        "ici",
+        "très",
+        "jamais"
+      ],
+      "correctAnswer": "très",
+      "englishHint": "Which adverb could amplify the meaning of the adjective \"grand\" in the sentence: \"Il est ... grand\"?",
+      "explanation": "L'adverbe \"très\" modifie l'adjectif et en amplifie le sens.",
+      "id": "ede6cab8c139d12c",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Elle chante bien\", quel est le rôle de \"bien\" ?",
+      "options": [
+        "Adjectif",
+        "Verbe",
+        "Nom",
+        "Adverbe"
+      ],
+      "correctAnswer": "Adverbe",
+      "englishHint": "In the sentence \"Elle chante bien\", what is the role of \"bien\"?",
+      "explanation": "\"Bien\" modifie le verbe \"chante\" et indique la manière dont elle chante. C'est un adverbe de manière.",
+      "id": "d3ec56937b12deb9",
+      "type": "standard"
+    },
+    {
+      "text": "Quel est l'adverbe d'affirmation le plus courant ?",
+      "options": [
+        "peut-être",
+        "non",
+        "oui",
+        "jamais"
+      ],
+      "correctAnswer": "oui",
+      "englishHint": "What is the most common adverb of affirmation?",
+      "explanation": "L'adverbe \"oui\" est le plus simple et le plus courant pour exprimer l'affirmation.",
+      "id": "d1aa33356fa1f6ae",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Il a beaucoup mangé\", quel type d'adverbe est \"beaucoup\" ?",
+      "options": [
+        "Adverbe de manière",
+        "Adverbe de temps",
+        "Adverbe de quantité",
+        "Adverbe de lieu"
+      ],
+      "correctAnswer": "Adverbe de quantité",
+      "englishHint": "In the sentence \"Il a beaucoup mangé\", what type of adverb is \"beaucoup\"?",
+      "explanation": "L'adverbe \"beaucoup\" indique la quantité de nourriture mangée. C'est un adverbe de quantité.",
+      "id": "41e6dcec09a2cfa1",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe pourrait compléter la phrase : \"Il est arrivé ... à la réunion\" ?",
+      "options": [
+        "hier",
+        "rapidement",
+        "beaucoup",
+        "partout"
+      ],
+      "correctAnswer": "rapidement",
+      "englishHint": "Which adverb could complete the sentence: \"Il est arrivé ... à la réunion\"?",
+      "explanation": "Plusieurs adverbes conviennent, mais \"rapidement\" est une bonne option pour décrire la manière dont il est arrivé.",
+      "id": "8a458ab09fdc9f89",
+      "type": "standard"
+    },
+    {
+      "text": "Transformez la phrase \"Il pleut\" en utilisant un adverbe de manière :",
+      "options": [
+        "Il pleut lentement",
+        "Il pleut fort",
+        "Il pleut demain",
+        "Il pleut ici"
+      ],
+      "correctAnswer": "Il pleut fort",
+      "englishHint": "Transform the sentence \"Il pleut\" using an adverb of manner:",
+      "explanation": "L'adverbe \"fort\" précise la manière dont il pleut.",
+      "id": "47a1c59d893aacce",
+      "type": "standard"
+    },
+    {
+      "text": "Quel adverbe de temps pourrait remplacer \"à présent\" ?",
+      "options": [
+        "hier",
+        "maintenant",
+        "demain",
+        "partout"
+      ],
+      "correctAnswer": "maintenant",
+      "englishHint": "Which adverb of time could replace \"à présent\"?",
+      "explanation": "L'adverbe \"maintenant\" est synonyme de \"à présent\" et indique le temps présent.",
+      "id": "42f31155513a123c",
+      "type": "standard"
+    },
+    {
+      "text": "Indiquez un adverbe de doute :",
+      "options": [
+        "certainement",
+        "oui",
+        "peut-être",
+        "toujours"
+      ],
+      "correctAnswer": "peut-être",
+      "englishHint": "Indicate an adverb of doubt:",
+      "explanation": "L'adverbe \"peut-être\" exprime l'incertitude ou le doute.",
+      "id": "7606923a7f0e8563",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase \"Il est malheureusement malade\", quel est le rôle de \"malheureusement\" ?",
+      "options": [
+        "Adverbe de manière",
+        "Adverbe de temps",
+        "Adverbe de lieu",
+        "Adverbe de cause"
+      ],
+      "correctAnswer": "Adverbe de manière",
+      "englishHint": "In the sentence \"Il est malheureusement malade\", what is the role of \"malheureusement\"?",
+      "explanation": "\"Malheureusement\" exprime une circonstance regrettable, mais cela modifie l'idée de la phrase, plutôt que de décrire une manière spécifique.",
+      "id": "5ad0f8228189cfa0",
+      "type": "standard"
+    }
+  ]
+}

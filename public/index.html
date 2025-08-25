@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.title">FrenchQuest - L'Aventure du Quiz</title>
+    
+    <!-- Les feuilles de style restent dans le <head> -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="network-styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/emoji-picker-js@1.0.7/dist/emoji-picker.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans antialiased text-foreground bg-game-bg overflow-hidden">
+
+    <!-- Tout le contenu de votre page (header, main, etc.) reste ici... -->
+    <!-- Header persistant en haut de la page -->
+    <header id="main-header" class="main-header">
+        <div class="logo">
+            <a href="#" id="return-Menu-Logo" data-i18n="app.name">FrenchQuest</a>
+        </div>
+        <div class="player-stats">
+            <div class="stat-item" title="Niveau">
+                <span class="stat-icon"> XP </span>
+                <span id="xp-display">0</span>
+            </div>
+             <div class="stat-item" title="Niveau">
+                <span class="stat-icon">🏅</span>
+                <span id="level-display">1</span>
+            </div>
+            <div class="stat-item" title="Série de jours">
+                <span class="stat-icon">🔥</span>
+                <span id="streak-display">0 j</span>
+            </div>
+            <div class="stat-item" title="Pièces">
+                <span class="stat-icon coins">💰</span>
+                <span id="coins-display">0</span>
+            </div>
+        </div>
+        <div class="menu-container">
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+<div class="dropdown-menu" id="dropdown-menu">
+    <!-- Section de salutation améliorée -->
+    <div id="user-greeting" class="dropdown-greeting">
+        <div class="greeting-avatar"></div>
+        <div class="greeting-text">
+            <span data-i18n="greeting.hello">Bonjour,</span>
+            <strong id="greeting-username" data-i18n="greeting.user" data-i18n-skip="false">Utilisateur</strong>
+        </div>
+    </div>
+
+    <!-- Liens de navigation avec icônes -->
+    <a href="#" id="return-Menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span data-i18n="navigation.home">Accueil</span>
+    </a>
+    <a href="#" id="how-to-play-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        <span data-i18n="navigation.howToPlay">Comment Jouer ?</span>
+    </a>
+    <a href="#" id="course-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+        <span data-i18n="navigation.course">Cours</span>
+    </a>
+    <a href="#" id="course-history-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 3v18"/><path d="M11 3v18"/><path d="M15 3v18"/><path d="M19 3v18"/></svg>
+        <span data-i18n="navigation.courseHistory">Archives des Cours</span>
+    </a>
+    <a href="#" id="livres-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <span data-i18n="navigation.freeBooks">Livres Gratuits</span>
+    </a>
+
+    <a href="#" id="history-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M12 8v4l2 2"/></svg>
+        <span data-i18n="navigation.history">Historique</span>
+    </a>
+    <a href="#" id="settings-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span data-i18n="navigation.settings">Paramètres</span>
+    </a>
+    
+    <!-- Séparateur visuel -->
+    <div class="dropdown-separator"></div>
+
+    <!-- Lien de déconnexion -->
+    <a href="#" id="logout-link" class="logout-link-style">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        <span data-i18n="navigation.logout">Déconnexion</span>
+    </a>
+</div>
+        </div>
+    </header>
+
+    <!-- Conteneur principal pour les différentes vues -->
+    <main class="main-container">
+
+        <!-- Notification partagée -->
+        <div id="notification" class="notification"></div>
+        <div id="achievement-notification" class="achievement-notification"></div>
+        <div id="toast-container"></div>
+        
+        <!-- Section Sélection de Session -->
+        <div id="song-selection" class="view-section" style="display: none;">
+             <div class="selection-container">
+                <h1 class="selection-title" data-i18n="game.chooseChallenge">Choisissez votre Défi</h1>
+                <ul id="session-list" class="session-list">
+                    <!-- Les sessions seront injectées par script.js -->
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section du Jeu (Quiz) -->
+        <div id="game" class="view-section" style="display: none;">
+            <div class="game-layout">
+                <aside class="leaderboard-panel">
+                    <h2 class="panel-title" data-i18n="game.leaderboard">Classement</h2>
+                    <ul id="leaderboard-list">
+                        <!-- Le classement sera injecté par script.js -->
+                    </ul>
+                </aside>
+                <div class="game-main">
+                    <div id="question-counter-display" class="question-counter"></div>
+                    <div class="progress-bar">
+                        <div id="progress-bar-inner" class="progress"></div>
+                    </div>
+                    <div id="timer" class="timer-display"><span data-i18n="game.time">Temps</span> : 0s</div>
+                    <div id="game-content" class="game-content">
+                        <div id="question-container" class="question-card">
+                            <div id="question"></div>
+                        </div>
+                        <div id="options" class="options-grid"></div>
+                        <div id="feedback"></div>
+                        <div id="correct-translation"></div>
+                        
+                        <!-- Zone dédiée pour l'explication (inchangée) -->
+                        <div id="answer-explanation" class="answer-explanation"></div>
+                        
+                        <!-- Zone pour les indices (inchangée) -->
+                        <div id="hint-controls" class="hint-zone" style="display: none;">
+                            <button id="hint-button" class="button-secondary">💡 Obtenir un indice (Coût: 25 💰)</button>
+                            <div id="hint-container" style="display: none;"></div>
+                        </div>
+                        <!-- Ce conteneur, caché par défaut, affichera le bouton pour passer à la question suivante en cas d'erreur. -->
+                        <div id="continue-controls" style="display: none; text-align: center; margin-top: 1.5rem;">
+                            <button id="continue-question-button" class="button-primary" data-i18n="game.continue">Continuer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Chat -->
+        <div id="chat-page" class="view-section" style="display: none;">
+            <!-- Le contenu du chat est généré par createChatContainer dans script.js -->
+        </div>
+
+        <!-- Nouvelle section : Liste des erreurs (déplacée au niveau supérieur) -->
+        <div id="errors-page" class="view-section" style="display: none;">
+            <div class="page-card">
+                <h1 class="page-title" data-i18n="history.myErrors">Mes erreurs</h1>
+                <div id="errors-list" class="scrollable-list"></div>
+                <button id="errors-return-history-button" class="button-secondary mt-6" data-i18n="history.returnToHistory">Retour à l'historique</button>
+                <button id="errors-replay-button" class="button-primary mt-6 ml-4" data-i18n="history.replayQuestions">Rejouer ces questions</button>
+            </div>
+        </div>
+
+        <!-- Section Historique -->
+        <div id="history-page" class="view-section" style="display: none;">
+            <div class="page-card">
+                 <h1 class="page-title" data-i18n="history.title">Votre Parcours</h1>
+                 <div class="history-grid">
+                    <div class="history-card stats-card">
+                        <h2 class="card-title" data-i18n="history.generalStats">Statistiques Générales</h2>
+<!-- DANS la div#history-page, REMPLACEZ la div.stats-grid par celle-ci : -->
+<div class="stats-grid">
+    <div><p data-i18n="stats.xp">XP Total</p><span id="history-xp">0</span></div>
+    <div><p data-i18n="stats.level">Niveau</p><span id="history-level">1</span></div>
+    <div><p data-i18n="stats.streak">Série</p><span id="history-streak">0 j</span></div>
+    
+    <!-- ========================================================== -->
+    <!-- ===           NOUVEL ÉLÉMENT AJOUTÉ ICI                === -->
+    <!-- ========================================================== -->
+    <!-- Cette nouvelle case affichera le total des pièces de compétition. -->
+    <div><p data-i18n="stats.competitionCoins">Pièces Compétition</p><span id="history-competition-coins">0</span></div>
+
+    <div class="col-span-full"><p data-i18n="stats.correctAnswers">Bonnes Réponses</p><span id="history-correct-total">0/0</span></div>
+</div>
+                    </div>
+                    <div class="history-card">
+                         <h2 class="card-title" data-i18n="history.quizHistory">Historique des Quiz</h2>
+                         <div id="quiz-history-list" class="scrollable-list"></div>
+                    </div>
+                    <div class="history-card">
+                        <h2 class="card-title" data-i18n="history.achievements">Vos Succès</h2>
+                        <div id="achievements-list" class="achievements-grid"></div>
+                    </div>
+                 </div>
+                 <button id="history-return-menu-button" class="button-primary mt-6" data-i18n="history.returnToMenu">Retour au menu</button>
+<button id="history-errors-button" class="button-secondary mt-6 ml-4" data-i18n="history.myErrors">Mes erreurs</button>
+            </div>
+        </div>
+        
+        <!-- Section Paramètres -->
+<!-- REMPLACEZ l'intégralité de votre div#settings-page par ce nouveau bloc : -->
+<div id="settings-page" class="view-section" style="display: none;">
+    <div class="page-card">
+         <h1 class="page-title" data-i18n="settings.title">Paramètres</h1>
+
+                 <!-- Section Langue -->
+                 <div class="settings-group">
+                     <h2 class="card-title" data-i18n="settings.language">Langue</h2>
+                     <p class="settings-description" data-i18n="settings.languageDescription">Choisissez la langue de l'interface</p>
+                     <div class="radio-button-group">
+                         <label>
+                             <input type="radio" name="language" value="fr" id="language-fr">
+                             <span class="radio-button-label">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg>
+                                 <span data-i18n="settings.french">Français</span>
+                             </span>
+                         </label>
+                         <label>
+                             <input type="radio" name="language" value="en" id="language-en">
+                             <span class="radio-button-label">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/></svg>
+                                 <span data-i18n="settings.english">English</span>
+                             </span>
+                         </label>
+                     </div>
+                 </div>
+
+                 <!-- Section Avatar -->
+                 <div class="settings-group">
+                     <h2 class="card-title" data-i18n="settings.avatar">Avatar du Profil</h2>
+                     <p class="settings-description" data-i18n="settings.avatarDescription">Choisissez un avatar système. Il sera visible dans l'entête et le classement.</p>
+
+                     <div class="avatar-settings grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                         <!-- Aperçu actuel -->
+                         <div class="current-avatar bg-card/40 rounded-xl p-4 border border-border/40">
+                             <div class="flex items-center gap-4">
+                                 <div id="current-avatar-preview" class="greeting-avatar w-20 h-20 text-xl" title="Aperçu"></div>
+                                 <div>
+                                     <div class="text-sm text-muted-foreground" data-i18n="settings.preview">Aperçu</div>
+                                     <div id="current-avatar-legend" class="text-foreground font-medium" data-i18n="settings.currentAvatar">Votre avatar actuel</div>
+                                 </div>
+                             </div>
+                             <div class="flex items-center gap-3 mt-4">
+                                 <button id="avatar-reset-button" type="button" class="button-secondary" data-i18n="settings.reset">Réinitialiser</button>
+                             </div>
+                         </div>
+
+                         <!-- Avatars système -->
+                         <div class="system-avatars bg-card/40 rounded-xl p-4 border border-border/40">
+                             <div class="flex items-center justify-between">
+                                 <h3 class="mb-2 font-semibold" data-i18n="settings.systemAvatars">Avatars système</h3>
+                                 <span class="text-xs text-muted-foreground" data-i18n="settings.clickToSelect">Cliquez pour sélectionner</span>
+                             </div>
+                             <div id="system-avatars-grid" class="grid grid-cols-4 sm:grid-cols-5 gap-3 mt-2"></div>
+                         </div>
+                     </div>
+                 </div>
+
+                 <!-- Section Thème Visuel -->
+                 <div class="settings-group">
+                     <h2 class="card-title" data-i18n="settings.theme">Thème Visuel</h2>
+                     <p class="settings-description" data-i18n="settings.themeDescription">Choisissez une apparence claire ou sombre pour l'application.</p>
+                     <div class="radio-button-group">
+                         <label>
+                             <input type="radio" name="theme" value="dark" id="theme-dark">
+                             <span class="radio-button-label">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                                 <span data-i18n="settings.dark">Sombre</span>
+                             </span>
+                         </label>
+                         <label>
+                             <input type="radio" name="theme" value="light" id="theme-light">
+                             <span class="radio-button-label">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                                 <span data-i18n="settings.light">Clair</span>
+                             </span>
+                         </label>
+                         <label>
+                             <input type="radio" name="theme" value="purple" id="theme-purple">
+                             <span class="radio-button-label">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/></svg>
+                                 <span data-i18n="settings.purple">Violet</span>
+                             </span>
+                         </label>
+                         <label>
+                             <input type="radio" name="theme" value="amoled" id="theme-amoled">
+                             <span class="radio-button-label">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                                 <span data-i18n="settings.amoled">AMOLED</span>
+                             </span>
+                         </label>
+                     </div>
+                 </div>
+
+                 <!-- Section Taille du Texte -->
+                 <div class="settings-group">
+                     <h2 class="card-title" data-i18n="settings.fontSize">Taille du Texte</h2>
+                     <p class="settings-description" data-i18n="settings.fontSizeDescription">Ajustez la taille de la police pour un meilleur confort de lecture.</p>
+                     <div class="radio-button-group">
+                         <label>
+                             <input type="radio" name="font-size" value="small" id="font-small">
+                             <span class="radio-button-label" data-i18n="settings.small">Petit</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-size" value="medium" id="font-medium">
+                             <span class="radio-button-label" data-i18n="settings.normal">Normal</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-size" value="large" id="font-large">
+                             <span class="radio-button-label" data-i18n="settings.large">Grand</span>
+                         </label>
+                     </div>
+                 </div>
+
+                 <!-- Section Design de l'Interface -->
+                 <div class="settings-group">
+                     <h2 class="card-title" data-i18n="settings.uiDesign">Design de l'Interface</h2>
+                     <p class="settings-description" data-i18n="settings.uiDesignDescription">Choisissez le style d'interface qui correspond à votre personnalité.</p>
+                     <div class="radio-button-group">
+                         <label>
+                             <input type="radio" name="ui-design" value="default" id="design-default">
+                             <span class="radio-button-label" data-i18n="settings.defaultDesign">Défaut</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="ui-design" value="gamer" id="design-gamer">
+                             <span class="radio-button-label" data-i18n="settings.gamerDesign">Gamer</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="ui-design" value="dev" id="design-dev">
+                             <span class="radio-button-label" data-i18n="settings.devDesign">Développeur</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="ui-design" value="duolingo" id="design-duolingo">
+                             <span class="radio-button-label" data-i18n="settings.duolingoDesign">Duolingo</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="ui-design" value="app" id="design-app">
+                             <span class="radio-button-label" data-i18n="settings.appDesign">App Moderne</span>
+                         </label>
+                     </div>
+                 </div>
+
+                 <!-- Section Style du Texte -->
+                 <div class="settings-group">
+                     <h2 class="card-title" data-i18n="settings.fontFamily">Style du Texte</h2>
+                     <p class="settings-description" data-i18n="settings.fontFamilyDescription">Choisissez la police de caractères qui vous convient le mieux.</p>
+                     <div class="radio-button-group">
+                         <label>
+                             <input type="radio" name="font-family" value="poppins" id="font-poppins">
+                             <span class="radio-button-label" data-i18n="settings.poppins">Poppins</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-family" value="arial" id="font-arial">
+                             <span class="radio-button-label" data-i18n="settings.arial">Arial</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-family" value="times" id="font-times">
+                             <span class="radio-button-label" data-i18n="settings.times">Times New Roman</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-family" value="georgia" id="font-georgia">
+                             <span class="radio-button-label" data-i18n="settings.georgia">Georgia</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-family" value="roboto" id="font-roboto">
+                             <span class="radio-button-label" data-i18n="settings.roboto">Roboto</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-family" value="open-sans" id="font-open-sans">
+                             <span class="radio-button-label" data-i18n="settings.openSans">Open Sans</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-family" value="cool-jazz" id="font-cool-jazz">
+                             <span class="radio-button-label" data-i18n="settings.coolJazz">Cool Jazz</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-family" value="choco-cooky" id="font-choco-cooky">
+                             <span class="radio-button-label" data-i18n="settings.chocoCooky">Choco Cooky</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-family" value="rosemary" id="font-rosemary">
+                             <span class="radio-button-label" data-i18n="settings.rosemary">Rosemary</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-family" value="samsung-sharp" id="font-samsung-sharp">
+                             <span class="radio-button-label" data-i18n="settings.samsungSharp">Samsung Sharp</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-family" value="samsung-one" id="font-samsung-one">
+                             <span class="radio-button-label" data-i18n="settings.samsungOne">Samsung One</span>
+                         </label>
+                         <label>
+                             <input type="radio" name="font-family" value="condensed" id="font-condensed">
+                             <span class="radio-button-label" data-i18n="settings.condensed">Condensed</span>
+                         </label>
+                     </div>
+                 </div>
+
+         <button id="settings-return-menu-button" class="button-primary mt-8 w-full md:w-auto" data-i18n="settings.returnToMenu">Retour au menu</button>
+     </div>
+ </div>
+
+<!-- DANS LE <main>, AJOUTEZ CETTE NOUVELLE SECTION À LA FIN, JUSTE AVANT LA BALISE DE FERMETURE </main> -->
+<div id="how-to-play-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 data-i18n="howToPlay.title">Les Règles de FrenchQuest</h2>
+            <button id="close-how-to-play-modal" class="modal-close-button">&times;</button>
+        </div>
+        <div class="modal-body">
+            <h3 data-i18n="howToPlay.objective">Votre Objectif</h3>
+            <p data-i18n="howToPlay.objectiveText">Bienvenue dans FrenchQuest ! Votre mission est de prouver votre maîtrise du français en terminant 10 sessions de quiz. Chaque bonne réponse vous rapporte des points, de l'expérience (XP) et des pièces. Montez en niveau et débloquez tous les succès !</p>
+
+            <h3 data-i18n="howToPlay.phase1">Phase 1 : L'Entraînement (Sessions 1 à 3)</h3>
+            <p data-i18n="howToPlay.phase1Text">Ces premières sessions sont là pour vous échauffer. Vous pouvez les refaire autant de fois que vous voulez. Les pièces 💰 que vous gagnez ici sont des <strong>pièces d'entraînement</strong>. Utilisez-les pour acheter des indices !</p>
+            <p data-i18n="howToPlay.phase1Requirement">Vous devez terminer une session avec au moins <strong>70% de bonnes réponses</strong> pour débloquer la suivante.</p>
+
+            <h3 data-i18n="howToPlay.phase2">Phase 2 : La Compétition (Sessions 4 à 10)</h3>
+            <p data-i18n="howToPlay.phase2Text">Après avoir terminé la session 3, vous accédez à la compétition officielle ! Les règles changent :</p>
+            <ul>
+                <li><strong>Début Programmé :</strong> La Session 4 est verrouillée pour tous les joueurs jusqu'à une heure précise. Un compte à rebours vous indiquera le début. En attendant, un salon de chat spécial est disponible pour discuter avec les autres compétiteurs !</li>
+                <li><strong>Récompense Unique :</strong> Dans la compétition, vous ne pouvez être récompensé (XP et pièces) pour une question <strong>qu'une seule fois</strong>. L'équité avant tout !</li>
+                <li><strong>Pièces de Compétition :</strong> Les pièces gagnées ici sont des <strong>pièces de compétition</strong>, séparées de celles de l'entraînement.</li>
+                <li><strong>Déverrouillage :</strong> Comme pour l'entraînement, un score de 70% est requis pour débloquer la session suivante.</li>
+            </ul>
+
+            <h3 data-i18n="howToPlay.coinsAndHints">Pièces et Indices</h3>
+            <p data-i18n="howToPlay.coinsAndHintsText">Les pièces 💰 sont votre monnaie. Coincé sur une question ? Achetez un indice grâce à l'IA pour 25 pièces. Gérez bien votre portefeuille pour aller au bout de l'aventure !</p>
+            <p class="final-word" data-i18n="howToPlay.goodLuck">Bonne chance, et que le meilleur gagne !</p>
+        </div>
+    </div>
+</div>
+<!-- DANS LE <main>, AJOUTEZ CETTE NOUVELLE SECTION À LA FIN -->
+
+        <!-- Section Cours -->
+        <div id="course-page" class="view-section" style="display: none;">
+            <div class="page-card">
+                 <h1 id="course-page-title" class="page-title" data-i18n="course.title">Apprendre le Français</h1>
+                 <div id="course-content-container" class="course-content">
+                     <p data-i18n="course.loading">Chargement du cours en cours...</p>
+                 </div>
+                 <button id="course-return-menu-button" class="button-primary mt-6" data-i18n="course.returnToMenu">Retour au menu</button>
+            </div>
+        </div>
+        <div id="livres-page" class="view-section" style="display: none;">
+            <div class="page-card">
+                 <h1 class="page-title" data-i18n="books.title">Bibliothèque Gratuite</h1>
+                 <p class="selection-subtitle" style="text-align: center; margin-top: -1.5rem; margin-bottom: 2rem;" data-i18n="books.subtitle">
+                     Consultez et téléchargez des ressources pour approfondir votre apprentissage.
+                 </p>
+                 <div id="livres-list-container" class="livres-list">
+                     <!-- La liste des livres de l'utilisateur sera injectée ici -->
+                 </div>
+                 <button id="livres-return-menu-button" class="button-primary mt-6" data-i18n="books.returnToMenu">Retour au menu</button>
+            </div>
+        </div>
+         <!-- Section Historique des Cours -->
+         <div id="course-history-page" class="view-section" style="display: none;">
+            <div class="page-card">
+                 <h1 class="page-title" data-i18n="courseHistory.title">Archives des Cours</h1>
+                 <p class="selection-subtitle" style="text-align: center; margin-top: -1.5rem; margin-bottom: 2rem;" data-i18n="courseHistory.subtitle">
+                     Retrouvez ici les leçons des jours précédents.
+                 </p>
+                 <div id="course-history-list" class="course-history-container">
+                     <!-- L'historique des cours sera injecté ici par le script -->
+                 </div>
+                 <button id="course-history-return-menu-button" class="button-primary mt-6" data-i18n="courseHistory.returnToMenu">Retour au menu</button>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Bouton de chat flottant - ERREUR SVG CORRIGÉE -->
+    <button id="floating-chat-button" class="floating-chat-button" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg>
+    </button>
+    
+    <!-- Chargement du système i18n -->
+    <script src="i18n.js" type="module"></script>
+    <!-- CORRECTION FINALE : On charge notre script comme un module -->
+    <script src="script.js" type="module"></script>
+</body>
+</html>

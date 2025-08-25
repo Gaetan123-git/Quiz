@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Tailwind CSS CDN for utility classes -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans antialiased bg-background text-foreground bg-game-bg">
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div id="auth" class="gaming-card p-8 rounded-xl max-w-sm w-full mx-auto shadow-2xl animate-glow">
+      <div class="text-center mb-6">
+        <span class="text-5xl mb-2 block">🎓</span>
+        <h1 class="text-4xl font-bold mb-2 text-gradient">FrenchQuest</h1>
+        <p class="text-game-muted text-lg mb-2">Plongez dans l'aventure !</p>
+        <p class="text-game-muted text-sm">Connectez-vous pour explorer nos quiz interactifs et apprendre le français avec plaisir !</p>
+      </div>
+      <form>
+        <div class="mb-4 relative">
+          <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-game-primary text-xl">👤</span>
+          <input type="text" id="login-username" placeholder="Nom d'utilisateur" required
+                 class="w-full p-3 pl-10 rounded-lg bg-input text-foreground border-2 border-border focus:border-primary transition-colors">
+        </div>
+        <div class="mb-4 relative">
+          <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-game-primary text-xl">🔒</span>
+          <input type="password" id="login-password" placeholder="Mot de passe" required
+                 class="w-full p-3 pl-10 pr-10 rounded-lg bg-input text-foreground border-2 border-border focus:border-primary transition-colors">
+          <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-game-muted cursor-pointer" onclick="togglePasswordVisibility('login-password')">👁️</span>
+        </div>
+        <button id="login-button" type="button" onclick="login()"
+                class="w-full p-3 rounded-lg button-gradient text-primary-foreground font-bold hover:opacity-90 transition-opacity">
+          Se connecter
+        </button>
+      </form>
+      <p class="mt-4 text-center text-game-muted text-sm">Pas de compte ? <a href="/inscription" class="text-accent hover:underline">Créez-en un !</a></p>
+    </div>
+    <!-- Conteneur pour les Toasts -->
+    <div id="toast-container"></div>
+  </div>
+  <script>
+    function togglePasswordVisibility(id) {
+      const input = document.getElementById(id);
+      if (input.type === "password") {
+        input.type = "text";
+      } else {
+        input.type = "password";
+      }
+    }
+  </script>
+  <script src="login.js"></script>
+</body>
+</html>

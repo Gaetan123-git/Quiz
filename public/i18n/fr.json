@@ -1,0 +1,166 @@
+{
+  "app": {
+    "title": "FrenchQuest - L'Aventure du Quiz",
+    "name": "FrenchQuest"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "howToPlay": "Comment Jouer ?",
+    "course": "Cours",
+    "courseHistory": "Archives des Cours",
+    "freeBooks": "Livres Gratuits",
+    "history": "Historique",
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
+  },
+  "greeting": {
+    "hello": "Bonjour,",
+    "user": "Utilisateur"
+  },
+  "stats": {
+    "level": "Niveau",
+    "streak": "Série de jours",
+    "coins": "Pièces",
+    "xp": "XP Total",
+    "competitionCoins": "Pièces Compétition",
+    "correctAnswers": "Bonnes Réponses"
+  },
+  "game": {
+    "chooseChallenge": "Choisissez votre Défi",
+    "leaderboard": "Classement",
+    "time": "Temps",
+    "continue": "Continuer",
+    "getHint": "Obtenir un indice",
+    "hintCost": "Coût: 25 💰",
+    "session": "Session"
+  },
+  "messages": {
+    "congratulations": [
+      "Super travail ! Continue comme ça !",
+      "Excellent ! Tu es sur la bonne voie !",
+      "Bravo ! Quelle belle réponse !",
+      "Génial ! Tu maîtrises bien !",
+      "Magnifique ! Tu progresses à grands pas!"
+    ],
+    "encouragement": [
+      "Ce n'est pas grave, tu vas y arriver !",
+      "Ne t'inquiète pas, continue d'apprendre !",
+      "Tu peux faire mieux, essaie encore !",
+      "Pas de souci, la prochaine sera la bonne !",
+      "Courage, tu es sur le bon chemin !"
+    ]
+  },
+  "history": {
+    "title": "Votre Parcours",
+    "generalStats": "Statistiques Générales",
+    "quizHistory": "Historique des Quiz",
+    "achievements": "Vos Succès",
+    "myErrors": "Mes erreurs",
+    "returnToMenu": "Retour au menu",
+    "returnToHistory": "Retour à l'historique",
+    "replayQuestions": "Rejouer ces questions"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "languageDescription": "Choisissez la langue de l'interface",
+    "french": "Français",
+    "english": "English",
+    "avatar": "Avatar du Profil",
+    "avatarDescription": "Choisissez un avatar système. Il sera visible dans l'entête et le classement.",
+    "currentAvatar": "Votre avatar actuel",
+    "preview": "Aperçu",
+    "reset": "Réinitialiser",
+    "systemAvatars": "Avatars système",
+    "clickToSelect": "Cliquez pour sélectionner",
+    "theme": "Thème Visuel",
+    "themeDescription": "Choisissez l'apparence de l'application (clair, sombre, violet ou AMOLED).",
+    "dark": "Sombre",
+    "light": "Clair",
+    "purple": "Violet",
+    "amoled": "AMOLED",
+    "fontSize": "Taille du Texte",
+    "fontSizeDescription": "Ajustez la taille de la police pour un meilleur confort de lecture.",
+    "small": "Petit",
+    "normal": "Normal",
+    "large": "Grand",
+    "fontFamily": "Style du Texte",
+    "fontFamilyDescription": "Choisissez la police de caractères qui vous convient le mieux.",
+    "poppins": "Poppins",
+    "arial": "Arial",
+    "times": "Times New Roman",
+    "georgia": "Georgia",
+    "roboto": "Roboto",
+    "openSans": "Open Sans",
+    "coolJazz": "Cool Jazz",
+    "chocoCooky": "Choco Cooky",
+    "rosemary": "Rosemary",
+    "samsungSharp": "Samsung Sharp",
+    "samsungOne": "Samsung One",
+    "condensed": "Condensé",
+    "uiDesign": "Design de l'Interface",
+    "uiDesignDescription": "Choisissez le style d'interface qui correspond à votre personnalité.",
+    "defaultDesign": "Défaut",
+    "gamerDesign": "Gamer",
+    "devDesign": "Développeur",
+    "duolingoDesign": "Duolingo",
+    "appDesign": "App Moderne",
+    "returnToMenu": "Retour au menu"
+  },
+  "course": {
+    "title": "Apprendre le Français",
+    "loading": "Chargement du cours en cours...",
+    "returnToMenu": "Retour au menu"
+  },
+  "books": {
+    "title": "Bibliothèque Gratuite",
+    "subtitle": "Consultez et téléchargez des ressources pour approfondir votre apprentissage.",
+    "returnToMenu": "Retour au menu"
+  },
+  "courseHistory": {
+    "title": "Archives des Cours",
+    "subtitle": "Retrouvez ici les leçons des jours précédents.",
+    "returnToMenu": "Retour au menu"
+  },
+  "howToPlay": {
+    "title": "Les Règles de FrenchQuest",
+    "objective": "Votre Objectif",
+    "objectiveText": "Bienvenue dans FrenchQuest ! Votre mission est de prouver votre maîtrise du français en terminant 10 sessions de quiz. Chaque bonne réponse vous rapporte des points, de l'expérience (XP) et des pièces. Montez en niveau et débloquez tous les succès !",
+    "phase1": "Phase 1 : L'Entraînement (Sessions 1 à 3)",
+    "phase1Text": "Ces premières sessions sont là pour vous échauffer. Vous pouvez les refaire autant de fois que vous voulez. Les pièces 💰 que vous gagnez ici sont des pièces d'entraînement. Utilisez-les pour acheter des indices !",
+    "phase1Requirement": "Vous devez terminer une session avec au moins 70% de bonnes réponses pour débloquer la suivante.",
+    "phase2": "Phase 2 : La Compétition (Sessions 4 à 10)",
+    "phase2Text": "Après avoir terminé la session 3, vous accédez à la compétition officielle ! Les règles changent :",
+    "coinsAndHints": "Pièces et Indices",
+    "coinsAndHintsText": "Les pièces  sont votre monnaie. Coincé sur une question ? Achetez un indice grâce à l'IA pour 25 pièces. Gérez bien votre portefeuille pour aller au bout de l'aventure !",
+    "goodLuck": "Bonne chance, et que le meilleur gagne !"
+  },
+  "competition": {
+    "liveCompetition": "Compétition en direct",
+    "startsIn": "Démarre dans",
+    "at": "à",
+    "opensTitle": "Compétition ouverte !",
+    "session4Available": "La Session 4 est maintenant disponible !"
+  },
+  "achievements": {
+    "firstWin": "Première Victoire",
+    "firstWinDesc": "Gagnez votre première partie de quiz !",
+    "tenConsecutive": "Série de 10",
+    "tenConsecutiveDesc": "Répondez correctement à 10 questions d'affilée."
+  },
+  "session": {
+    "forceLogoutTitle": "Déconnexion",
+    "forceLogoutMessage": "Votre session a été ouverte sur un autre appareil."
+  },
+  "network": {
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "connectionLost": "Connexion perdue",
+    "tryingReconnect": "Tentative de reconnexion...",
+    "reconnected": "Connexion rétablie !",
+    "reconnectedMobile": "Connexion rétablie, bonne continuation !",
+    "disconnected": "Connexion interrompue",
+    "reconnectFailed": "Impossible de se reconnecter",
+    "retry": "Réessayer"
+  }
+}

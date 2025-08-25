@@ -1,0 +1,58 @@
+/* Style pour la scrollbar dans le modal */
+#question-modal .max-h-screen::-webkit-scrollbar {
+    width: 8px;
+}
+
+#question-modal .max-h-screen::-webkit-scrollbar-track {
+    background: #2d3748; /* gray-800 */
+}
+
+#question-modal .max-h-screen::-webkit-scrollbar-thumb {
+    background-color: #4a5568; /* gray-600 */
+    border-radius: 10px;
+    border: 2px solid #2d3748; /* gray-800 */
+}
+
+/* Animation pour le modal */
+.modal-enter {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+.modal-leave {
+    animation: fadeOut 0.3s ease-in forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+}
+/* AJOUTEZ CE BLOC À LA FIN DE VOTRE FICHIER */
+
+/* Style pour les éléments de la liste des thèmes */
+.theme-item {
+    border: 1px solid transparent;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.theme-item.sortable-ghost {
+    opacity: 0.4;
+    background-color: #2c5282; /* blue-800 */
+    border-color: #4299e1; /* blue-400 */
+}

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panneau d'Administration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body class="bg-gray-900 text-white font-sans">
+
+    <div id="admin-login-section" class="min-h-screen flex items-center justify-center">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-sm">
+            <h1 class="text-2xl font-bold mb-6 text-center text-cyan-400">Connexion Admin</h1>
+            <form id="admin-login-form">
+                <div class="mb-4">
+                    <label for="admin-password" class="block mb-2 text-sm font-medium">Mot de passe</label>
+                    <input type="password" id="admin-password" required
+                           class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 focus:border-cyan-500 focus:outline-none">
+                </div>
+                <button type="submit"
+                        class="w-full p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 font-bold transition-colors">
+                    Entrer
+                </button>
+            </form>
+            <p id="login-error" class="text-red-500 text-sm mt-4 text-center"></p>
+        </div>
+    </div>
+
+    <div id="admin-panel-section" class="hidden p-4 md:p-8">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-cyan-400">Gestion des Questions</h1>
+            <button id="logout-admin-button" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-semibold">Déconnexion</button>
+        </header>
+
+        <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+            <h2 class="text-xl font-semibold text-cyan-400 mb-4">Gestion de la Compétition (Session 4)</h2>
+            <div id="competition-status-loading">Chargement des informations...</div>
+            <div id="competition-form-container" class="hidden">
+                <div class="mb-4">
+                    <label for="competition-datetime" class="block mb-2 text-sm font-medium">Date et Heure de Début</label>
+                    <input type="datetime-local" id="competition-datetime" 
+                           class="w-full md:w-1/3 p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+                <button id="update-competition-btn" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                    Mettre à jour l'heure de début
+                </button>
+                <p id="competition-update-status" class="text-sm mt-3"></p>
+                <div class="mt-6 border-t border-gray-700 pt-4">
+                     <label for="max-winners" class="block mb-2 text-sm font-medium">Nombre de Gagnants Autorisés</label>
+                     <p class="text-xs text-gray-400 mb-2">Définissez le nombre de joueurs qui peuvent terminer la compétition (Session 10) avant qu'elle ne se termine pour tout le monde. Changer cette valeur réinitialisera la compétition.</p>
+                     <div class="flex items-center gap-4">
+                        <input type="number" id="max-winners" value="3" min="1" 
+                               class="w-24 p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        <button id="update-winners-btn" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                            Mettre à jour et Réinitialiser
+                        </button>
+                     </div>
+                     <p id="winners-update-status" class="text-sm mt-3 h-5"></p>
+                </div>
+            </div>
+        </div>
+        <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+            <h2 class="text-xl font-semibold text-green-400 mb-4">Gestion des Livres Gratuits</h2>
+            
+            <form id="add-book-form" class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                <div class="md:col-span-1">
+                    <label for="book-title" class="block mb-2 text-sm font-medium">Titre du livre</label>
+                    <input type="text" id="book-title" required class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <div class="md:col-span-1">
+                    <label for="book-link" class="block mb-2 text-sm font-medium">Lien de téléchargement</label>
+                    <input type="url" id="book-link" required placeholder="https://..." class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg h-10">
+                    Ajouter le Livre
+                </button>
+            </form>
+            <p id="book-status" class="text-sm mb-4 h-5"></p> <h3 class="text-lg font-semibold mb-2">Livres Actuels</h3>
+            <div id="admin-books-list" class="space-y-2">
+                <p class="text-gray-400">Chargement des livres...</p>
+            </div>
+        </div>
+
+        <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+            <h2 class="text-xl font-semibold text-purple-400 mb-4">File d'Attente des Thèmes Journaliers</h2>
+            <p class="text-sm text-gray-400 mb-4">Gérez la liste des thèmes qui tourneront automatiquement chaque jour à minuit. Le système réinitialisera la progression des joueurs et générera un nouveau cours et de nouvelles questions basées sur le thème suivant de la liste.</p>
+            
+            <form id="add-theme-form" class="mb-6 flex items-end gap-4">
+                <div class="flex-grow">
+                    <label for="theme-name" class="block mb-2 text-sm font-medium">Nouveau thème</label>
+                    <input type="text" id="theme-name" required placeholder="Ex: Le subjonctif présent" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg h-10">
+                    Ajouter à la file
+                </button>
+            </form>
+            <p id="theme-status" class="text-sm mb-4 h-5"></p>
+
+            <h3 class="text-lg font-semibold mb-2">Ordre de rotation (glissez-déposez pour réorganiser)</h3>
+            <div id="themes-list" class="space-y-2">
+                <p class="text-gray-400">Chargement des thèmes...</p>
+            </div>
+        </div>
+<!-- NOUVELLE SECTION : Gestion des Prompts Gemini -->
+<div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+    <h2 class="text-xl font-semibold text-indigo-400 mb-4">Gestion des Prompts Gemini</h2>
+    <p class="text-sm text-gray-400 mb-4">
+        Modifiez ici les instructions envoyées à l'IA pour générer le contenu. Utilisez les variables comme `${theme}` ou `${count}` pour insérer des valeurs dynamiques.
+    </p>
+    <form id="prompts-form">
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-2">
+                <label for="prompt-questions" class="text-lg font-medium">Prompt pour la génération de Questions</label>
+                <button type="button" id="edit-prompt-questions-btn" class="text-indigo-300 hover:text-indigo-200 text-sm underline">Modifier</button>
+            </div>
+            <textarea id="prompt-questions" rows="12" class="hidden w-full p-3 font-mono text-sm rounded bg-gray-900 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-2">
+                <label for="prompt-course" class="text-lg font-medium">Prompt pour la génération de Cours</label>
+                <button type="button" id="edit-prompt-course-btn" class="text-indigo-300 hover:text-indigo-200 text-sm underline">Modifier</button>
+            </div>
+            <textarea id="prompt-course" rows="12" class="hidden w-full p-3 font-mono text-sm rounded bg-gray-900 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+        </div>
+        <button type="submit" id="save-prompts-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg">
+            Sauvegarder les Prompts
+        </button>
+        <p id="prompts-status" class="text-sm mt-3 h-5"></p>
+    </form>
+</div>
+        <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+            <h2 class="text-xl font-semibold text-red-400 mb-4">Zone Dangereuse - Gestion des Joueurs</h2>
+            <div id="user-management-loading">Chargement de la liste des joueurs...</div>
+            <div id="user-management-container" class="hidden items-center space-x-4">
+                <div>
+                    <label for="user-selector" class="block mb-2 text-sm font-medium">Sélectionner un joueur</label>
+                    <select id="user-selector" class="w-full md:w-64 p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"></select>
+                    <label for="course-theme" class="block text-sm font-medium text-gray-300 mt-4" style="display: none;" id="course-theme-label">Thème pour le nouveau cours (obligatoire pour "Tous les Joueurs")</label>
+                    <input type="text" id="course-theme" class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white" placeholder="Ex: La cuisine française" style="display: none;">
+                </div>
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-transparent">Action</label> <button id="reset-user-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                        Réinitialiser le Joueur
+                    </button>
+                </div>
+            </div>
+            <p id="user-reset-status" class="text-sm mt-3"></p>
+            <!-- NOUVELLE SECTION : Gestion de l'historique des questions -->
+            <div class="mt-6 border-t border-red-900 pt-4">
+                <label class="block mb-2 text-sm font-medium">Historique des questions générées</label>
+                <p class="text-xs text-gray-400 mb-2">Pour garantir la fraîcheur des questions, le système mémorise les dernières questions générées. Si vous souhaitez repartir de zéro, vous pouvez purger cet historique.</p>
+                <button id="reset-history-btn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                    Purger l'historique des questions
+                </button>
+                <p id="history-reset-status" class="text-sm mt-3 h-5"></p>
+            </div>
+        </div>
+
+        <div class="mt-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+            <h3 class="text-xl font-semibold text-cyan-400 mb-4">Paramètres de Génération par Gemini</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label for="session-selector" class="block mb-2 text-sm font-medium">Session à modifier</label>
+                    <select id="session-selector" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        <option value="session1">Session 1</option>
+                        <option value="session2">Session 2</option>
+                        <option value="session3">Session 3</option>
+                        <option value="session4">Session 4</option>
+                        <option value="session5">Session 5</option>
+                        <option value="session6">Session 6</option>
+                        <option value="session7">Session 7</option>
+                        <option value="session8">Session 8</option>
+                        <option value="session9">Session 9</option>
+                        <option value="session10">Session 10</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="gemini-theme" class="block mb-2 text-sm font-medium">Thème ou Sujet</label>
+                    <input type="text" id="gemini-theme" value="La nourriture française" placeholder="Ex: Histoire de France" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                </div>
+                <div>
+                    <label for="gemini-level" class="block mb-2 text-sm font-medium">Niveau de difficulté</label>
+                    <select id="gemini-level" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        <option value="facile">Facile</option>
+                        <option value="intermédiaire" selected>Intermédiaire</option>
+                        <option value="difficile">Difficile</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="gemini-language" class="block mb-2 text-sm font-medium">Langue des Questions</label>
+                    <select id="gemini-language" class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        <option value="Français" selected>Français</option>
+                        <option value="Anglais">Anglais</option>
+                        <option value="Espagnol">Espagnol</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 flex items-center space-x-4">
+            <button id="add-question-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                Ajouter une question (Manuel)
+            </button>
+            <div class="relative">
+                 <button id="regenerate-questions-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.9 3.9-3.9 1.9 3.9 1.9 1.9 3.9 1.9-3.9 3.9-1.9-3.9-1.9z"/><path d="M5 11.5 3.1 9.6l-1.9 1.9 1.9 1.9 1.9 1.9 1.9-1.9-1.9-1.9z"/><path d="M20.9 11.5 19 9.6l-1.9 1.9 1.9 1.9 1.9 1.9 1.9-1.9-1.9-1.9z"/></svg>
+                    <span>Régénérer avec Gemini</span>
+                </button>
+            </div>
+            <div class="relative">
+                <button id="regenerate-all-btn" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-105 flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rocket"><path d="M5 13a10 10 0 0 0 6 6"/><path d="M4 4c4.5-1.5 10.5 4.5 9 9-2.5 2.5-7.5-2.5-9-9Z"/><path d="M14 14l6-6"/><path d="M9 19l-4 4"/></svg>
+                    <span>Régénérer toutes les sessions</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="gemini-status-container" class="mt-4 p-3 bg-gray-700 rounded-lg hidden">
+            <p id="gemini-status" class="text-yellow-300"></p>
+        </div>
+
+        <div id="questions-list" class="space-y-4 mt-6">
+            </div>
+
+        <div id="question-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden">
+            <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-2xl max-h-screen overflow-y-auto">
+                <h2 id="modal-title" class="text-2xl font-bold mb-6 text-cyan-400">Éditer la Question</h2>
+                <form id="question-form">
+                    <input type="hidden" id="question-id">
+                    <div class="mb-4">
+                        <label for="question-text" class="block mb-2">Texte de la question</label>
+                        <textarea id="question-text" rows="3" class="w-full p-2 rounded bg-gray-700 border border-gray-600"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block mb-2">Options</label>
+                        <div id="options-container" class="space-y-2">
+                            </div>
+                        <button type="button" id="add-option-btn" class="mt-2 bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg text-sm">Ajouter une option</button>
+                    </div>
+                    <div class="mb-4">
+                        <label for="correct-answer" class="block mb-2">Réponse correcte</label>
+                         <div id="correct-answer-container" class="space-y-2 p-3 bg-gray-900 rounded-lg border border-gray-700">
+                            <p class="text-gray-400">Veuillez d'abord saisir les options.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" id="cancel-btn" class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg">Annuler</button>
+                        <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 px-6 py-2 rounded-lg font-bold">Sauvegarder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

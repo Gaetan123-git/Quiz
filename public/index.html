@@ -475,6 +475,22 @@
                  <button id="course-history-return-menu-button" class="button-primary mt-6" data-i18n="courseHistory.returnToMenu">Retour au menu</button>
             </div>
         </div>
+        <!-- NOUVEAU : Fenêtre modale de confirmation générique -->
+        <div id="confirmation-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h2 id="confirmation-modal-title">Confirmation</h2>
+                    <button id="confirmation-modal-close-button" class="modal-close-button">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmation-modal-message" style="text-align: center; font-size: 1.1em;"></p>
+                    <div class="flex justify-center gap-4 mt-8">
+                        <button id="confirm-action-button" class="button-primary"></button>
+                        <button id="cancel-action-button" class="button-secondary"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     
     <!-- Bouton de chat flottant - ERREUR SVG CORRIGÉE -->

@@ -1620,6 +1620,10 @@ app.get('/api/session-info', (req, res) => {
 app.get('/api/course', async (req, res) => {
   try {
     const data = await readJsonCached('course.json');
+    // On s'assure que la date est bien présente, sinon on en met une par défaut
+    if (!data.generatedAt) {
+      data.generatedAt = new Date().toISOString();
+    }
     res.json(data);
   } catch (error) {
     if (error.code === 'ENOENT') {
@@ -2188,6 +2192,47 @@ const protectAdmin = (req, res, next) => {
     if (token === ADMIN_TOKEN) return next();
     return res.status(403).json({ error: 'Accès interdit' });
 };
+
+// NOUVEAU : Route pour que l'admin puisse éditer et sauvegarder le cours actuel
+app.post('/admin/course', protectAdmin, async (req, res) => {
+  const { theme, content } = req.body;
+
+  // Validation simple des données reçues
+  if (!theme || typeof theme !== 'string' || !content || typeof content !== 'string') {
+    return res.status(400).json({ error: 'Le thème et le contenu sont requis.' });
+  }
+
+  try {
+    // On lit le fichier actuel pour conserver la date de génération
+    let currentCourse = {};
+    try {
+      const currentData = await fsp.readFile('course.json', 'utf8');
+      currentCourse = JSON.parse(currentData);
+    } catch (e) {
+      // Si le fichier n'existe pas, ce n'est pas grave, la date sera celle de maintenant
+      console.log('[Admin Course Edit] course.json non trouvé, un nouveau sera créé.');
+    }
+
+    const newCourseData = {
+      theme: theme.trim(),
+      content: content,
+      generatedAt: currentCourse.generatedAt || new Date().toISOString() // On garde l'ancienne date ou on en crée une nouvelle
+    };
+
+    // On écrit les nouvelles données dans le fichier
+    await fsp.writeFile('course.json', JSON.stringify(newCourseData, null, 2), 'utf8');
+    
+    // TRÈS IMPORTANT : On met à jour le cache pour que les utilisateurs voient immédiatement la version corrigée
+    updateJsonCache('course.json', newCourseData);
+
+    console.log(`[ADMIN] Le cours sur le thème "${theme}" a été modifié et sauvegardé.`);
+    res.json({ success: true, message: 'Le cours a été mis à jour avec succès !' });
+
+  } catch (error) {
+    console.error('[ADMIN] Erreur lors de la sauvegarde du cours modifié :', error);
+    res.status(500).json({ error: 'Une erreur interne est survenue lors de la sauvegarde du cours.' });
+  }
+});
 
 app.post('/api/keep-alive', (req, res) => {
   if (req.session.user && req.session.user.username) {

@@ -136,6 +136,29 @@
         <p id="prompts-status" class="text-sm mt-3 h-5"></p>
     </form>
 </div>
+
+        <!-- NOUVEAU : Section d'édition du cours -->
+        <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+            <h2 class="text-xl font-semibold text-teal-400 mb-4">Gestion du Cours Actuel</h2>
+            <p class="text-sm text-gray-400 mb-4">
+                Modifiez ici le thème et le contenu du cours qui est actuellement visible par les utilisateurs. Les modifications sont appliquées immédiatement.
+            </p>
+            <form id="edit-course-form">
+                <div class="mb-4">
+                    <label for="course-edit-theme" class="block mb-2 text-sm font-medium">Thème du cours</label>
+                    <input type="text" id="course-edit-theme" required class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div class="mb-6">
+                    <label for="course-edit-content" class="block mb-2 text-sm font-medium">Contenu du cours (Markdown)</label>
+                    <textarea id="course-edit-content" rows="20" class="w-full p-3 font-mono text-sm rounded bg-gray-900 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Le contenu du cours apparaîtra ici..."></textarea>
+                </div>
+                <button type="submit" id="save-course-btn" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg">
+                    Sauvegarder les modifications du cours
+                </button>
+                <p id="course-save-status" class="text-sm mt-3 h-5"></p>
+            </form>
+        </div>
+
         <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
             <h2 class="text-xl font-semibold text-red-400 mb-4">Zone Dangereuse - Gestion des Joueurs</h2>
             <div id="user-management-loading">Chargement de la liste des joueurs...</div>

@@ -32,7 +32,6 @@
         transform: scale(1);
     }
 }
-
 @keyframes fadeOut {
     from {
         opacity: 1;
@@ -43,7 +42,7 @@
         transform: scale(0.95);
     }
 }
-/* AJOUTEZ CE BLOC À LA FIN DE VOTRE FICHIER */
+ AJOUTEZ CE BLOC À LA FIN DE VOTRE FICHIER */
 
 /* Style pour les éléments de la liste des thèmes */
 .theme-item {

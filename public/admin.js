@@ -118,6 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateWinnersBtn = document.getElementById('update-winners-btn');
     const winnersUpdateStatus = document.getElementById('winners-update-status');
 
+    // NOUVEAU : Sélecteurs pour l'édition de cours
+    const editCourseForm = document.getElementById('edit-course-form');
+    const courseEditThemeInput = document.getElementById('course-edit-theme');
+    const courseEditContentTextarea = document.getElementById('course-edit-content');
+    const saveCourseBtn = document.getElementById('save-course-btn');
+    const courseSaveStatus = document.getElementById('course-save-status');
+
     // ---- TOGGLE AFFICHAGE PROMPTS ----
     function toggleTextarea(textareaEl, btnEl) {
         if (!textareaEl || !btnEl) return;
@@ -141,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadUsersForReset();
         loadAdminBooks();
         loadAndDisplayThemes();
+        loadCurrentCourse();
     }
     adminLoginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -171,7 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
             loadUsersForReset();
             loadAdminBooks();
             loadAndDisplayThemes();
-            loadPrompts(); // <-- LA LIGNE MANQUANTE EST AJOUTÉE ICI
+            loadPrompts();
+            loadCurrentCourse();
 
         } catch (error) {
             loginError.textContent = error.message || 'Une erreur est survenue.';
@@ -258,6 +267,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             winnersListContainer.innerHTML = `<p class="text-red-500">Erreur : ${error.message}</p>`;
+        }
+    }
+
+    async function loadCurrentCourse() {
+        const token = sessionStorage.getItem(API_TOKEN_KEY);
+        courseSaveStatus.textContent = 'Chargement du cours actuel...';
+        courseSaveStatus.className = 'text-yellow-400 text-sm mt-3 h-5';
+        try {
+            const response = await fetch('/api/course', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) {
+                 const errorData = await response.json();
+                 throw new Error(errorData.error || 'Impossible de charger le cours.');
+            }
+            const course = await response.json();
+            courseEditThemeInput.value = course.theme;
+            courseEditContentTextarea.value = course.content;
+            courseSaveStatus.textContent = '';
+        } catch (error) {
+            courseEditThemeInput.value = 'Erreur';
+            courseEditContentTextarea.value = `Impossible de charger le contenu du cours.\n\nErreur : ${error.message}`;
+            courseSaveStatus.textContent = `Erreur : ${error.message}`;
+            courseSaveStatus.className = 'text-red-500 text-sm mt-3 h-5';
         }
     }
 
@@ -575,6 +608,45 @@ document.addEventListener('DOMContentLoaded', () => {
             promptsStatus.className = 'text-red-500 text-sm mt-3 h-5';
         } finally {
             savePromptsBtn.disabled = false;
+        }
+    });
+
+    // NOUVEAU : Écouteur pour la sauvegarde du cours édité
+    editCourseForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const token = sessionStorage.getItem(API_TOKEN_KEY);
+        const theme = courseEditThemeInput.value;
+        const content = courseEditContentTextarea.value;
+
+        if (!confirm('Êtes-vous sûr de vouloir remplacer le cours actuel par vos modifications ?')) {
+            return;
+        }
+
+        courseSaveStatus.textContent = 'Sauvegarde en cours...';
+        courseSaveStatus.className = 'text-yellow-400 text-sm mt-3 h-5';
+        saveCourseBtn.disabled = true;
+
+        try {
+            const response = await fetch('/admin/course', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ theme, content })
+            });
+            
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || 'Erreur inconnue.');
+            
+            courseSaveStatus.textContent = result.message;
+            courseSaveStatus.className = 'text-green-400 text-sm mt-3 h-5';
+
+        } catch (error) {
+            courseSaveStatus.textContent = `Erreur: ${error.message}`;
+            courseSaveStatus.className = 'text-red-500 text-sm mt-3 h-5';
+        } finally {
+            saveCourseBtn.disabled = false;
         }
     });
 

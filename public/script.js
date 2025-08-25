@@ -22,6 +22,7 @@ let sessionStatusEventSource = null;
 let userStatusEventSource = null;
 let courseHistory = [];
 let networkMonitor = null;
+let currentCourseDate = null;
 
 // Retry state for session status EventSource
 let sessionStatusRetryMs = 1000;
@@ -581,6 +582,14 @@ async function checkSessionAndShowCourse() {
         }
         const courseData = await courseResponse.json();
         
+        // Stocker la date du cours actuel
+        currentCourseDate = courseData.generatedAt;
+        
+        // Marquer ce cours comme "vu" dans le sessionStorage
+        if (currentCourseDate) {
+            sessionStorage.setItem(`course_viewed_${currentCourseDate}`, 'true');
+        }
+        
         if (titleEl) titleEl.textContent = `Cours : ${courseData.theme}`;
         if (contentEl) contentEl.innerHTML = markdownToHtml(courseData.content);
 
@@ -590,6 +599,69 @@ async function checkSessionAndShowCourse() {
         if (contentEl) contentEl.innerHTML = `<p class="congrats-message error">${error.message}</p>`;
     }
 }
+
+// Fonction pour afficher une fenêtre modale de confirmation générique
+function showConfirmationModal(title, message, confirmText, cancelText, onConfirm, onCancel) {
+    const modal = document.getElementById('confirmation-modal');
+    const titleEl = document.getElementById('confirmation-modal-title');
+    const messageEl = document.getElementById('confirmation-modal-message');
+    const confirmBtn = document.getElementById('confirm-action-button');
+    const cancelBtn = document.getElementById('cancel-action-button');
+    const closeBtn = document.getElementById('confirmation-modal-close-button');
+
+    if (!modal || !titleEl || !messageEl || !confirmBtn || !cancelBtn || !closeBtn) {
+        console.error('[CLIENT] Éléments de la modale de confirmation introuvables');
+        return;
+    }
+
+    // Configurer le contenu
+    titleEl.textContent = title;
+    messageEl.textContent = message;
+    confirmBtn.textContent = confirmText;
+    cancelBtn.textContent = cancelText;
+
+    // Fonction pour fermer la modale
+    const closeModal = () => {
+        modal.style.display = 'none';
+        // Nettoyer les event listeners
+        confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+        cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+        closeBtn.replaceWith(closeBtn.cloneNode(true));
+    };
+
+    // Récupérer les nouveaux éléments après clonage
+    const newConfirmBtn = document.getElementById('confirm-action-button');
+    const newCancelBtn = document.getElementById('cancel-action-button');
+    const newCloseBtn = document.getElementById('confirmation-modal-close-button');
+
+    // Ajouter les event listeners
+    newConfirmBtn.addEventListener('click', () => {
+        closeModal();
+        if (onConfirm) onConfirm();
+    });
+
+    newCancelBtn.addEventListener('click', () => {
+        closeModal();
+        if (onCancel) onCancel();
+    });
+
+    newCloseBtn.addEventListener('click', () => {
+        closeModal();
+        if (onCancel) onCancel();
+    });
+
+    // Fermer en cliquant sur l'overlay
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+            if (onCancel) onCancel();
+        }
+    });
+
+    // Afficher la modale
+    modal.style.display = 'flex';
+}
+
 // AJOUTEZ CETTE NOUVELLE FONCTION (par exemple, après checkSessionAndShowCourse)
 
 /**
@@ -2072,12 +2144,18 @@ async function showSongSelection() {
     songSelection.style.display = 'block';
 
     try {
-        const [sessionDataRes, competitionRes] = await Promise.all([
+        const [sessionDataRes, competitionRes, courseRes] = await Promise.all([
             fetch('/check-session'),
-            fetch('/api/competition-info')
+            fetch('/api/competition-info'),
+            fetch('/api/course')
         ]);
         const userData = await sessionDataRes.json();
         const competitionData = await competitionRes.json();
+        const courseData = await courseRes.json();
+        
+        // Stocker la date du cours actuel
+        currentCourseDate = courseData.generatedAt;
+        
         // Robust parsing: avoid NaN which would prematurely unlock
         const parsedTs = Date.parse(competitionData?.startTime);
         competitionStartTime = isNaN(parsedTs) ? (Date.now() + 24 * 60 * 60 * 1000) : parsedTs;
@@ -2138,7 +2216,7 @@ async function showSongSelection() {
 
                 return `
                     <li class="${lockedClass}" title="${lockReason}">
-                        <a href="${isLocked ? '#' : subItem.page}" class="session-link">
+                        <a href="${isLocked ? '#' : subItem.page}" class="session-link" data-session-number="${sessionNumber}">
                             <span class="session-name">${subItem.name} ${lockIcon}</span>
                             ${countdownHTML}
                             <div class="player-count ${activeClass}">
@@ -2153,7 +2231,35 @@ async function showSongSelection() {
             
             if (document.getElementById('session-4-countdown')) { startCountdown(competitionStartTime); }
 
-            sessionList.querySelectorAll('.session-link').forEach(link => { if (!link.closest('li').classList.contains('locked')) { link.addEventListener('click', (e) => { e.preventDefault(); navigateTo(link.getAttribute('href')); }); } });
+            sessionList.querySelectorAll('.session-link').forEach(link => {
+                if (!link.closest('li').classList.contains('locked')) {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const sessionNumber = parseInt(link.dataset.sessionNumber);
+                        const href = link.getAttribute('href');
+                        
+                        // Vérifier si c'est une session de compétition (4 et plus) et si le cours n'a pas été vu
+                        if (sessionNumber >= 4 && currentCourseDate) {
+                            const courseViewed = sessionStorage.getItem(`course_viewed_${currentCourseDate}`);
+                            if (!courseViewed) {
+                                // Afficher la modale de rappel
+                                showConfirmationModal(
+                                    'Rappel : Cours du jour',
+                                    'Nous vous recommandons de consulter le cours du jour avant de commencer cette session de compétition. Souhaitez-vous le voir maintenant ?',
+                                    'Voir le cours',
+                                    'Continuer vers le quiz',
+                                    () => navigateTo('/course'), // Aller au cours
+                                    () => navigateTo(href) // Continuer vers le quiz
+                                );
+                                return;
+                            }
+                        }
+                        
+                        // Si pas de rappel nécessaire, naviguer normalement
+                        navigateTo(href);
+                    });
+                }
+            });
             sessionList.querySelectorAll('.session-chat-btn').forEach(button => { button.addEventListener('click', (e) => { e.stopPropagation(); navigateTo(`/chat?session=${button.dataset.session}`); }); });
         };
         

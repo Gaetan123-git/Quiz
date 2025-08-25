@@ -2112,7 +2112,8 @@ app.get('/api/books', (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ error: 'Non authentifié' });
   }
-  // On renvoie la liste complète des livres
+  
+  // On renvoie la liste des livres
   res.json(books);
 });
 

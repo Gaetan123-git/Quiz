@@ -225,6 +225,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function loadAndDisplayWinners() {
+        const token = sessionStorage.getItem(API_TOKEN_KEY);
+        const winnersListContainer = document.getElementById('admin-winners-list');
+        winnersListContainer.innerHTML = '<p class="text-gray-400">Chargement...</p>';
+
+        try {
+            const response = await fetch('/api/winners', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (response.status === 403) {
+                winnersListContainer.innerHTML = '<p class="text-yellow-400">La compétition n\'est pas encore terminée.</p>';
+                return;
+            }
+            if (!response.ok) throw new Error('Impossible de charger les gagnants.');
+
+            const winners = await response.json();
+            if (winners.length === 0) {
+                winnersListContainer.innerHTML = '<p class="text-gray-500">Aucun gagnant enregistré pour le moment.</p>';
+                return;
+            }
+
+            winners.sort((a, b) => a.rank - b.rank);
+
+            winnersListContainer.innerHTML = winners.map(winner => `
+                <div class="bg-gray-700 p-3 rounded-md flex justify-between items-center text-sm">
+                    <span class="font-bold">${winner.rank}. ${winner.username}</span>
+                    <span class="text-green-400">${winner.score.toFixed(0)} pts</span>
+                </div>
+            `).join('');
+
+        } catch (error) {
+            winnersListContainer.innerHTML = `<p class="text-red-500">Erreur : ${error.message}</p>`;
+        }
+    }
+
     updateCompetitionBtn.addEventListener('click', async () => {
         const token = sessionStorage.getItem(API_TOKEN_KEY);
         const localDateValue = competitionDatetimeInput.value;
@@ -1135,6 +1171,9 @@ function hideStatusMessage() {
             winnersUpdateStatus.textContent = result.message;
             winnersUpdateStatus.className = 'text-green-400 text-sm mt-3';
 
+            // On rafraîchit la liste des gagnants, qui devrait maintenant être vide
+            loadAndDisplayWinners();
+
         } catch (error) {
             winnersUpdateStatus.textContent = `Erreur : ${error.message}`;
             winnersUpdateStatus.className = 'text-red-500 text-sm mt-3';
@@ -1143,10 +1182,13 @@ function hideStatusMessage() {
 
     // Lancement initial
     if (sessionStorage.getItem(API_TOKEN_KEY)) {
+        adminLoginSection.classList.add('hidden');
+        adminPanelSection.classList.remove('hidden');
         loadQuestionsForSelectedSession();
         loadCompetitionInfo();
-        loadCompetitionRules(); // <-- Ligne ajoutée ici
-        loadUsersForReset(); // Assurez-vous que c'est là
+        loadCompetitionRules();
+        loadAndDisplayWinners();
+        loadUsersForReset();
         loadAdminBooks();
         loadAndDisplayThemes();
         loadPrompts();

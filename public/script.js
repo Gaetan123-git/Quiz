@@ -62,10 +62,10 @@ function detectDevice() {
     }
 }
 // New: Default settings
-let currentTheme = 'blue';
+let currentTheme = 'amoled'; // MODIFIÉ: Thème par défaut
 let currentFontSize = 'medium';
-let currentFontFamily = 'poppins';
-let currentUIDesign = 'default';
+let currentFontFamily = 'rosemary'; // MODIFIÉ: Police par défaut
+let currentUIDesign = 'gamer'; // MODIFIÉ: Design par défaut
 let userNotificationEventSource = null;
 // New: Quiz result data to send to the server for analysis
 let quizResults = {

@@ -29,6 +29,11 @@
                  class="w-full p-3 pl-10 pr-10 rounded-lg bg-input text-foreground border-2 border-border focus:border-primary transition-colors">
           <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-game-muted cursor-pointer" onclick="togglePasswordVisibility('register-password')">👁️</span>
         </div>
+        <div class="mb-6 relative"> <!-- Margin bottom augmentée pour espacer le bouton -->
+          <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-game-primary text-xl">📞</span>
+          <input type="tel" id="register-phone" placeholder="Numéro de téléphone pour le paiement" required
+                 class="w-full p-3 pl-10 rounded-lg bg-input text-foreground border-2 border-border focus:border-primary transition-colors">
+        </div>
         <button id="register-button" type="button" onclick="register()"
                 class="w-full p-3 rounded-lg button-gradient text-primary-foreground font-bold hover:opacity-90 transition-opacity">
           S'inscrire

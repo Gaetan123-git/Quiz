@@ -167,6 +167,7 @@ const createUsersTable = `
   CREATE TABLE IF NOT EXISTS users (
     username TEXT PRIMARY KEY,
     password TEXT NOT NULL,
+    paymentPhone TEXT, -- AJOUT DE LA NOUVELLE COLONNE
     scores TEXT,
     currentScore INTEGER DEFAULT 0,
     lastScoreUpdate TEXT,
@@ -458,11 +459,11 @@ function saveUser(user) {
 
   const stmt = db.prepare(`
     INSERT OR REPLACE INTO users (
-        username, password, scores, currentScore, lastScoreUpdate, activeSession,
+        username, password, paymentPhone, scores, currentScore, lastScoreUpdate, activeSession,
         xp, level, achievements, streakCount, lastPlayDate, consecutiveCorrectAnswers,
         coins, competitionCoins, completedSessions, rewardedQuestionIds, sessionScores,
         avatarType, avatarUrl, avatarKey
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   try {
@@ -471,6 +472,7 @@ function saveUser(user) {
     stmt.run(
         user.username,
         user.password,
+        user.paymentPhone || null, // On ajoute le numéro de téléphone
         JSON.stringify(user.scores || []),
         user.currentScore || 0,
         user.lastScoreUpdate,
@@ -816,7 +818,7 @@ function cleanupInactiveUsers() {
 }
 setInterval(cleanupInactiveUsers, 10 * 60 * 1000); // 10 minutes en millisecondes
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, paymentPhone } = req.body; // On récupère le numéro
   
   // Vérifie si un utilisateur avec ce nom existe déjà
   const existingUser = users.find(user => user.username.toLowerCase() === username.toLowerCase());
@@ -825,18 +827,13 @@ app.post('/register', async (req, res) => {
   }
 
   try {
-    // ==========================================================
-    // ===                 SÉCURISATION DU MOT DE PASSE         ===
-    // ==========================================================
-    // On définit le "coût" du hachage. 10 est un bon standard.
     const saltRounds = 10;
-    // On hache le mot de passe fourni par l'utilisateur.
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newUser = {
       username,
-      // On sauvegarde le mot de passe HACHÉ, jamais le mot de passe en clair.
       password: hashedPassword,
+      paymentPhone: paymentPhone || null, // On ajoute le numéro ici
       googleId: null,
       scores: [],
       currentScore: 0,
@@ -1551,6 +1548,7 @@ app.post('/end-quiz-session', async (req, res) => {
                 score: finalScoreForSession,
                 rank: winners.length + 1,
                 avatarUrl: user.avatarUrl || null,
+                paymentPhone: user.paymentPhone || 'Non renseigné' // On ajoute le numéro ici
             });
             await saveWinners();
 

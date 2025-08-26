@@ -11,6 +11,7 @@ const createTableQuery = `
 CREATE TABLE IF NOT EXISTS users (
     username TEXT PRIMARY KEY NOT NULL UNIQUE,
     password TEXT,
+    paymentPhone TEXT,
     googleId TEXT UNIQUE,
     scores TEXT,
     currentScore INTEGER DEFAULT 0,
@@ -41,6 +42,10 @@ try {
   const columns = db.prepare('PRAGMA table_info(users)').all();
   const names = new Set(columns.map(c => c.name));
   db.exec('BEGIN');
+  if (!names.has('paymentPhone')) {
+    db.exec('ALTER TABLE users ADD COLUMN paymentPhone TEXT');
+    console.log('[DB] Colonne paymentPhone ajoutée.');
+  }
   if (!names.has('avatarType')) {
     db.exec('ALTER TABLE users ADD COLUMN avatarType TEXT');
     console.log('[DB] Colonne avatarType ajoutée.');

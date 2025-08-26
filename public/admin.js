@@ -260,8 +260,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             winnersListContainer.innerHTML = winners.map(winner => `
                 <div class="bg-gray-700 p-3 rounded-md flex justify-between items-center text-sm">
-                    <span class="font-bold">${winner.rank}. ${winner.username}</span>
-                    <span class="text-green-400">${winner.score.toFixed(0)} pts</span>
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold text-base">${winner.rank}. ${winner.username}</span>
+                        <span class="text-xs text-gray-400">📞 ${winner.paymentPhone || 'Non fourni'}</span>
+                    </div>
+                    <span class="text-green-400 font-bold">${winner.score.toFixed(0)} pts</span>
                 </div>
             `).join('');
 

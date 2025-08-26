@@ -1071,40 +1071,42 @@ function updateTypingIndicator(typingUsers) {
         typingIndicatorElement.classList.remove('visible');
     }
 }
-// New: Settings functions
 function loadSettings() {
     const savedTheme = localStorage.getItem('theme');
     const savedFontSize = localStorage.getItem('fontSize');
     const savedFontFamily = localStorage.getItem('fontFamily');
     const savedUIDesign = localStorage.getItem('uiDesign');
 
+    // Pour le thème
     if (savedTheme) {
-        currentTheme = savedTheme;
-        applyTheme(savedTheme, false); // Apply without saving again
+        applyTheme(savedTheme, false);
     } else {
-        applyTheme(currentTheme, true); // Apply default and save it
+        // Applique le nouveau thème par défaut ('amoled') et le sauvegarde
+        applyTheme(currentTheme, true);
     }
 
+    // Pour la taille de la police
     if (savedFontSize) {
-        currentFontSize = savedFontSize;
-        applyFontSize(savedFontSize, false); // Apply without saving again
+        applyFontSize(savedFontSize, false);
     } else {
-        applyFontSize(currentFontSize, true); // Apply default and save it
+        // Applique la taille par défaut ('medium') et la sauvegarde
+        applyFontSize(currentFontSize, true);
     }
 
+    // Pour la police de caractères
     if (savedFontFamily) {
-        currentFontFamily = savedFontFamily;
-        applyFontFamily(savedFontFamily, false); // Apply without saving again
+        applyFontFamily(savedFontFamily, false);
     } else {
-        applyFontFamily(currentFontFamily, true); // Apply default and save it
+        // Applique la nouvelle police par défaut ('rosemary') et la sauvegarde
+        applyFontFamily(currentFontFamily, true);
     }
 
+    // Pour le design de l'interface
     if (savedUIDesign) {
-        currentUIDesign = savedUIDesign;
-        applyUIDesign(savedUIDesign, false); // Apply without saving again
+        applyUIDesign(savedUIDesign, false);
     } else {
-        currentUIDesign = 'default';
-        applyUIDesign(currentUIDesign, true); // Apply default and save it
+        // Applique le nouveau design par défaut ('gamer') et le sauvegarde
+        applyUIDesign(currentUIDesign, true);
     }
 }
 

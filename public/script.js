@@ -1624,6 +1624,8 @@ async function retrySession() {
 }
 async function endQuiz() {
     stopTimer();
+    deactivateAntiCheating(); // *** DÉSACTIVATION DE LA PROTECTION ***
+
     const gameContent = document.querySelector('.game-content');
     const totalQuizQuestions = totalQuestions;
 
@@ -1923,6 +1925,9 @@ async function nextQuestion() {
                     });
                 });
             }
+
+            // *** ACTIVATION DE LA PROTECTION ***
+            activateAntiCheating();
 
             startTimer();
             if (gameContent) {
@@ -3104,6 +3109,54 @@ function startReplayErrorQuestions() {
     nextQuestion();
 }
 // --- FIN MES ERREURS ---
+
+/**
+ * Active les mesures pour empêcher la copie du contenu du quiz.
+ * Bloque la sélection de texte, le clic droit et le raccourci Ctrl+C.
+ */
+function activateAntiCheating() {
+    const gameContent = document.getElementById('game-content');
+    if (!gameContent) return;
+
+    // Ajoute la classe CSS pour bloquer la sélection
+    gameContent.classList.add('no-select');
+
+    // Bloque le menu contextuel (clic droit)
+    gameContent.addEventListener('contextmenu', e => e.preventDefault());
+
+    // Bloque le raccourci clavier Ctrl+C (ou Cmd+C sur Mac)
+    document.addEventListener('keydown', preventCopyPaste);
+    
+    console.log('[ANTI-CHEAT] Protections activées.');
+}
+
+/**
+ * Fonction spécifique pour être ajoutée et retirée de l'écouteur d'événements.
+ * @param {KeyboardEvent} e L'événement du clavier.
+ */
+function preventCopyPaste(e) {
+    // Si la touche Ctrl (ou Cmd sur Mac) est pressée en même temps que la touche 'c'
+    if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+        e.preventDefault();
+        // Optionnel : informer l'utilisateur pourquoi l'action est bloquée
+        showToast("Action non autorisée", "La copie du texte est désactivée pendant le quiz.", "error", 2000);
+    }
+}
+
+/**
+ * Désactive les mesures anti-copie à la fin du quiz.
+ */
+function deactivateAntiCheating() {
+    const gameContent = document.getElementById('game-content');
+    if (gameContent) {
+        gameContent.classList.remove('no-select');
+        // Il est difficile de retirer un écouteur anonyme, mais le blocage
+        // s'arrêtera quand la vue du jeu sera remplacée par les résultats.
+    }
+    // Retire l'écouteur du clavier
+    document.removeEventListener('keydown', preventCopyPaste);
+    console.log('[ANTI-CHEAT] Protections désactivées.');
+}
 
 async function showGameOverScreen() {
     stopTimer();

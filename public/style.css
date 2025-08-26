@@ -2573,3 +2573,13 @@ main.main-container, .container {
     font-weight: 600;
     color: var(--color-success);
 }
+/* ======================================================== */
+/* ==       CLASSE UTILITAIRE ANTI-COPIE/COLLAGE         == */
+/* ======================================================== */
+.no-select {
+    -webkit-user-select: none; /* Pour les navigateurs basés sur WebKit (Chrome, Safari) */
+    -moz-user-select: none;    /* Pour Firefox */
+    -ms-user-select: none;     /* Pour Internet Explorer / Edge */
+    user-select: none;         /* Syntaxe standard */
+    -webkit-touch-callout: none; /* Désactive le menu contextuel sur appui long sur iOS */
+  }

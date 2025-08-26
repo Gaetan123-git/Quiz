@@ -13,6 +13,18 @@
 </head>
 <body class="font-sans antialiased text-foreground bg-game-bg overflow-hidden">
 
+    <!-- ========================================================== -->
+    <!-- ==        AJOUT : ÉCRAN DE BLOCAGE MULTI-ONGLETS        == -->
+    <!-- ========================================================== -->
+    <!-- Cet élément est caché par défaut et ne s'affichera que si l'application est déjà ouverte dans un autre onglet -->
+    <div id="multi-tab-blocker" style="display: none;">
+        <div class="blocker-content">
+            <div class="blocker-icon">⚠️</div>
+            <h2 class="blocker-title" data-i18n="multiTab.title">Application déjà ouverte</h2>
+            <p class="blocker-message" data-i18n="multiTab.message">FrenchQuest est déjà en cours d'exécution dans un autre onglet. Veuillez fermer cet onglet et utiliser la fenêtre existante pour continuer.</p>
+        </div>
+    </div>
+
     <!-- Tout le contenu de votre page (header, main, etc.) reste ici... -->
     <!-- Header persistant en haut de la page -->
     <header id="main-header" class="main-header">

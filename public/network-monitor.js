@@ -233,6 +233,13 @@ class NetworkMonitor {
     }
 
     handleOffline() {
+        // AJOUT : Si on sait que cet onglet n'est pas le principal, on ignore la perte de connexion.
+        // C'est normal que sa connexion soit coupée par le serveur.
+        if (typeof window.isPrimaryTab !== 'undefined' && !window.isPrimaryTab) {
+            console.log('[NetworkMonitor] Perte de connexion ignorée car cet onglet n\'est pas le principal.');
+            return;
+        }
+
         console.log('Connexion perdue');
         this.isOnline = false;
         

@@ -1,6 +1,7 @@
 import { EmojiButton } from 'https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@latest/dist/index.min.js';
 import i18n from './i18n.js';
 import NetworkMonitor from './network-monitor.js';
+let isAppInitialized = false; // Pour s'assurer que l'app ne s'initialise qu'une seule fois
 let keepAliveInterval = null;
 let competitionStartTime = null;
 let currentQuestion = null;
@@ -47,6 +48,141 @@ let sessionStatusOnlineHandlerAdded = false;
     // installer immédiatement
     try { installForceLogoutInterceptor(); } catch (_) {}
 })();
+
+// ==========================================================
+// ==        DÉBUT : GESTION DU MULTI-ONGLETS              ==
+// ==========================================================
+
+// Clé utilisée dans le localStorage pour la communication entre onglets.
+const TAB_COMMUNICATION_KEY = 'frenchquest_active_tab';
+// Identifiant unique pour cet onglet spécifique.
+const myTabId = `${Date.now()}-${Math.random()}`;
+// Intervalle pour le "heartbeat" (battement de cœur) qui indique que l'onglet est actif.
+let tabHeartbeatInterval = null;
+// Indique si cet onglet est l'onglet principal.
+let isPrimaryTab = false;
+
+/**
+ * Affiche l'écran de blocage et coupe toutes les communications réseau de cet onglet.
+ */
+function showMultiTabBlocker() {
+    console.warn('[Multi-Tab] Un autre onglet est actif. Cet onglet est bloqué et ses connexions réseau sont coupées.');
+    const blocker = document.getElementById('multi-tab-blocker');
+    if (blocker) {
+        blocker.style.display = 'flex';
+    }
+
+    // Couper toutes les connexions réseau actives pour cet onglet "zombie"
+    if (leaderboardEventSource) leaderboardEventSource.close();
+    if (chatEventSource) chatEventSource.close();
+    if (sessionStatusEventSource) sessionStatusEventSource.close();
+    if (userStatusEventSource) userStatusEventSource.close();
+    stopKeepAlive(); // Arrête le ping d'activité
+}
+
+/**
+ * Cache l'écran de blocage si cet onglet devient le principal.
+ */
+function hideMultiTabBlocker() {
+    const blocker = document.getElementById('multi-tab-blocker');
+    if (blocker) {
+        blocker.style.display = 'none';
+    }
+}
+
+/**
+ * "Heartbeat" : Met à jour périodiquement le localStorage pour signaler que cet onglet est actif.
+ */
+function tabHeartbeat() {
+    // On écrit notre ID unique et l'heure actuelle dans le stockage partagé.
+    localStorage.setItem(TAB_COMMUNICATION_KEY, JSON.stringify({
+        id: myTabId,
+        timestamp: Date.now()
+    }));
+}
+
+/**
+ * Vérifie qui est l'onglet principal et agit en conséquence.
+ */
+function checkTabOwnership() {
+    const activeTabInfoRaw = localStorage.getItem(TAB_COMMUNICATION_KEY);
+
+    if (activeTabInfoRaw) {
+        try {
+            const activeTabInfo = JSON.parse(activeTabInfoRaw);
+            const isThisTabPrimary = activeTabInfo.id === myTabId;
+            // Un autre onglet est considéré comme actif s'il a envoyé un heartbeat il y a moins de 5 secondes.
+            const isAnotherTabActive = !isThisTabPrimary && (Date.now() - activeTabInfo.timestamp < 5000);
+
+            if (isAnotherTabActive) {
+                // Un autre onglet est actif : cet onglet devient secondaire.
+                isPrimaryTab = false;
+                clearInterval(tabHeartbeatInterval); // On arrête d'envoyer notre propre heartbeat.
+                showMultiTabBlocker();
+                console.warn('[Multi-Tab] Un autre onglet est déjà actif. Cet onglet est bloqué.');
+            } else {
+                // Personne n'est actif, ou c'est nous : cet onglet devient (ou reste) principal.
+                becomePrimaryTab();
+            }
+        } catch (e) {
+            // En cas d'erreur de lecture, on prend le contrôle.
+            becomePrimaryTab();
+        }
+    } else {
+        // Personne n'a jamais réclamé le rôle : cet onglet devient principal.
+        becomePrimaryTab();
+    }
+}
+
+/**
+ * Fait de cet onglet l'onglet principal et lance l'initialisation de l'application si nécessaire.
+ */
+function becomePrimaryTab() {
+    if (!isPrimaryTab) {
+        console.log('[Multi-Tab] Cet onglet est maintenant l\'onglet principal.');
+    }
+    isPrimaryTab = true;
+    window.isPrimaryTab = true; // Exposer globalement pour le network-monitor
+    hideMultiTabBlocker();
+    tabHeartbeat(); // On envoie un premier heartbeat immédiatement.
+    
+    // On relance l'intervalle au cas où il aurait été arrêté.
+    clearInterval(tabHeartbeatInterval);
+    tabHeartbeatInterval = setInterval(tabHeartbeat, 3000); // Envoie un heartbeat toutes les 3 secondes.
+
+    // Si l'application n'a pas encore été lancée, on le fait maintenant.
+    if (!isAppInitialized) {
+        initializeApp();
+    }
+}
+
+
+/**
+ * Initialise le système de gestion des onglets.
+ */
+function initializeTabManagement() {
+    // Écoute les changements dans le localStorage faits par d'autres onglets.
+    window.addEventListener('storage', (event) => {
+        if (event.key === TAB_COMMUNICATION_KEY) {
+            // Quelqu'un a modifié la clé. On revérifie qui doit être le maître.
+            checkTabOwnership();
+        }
+    });
+
+    // Quand l'onglet est sur le point d'être fermé, on essaie de libérer la place.
+    window.addEventListener('beforeunload', () => {
+        if (isPrimaryTab) {
+            localStorage.removeItem(TAB_COMMUNICATION_KEY);
+        }
+    });
+
+    // On lance une première vérification au chargement.
+    checkTabOwnership();
+}
+
+// ==========================================================
+// ==          FIN : GESTION DU MULTI-ONGLETS            ==
+// ==========================================================
 
 // Fonction qui détecte le type d'appareil et ajoute une classe au body
 function detectDevice() {
@@ -1318,28 +1454,28 @@ function updateDynamicContent() {
 
 // (supprimé) Ancienne implémentation du flux SSE pour éviter les doublons
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // Initialize i18n system first
+/**
+ * Initialise tous les composants principaux de l'application.
+ * Cette fonction ne doit être appelée qu'UNE SEULE FOIS par l'onglet principal.
+ */
+async function initializeApp() {
+    if (isAppInitialized) return; // Sécurité pour ne jamais l'exécuter deux fois
+    isAppInitialized = true;
+    console.log('[App] Initialisation de l\'application principale...');
+
+    // Tout le code qui était dans DOMContentLoaded est déplacé ici.
     await i18n.init();
     
-    // Initialize network monitoring
     networkMonitor = new NetworkMonitor();
     console.log('[CLIENT] NetworkMonitor initialisé');
     
     detectDevice();
     setupMenuAutoClose();
     loadSettings();
-    
-    // Setup language change handlers
     setupLanguageHandlers();
 
-    // Initialisation du picker d'emojis
     try {
-        emojiPicker = new EmojiButton({
-            position: 'top-end',
-            autoHide: true,
-        });
-        
+        emojiPicker = new EmojiButton({ position: 'top-end', autoHide: true });
         emojiPicker.on('emoji', selection => {
             const chatInput = document.getElementById('chat-input');
             const sendButton = document.getElementById('send-message');
@@ -1357,18 +1493,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateView();
     window.addEventListener('popstate', updateView);
 
-    // Initialisation du contexte audio
     document.body.addEventListener('click', () => {
         if (!audioContext) {
             try {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            } catch (e) {
-                console.error("Web Audio API n'est pas supporté dans ce navigateur.");
-            }
+            } catch (e) { console.error("Web Audio API n'est pas supporté dans ce navigateur."); }
         }
     }, { once: true });
 
-    // Gestion du menu déroulant
     const menuToggle = document.getElementById('menu-toggle');
     const dropdownMenu = document.getElementById('dropdown-menu');
     if (menuToggle && dropdownMenu) {
@@ -1378,32 +1510,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // ==========================================================
-    // ===                 CORRECTION APPLIQUÉE ICI           ===
-    // ==========================================================
-    // On déclare tous les liens du menu pour plus de clarté.
     const returnToMenuLink = document.getElementById('return-Menu');
     const howToPlayLink = document.getElementById('how-to-play-link');
     const courseLink = document.getElementById('course-link');
-    const courseHistoryLink = document.getElementById('course-history-link'); // <-- Le sélecteur était manquant
+    const courseHistoryLink = document.getElementById('course-history-link');
     const livresLink = document.getElementById('livres-link'); 
     const historyLink = document.getElementById('history-link');
     const settingsLink = document.getElementById('settings-link');
     const logoutLink = document.getElementById('logout-link');
 
-    // On attache les écouteurs d'événements à chaque lien.
     if (returnToMenuLink) returnToMenuLink.addEventListener('click', (e) => { e.preventDefault(); navigateTo('/menu'); });
     if (courseLink) courseLink.addEventListener('click', (e) => { e.preventDefault(); navigateTo('/course'); });
-    if (courseHistoryLink) courseHistoryLink.addEventListener('click', (e) => { e.preventDefault(); navigateTo('/course-history'); }); // <-- L'écouteur était manquant
+    if (courseHistoryLink) courseHistoryLink.addEventListener('click', (e) => { e.preventDefault(); navigateTo('/course-history'); });
     if (livresLink) livresLink.addEventListener('click', (e) => { e.preventDefault(); navigateTo('/livres'); });
     if (historyLink) historyLink.addEventListener('click', (e) => { e.preventDefault(); navigateTo('/history'); });
     if (settingsLink) settingsLink.addEventListener('click', (e) => { e.preventDefault(); navigateTo('/settings'); });
     if (logoutLink) logoutLink.addEventListener('click', (e) => { e.preventDefault(); logout(); });
     
-    // Logique du modal "Comment Jouer"
     const howToPlayModal = document.getElementById('how-to-play-modal');
     const closeHowToPlayModal = document.getElementById('close-how-to-play-modal');
-
     if (howToPlayLink && howToPlayModal) {
         howToPlayLink.addEventListener('click', (e) => {
             e.preventDefault();
@@ -1414,32 +1539,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
-
-    const closeModalFunction = () => {
-        if (howToPlayModal) {
-            howToPlayModal.style.display = 'none';
-        }
-    };
-
-    if (closeHowToPlayModal) {
-        closeHowToPlayModal.addEventListener('click', closeModalFunction);
-    }
-    if (howToPlayModal) {
-        howToPlayModal.addEventListener('click', (e) => {
-            if (e.target === howToPlayModal) {
-                closeModalFunction();
-            }
-        });
-    }
+    const closeModalFunction = () => { if (howToPlayModal) { howToPlayModal.style.display = 'none'; } };
+    if (closeHowToPlayModal) { closeHowToPlayModal.addEventListener('click', closeModalFunction); }
+    if (howToPlayModal) { howToPlayModal.addEventListener('click', (e) => { if (e.target === howToPlayModal) { closeModalFunction(); } }); }
     
-    // Bouton de chat flottant
     const floatingChatButton = document.getElementById('floating-chat-button');
     if (floatingChatButton) floatingChatButton.addEventListener('click', () => navigateTo('/chat'));
 
-    // Initialisation du stream de statut utilisateur
     setupUserStatusStream(); 
 
-    // Écouteur pour les clics sur les cours archivés
     const courseHistoryList = document.getElementById('course-history-list');
     if (courseHistoryList) {
         courseHistoryList.addEventListener('click', e => {
@@ -1447,12 +1555,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (courseItem) {
                 const theme = courseItem.dataset.theme;
                 const selectedCourse = courseHistory.find(c => c.theme === theme);
-                if (selectedCourse) {
-                    displayCourseInModal(selectedCourse);
-                }
+                if (selectedCourse) { displayCourseInModal(selectedCourse); }
             }
         });
     }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // La seule chose à faire au chargement est de déterminer le rôle de l'onglet.
+    // L'initialisation de l'application sera déclenchée par la fonction `becomePrimaryTab`
+    // si et seulement si cet onglet est élu "principal".
+    initializeTabManagement();
 });
 
 // NOUVELLE FONCTION : Gère le flux SSE des mises à jour de statut utilisateur
@@ -1854,35 +1967,40 @@ async function nextQuestion() {
         try {
             let questionToShow = null;
 
-            // ==========================================================
-            // ===             CORRECTION DU BUG APPLIQUÉE ICI        ===
-            // ==========================================================
             // On vérifie si on est en mode "Rejouer les erreurs".
             if (isErrorReplay) {
-                // Si OUI, on prend la prochaine question depuis la liste LOCALE
-                // qui a été préparée par startReplayErrorQuestions().
+                // Si OUI, on prend la prochaine question depuis la liste LOCALE.
                 if (questions.length > 0) {
                     questionToShow = questions.shift(); // On dépile la question suivante.
                 }
             } else {
-                // Si NON (mode quiz normal), on contacte le SERVEUR pour la prochaine question.
+                // Si NON (mode quiz normal), on contacte le SERVEUR.
                 const response = await fetch(`/questions?session=${selectedSession}`);
                 if (!response.ok) {
                     const errorData = await response.json();
-                    showToast('Erreur Quiz', errorData.error || 'Impossible de charger la question.', 'error');
-                    navigateTo('/menu');
-                    return;
+                    
+                    // --- MODIFICATION PRINCIPALE ---
+                    // On vérifie si l'erreur est due à la fin de la compétition.
+                    if (errorData.competitionOver) {
+                        // On affiche la notification de blocage.
+                        showToast('Compétition Terminée', errorData.error, 'info');
+                        // On affiche directement l'écran des gagnants.
+                        showGameOverScreen(); 
+                    } else {
+                        // Si c'est une autre erreur (ex: session verrouillée), on applique le comportement normal.
+                        showToast('Accès Verrouillé', errorData.error, 'error');
+                        navigateTo('/menu');
+                    }
+                    return; // On arrête l'exécution de la fonction ici.
                 }
-                questionToShow = await response.json(); // Le serveur renvoie la question ou null.
+                questionToShow = await response.json();
             }
 
-            // Si, à la fin, nous n'avons aucune question à afficher (soit parce que la liste est vide,
-            // soit parce que le serveur a renvoyé null), alors le quiz est terminé.
+            // Si aucune question à afficher, le quiz est terminé.
             if (!questionToShow) {
                 endQuiz();
                 return;
             }
-            // ==========================================================
             
             // On met à jour la question actuelle et on continue l'affichage normalement.
             currentQuestion = questionToShow;

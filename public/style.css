@@ -2583,3 +2583,59 @@ main.main-container, .container {
     user-select: none;         /* Syntaxe standard */
     -webkit-touch-callout: none; /* Désactive le menu contextuel sur appui long sur iOS */
   }
+
+/* ========================================================== */
+/* ==         AJOUT : STYLE BLOCAGE MULTI-ONGLETS          == */
+/* ========================================================== */
+#multi-tab-blocker {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background-color: rgba(20, 20, 25, 0.95); /* Fond sombre semi-transparent */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light-color);
+    text-align: center;
+    padding: 2rem;
+    backdrop-filter: blur(8px); /* Effet de flou sur le contenu en arrière-plan */
+}
+
+.blocker-content {
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.blocker-icon {
+    font-size: 4rem;
+    line-height: 1;
+    animation: bounce-icon 1.5s infinite; /* Petite animation pour attirer l'attention */
+}
+
+.blocker-title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--color-accent);
+}
+
+.blocker-message {
+    font-size: 1.1rem;
+    color: var(--muted-color);
+    line-height: 1.6;
+}
+
+/* Animation pour l'icône */
+@keyframes bounce-icon {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}

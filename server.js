@@ -1293,7 +1293,13 @@ app.get('/questions', (req, res) => {
     const timeSinceEnd = Date.now() - new Date(competitionRules.competitionEndTime).getTime();
     const tenMinutes = 10 * 60 * 1000;
     if (timeSinceEnd < tenMinutes) {
-      return res.status(403).json({ error: 'La compétition est terminée ! Les résultats sont affichés. Les quiz reprendront dans quelques minutes.' });
+      // MODIFICATION : Au lieu de juste renvoyer une erreur, on signale que la compétition est terminée
+      // et on inclut la liste des gagnants pour que le client puisse l'afficher.
+      return res.status(403).json({
+        error: 'La compétition est terminée ! Les résultats sont affichés. Les quiz reprendront dans quelques minutes.',
+        competitionOver: true, // Un drapeau pour que le client comprenne la situation
+        winners: winners // On envoie la liste des gagnants
+      });
     }
   }
 

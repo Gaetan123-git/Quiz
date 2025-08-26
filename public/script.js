@@ -1071,6 +1071,7 @@ function updateTypingIndicator(typingUsers) {
         typingIndicatorElement.classList.remove('visible');
     }
 }
+// New: Settings functions
 function loadSettings() {
     const savedTheme = localStorage.getItem('theme');
     const savedFontSize = localStorage.getItem('fontSize');

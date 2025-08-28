@@ -976,72 +976,34 @@ app.get('/check-session', (req, res) => {
   if (req.session.user) {
     const user = users.find(u => u.username === req.session.user.username);
     if (user) {
-      // Initialisation des valeurs par défaut
+      // Initialisation des valeurs par défaut si elles n'existent pas
       if (user.xp === undefined) user.xp = 0;
       if (user.level === undefined) user.level = 1;
       if (user.achievements === undefined) user.achievements = [];
       if (user.streakCount === undefined) user.streakCount = 0;
       if (user.completedSessions === undefined) user.completedSessions = [];
       
-      const sessionNames = ['session1', 'session2', 'session3', 'session4', 'session5', 'session6', 'session7', 'session8', 'session9', 'session10'];
-
-      // Admin 'devtest' doit toujours tout débloquer: on IGNORE tout recalcul
+      // La logique spéciale pour le compte 'devtest' est conservée.
       if (user.username === 'devtest') {
+        const sessionNames = ['session1', 'session2', 'session3', 'session4', 'session5', 'session6', 'session7', 'session8', 'session9', 'session10'];
         const fullUnlock = [...sessionNames];
         const originalCompleted = user.completedSessions || [];
-        const needsAdminSet = JSON.stringify(originalCompleted.sort()) !== JSON.stringify(fullUnlock.sort());
-        if (needsAdminSet) {
+        // On s'assure que devtest a toujours tout de débloqué
+        if (JSON.stringify(originalCompleted.sort()) !== JSON.stringify(fullUnlock.sort())) {
           console.log(`[SERVER] Admin devtest détecté: forçage des sessions complètes.`);
           user.completedSessions = fullUnlock;
           saveUser(user);
         }
-      } else {
-        // RECALCUL DES SESSIONS COMPLÉTÉES BASÉ SUR LES SCORES RÉELS ET LE NOMBRE TOTAL DE QUESTIONS DÉFINI
-        const recalculatedCompletedSessions = [];
-
-        for (let i = 0; i < sessionNames.length; i++) {
-          const sessionName = sessionNames[i];
-          const sessionScores = user.scores.filter(s => s.session === sessionName);
-
-          // Nombre total de questions ATTENDU pour la session (défini côté serveur)
-          const totalQuestionsInSession = (sessionQuestions[sessionName] || []).length;
-
-          // Si la session existe dans la config et qu'on a au moins une réponse enregistrée
-          if (totalQuestionsInSession > 0 && sessionScores.length > 0) {
-            const correctAnswers = sessionScores.filter(s => s.score > 0).length;
-            const successPercentage = (correctAnswers / totalQuestionsInSession) * 100;
-
-            // Une session est complétée SI:
-            // 1. Elle a ≥70% de réussite (sur le total des questions de la session)
-            // 2. C'est la session1 OU la session précédente est complétée
-            if (successPercentage >= 70) {
-              if (i === 0 || recalculatedCompletedSessions.includes(sessionNames[i - 1])) {
-                recalculatedCompletedSessions.push(sessionName);
-              } else {
-                console.log(`[SERVER] Session ${sessionName} a ${successPercentage.toFixed(1)}% mais session précédente non complétée - pas ajoutée`);
-                break; // Les suivantes ne peuvent pas être complétées
-              }
-            } else {
-              console.log(`[SERVER] Session ${sessionName} a ${successPercentage.toFixed(1)}% (< 70% sur ${totalQuestionsInSession} questions) - pas complétée`);
-              break; // Cette session et les suivantes ne peuvent pas être complétées
-            }
-          }
-        }
-        
-        // MISE À JOUR DES SESSIONS COMPLÉTÉES SI NÉCESSAIRE
-        const originalCompleted = user.completedSessions || [];
-        const needsUpdate = JSON.stringify(originalCompleted.sort()) !== JSON.stringify(recalculatedCompletedSessions.sort());
-        
-        if (needsUpdate) {
-          console.log(`[SERVER] Correction des sessions complétées pour ${user.username}:`);
-          console.log(`[SERVER] Avant: [${originalCompleted.join(', ')}]`);
-          console.log(`[SERVER] Après: [${recalculatedCompletedSessions.join(', ')}]`);
-          
-          user.completedSessions = recalculatedCompletedSessions;
-          saveUser(user);
-        }
       }
-      
+
+      // ==========================================================
+      // ===          LA CORRECTION DÉFINITIVE EST ICI          ===
+      // ==========================================================
+      // NOUS SUPPRIMONS LA LOGIQUE DE RECALCUL POUR LES UTILISATEURS NORMAUX.
+      // Cette route se contente maintenant de lire et de renvoyer les données de l'utilisateur
+      // telles qu'elles sont, sans les modifier. C'est la route '/end-quiz-session'
+      // qui est la seule responsable de l'ajout d'une session à la liste des sessions complétées.
+
       res.json({
         loggedIn: true,
         username: user.username,
@@ -1052,7 +1014,7 @@ app.get('/check-session', (req, res) => {
         streakCount: user.streakCount,
         coins: user.coins,
         competitionCoins: user.competitionCoins,
-        completedSessions: user.completedSessions,
+        completedSessions: user.completedSessions, // On renvoie la liste telle quelle.
         avatarType: user.avatarType || null,
         avatarUrl: user.avatarUrl || null,
         avatarKey: user.avatarKey || null
@@ -1064,7 +1026,6 @@ app.get('/check-session', (req, res) => {
     res.json({ loggedIn: false });
   }
 });
-
 // REMPLACEZ l'intégralité de la fonction app.get('/user-ranking', ...) par cette nouvelle version.
 app.get('/user-ranking', (req, res) => {
   // Si l'utilisateur n'est pas connecté, on ne peut pas calculer son rang.

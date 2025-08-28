@@ -1742,12 +1742,10 @@ async function endQuiz() {
     const gameContent = document.querySelector('.game-content');
     const totalQuizQuestions = totalQuestions;
 
-    // Si on était en mode correction d'erreurs, on désactive le flag et on évite le déblocage
     if (isErrorReplay) {
         console.log('[DEBUG] Fin du mode correction d\'erreurs - pas de validation de session');
         isErrorReplay = false;
         
-        // Afficher directement les résultats sans valider la session
         const resultsHTML = `
             <h2>Correction d'erreurs terminée !</h2>
             <p class="congrats-message">Vous avez terminé la révision de vos erreurs.</p>
@@ -1773,7 +1771,7 @@ async function endQuiz() {
         if (returnMenuBtn) returnMenuBtn.addEventListener('click', returnToMenu);
         if (errorsReturnBtn) errorsReturnBtn.addEventListener('click', () => navigateTo('/history'));
         
-        return; // Sortir de la fonction sans appeler /end-quiz-session
+        return;
     }
 
     if (gameContent) gameContent.innerHTML = `<div class="quiz-results"><h2>Validation de la session...</h2></div>`;
@@ -1784,7 +1782,6 @@ async function endQuiz() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 session: selectedSession,
-                // Note: on envoie les stats du client, mais le serveur va les recalculer pour être sûr.
                 correctAnswers: quizResults.correctAnswersCount,
                 totalQuestions: totalQuizQuestions
             })
@@ -1795,20 +1792,13 @@ async function endQuiz() {
         }
         const endSessionResult = await endSessionResponse.json();
         
-        // ====================================================================
-        // ===                      LA CORRECTION EST ICI                   ===
-        // ====================================================================
-        // Juste avant d'afficher, on redemande au serveur les données officielles de l'utilisateur.
-        // C'est la garantie que l'affichage final sera toujours correct.
         const userResponse = await fetch('/check-session');
         const userData = await userResponse.json();
 
-        // On recalcule le nombre de bonnes réponses DEPUIS L'HISTORIQUE OFFICIEL (du serveur) pour cette session.
         const sessionScores = userData.scores.filter(s => s.session === selectedSession);
         const finalCorrectAnswers = sessionScores.filter(s => s.score > 0).length;
 
-        const alreadyCompleted = Array.isArray(endSessionResult.completedSessions) && endSessionResult.completedSessions.includes(selectedSession);
-        const sessionCompleted = endSessionResult.completed || alreadyCompleted;
+        const sessionCompleted = endSessionResult.completed;
 
         const rankResponse = await fetch(`/user-ranking?session=${selectedSession}`);
         const { rank } = await rankResponse.json();
@@ -1818,6 +1808,7 @@ async function endQuiz() {
         let buttonHTML = '';
         
         const currentSessionNumber = parseInt(selectedSession.replace('session', ''));
+        const nextSessionNumber = currentSessionNumber + 1;
 
         if (sessionCompleted) {
             if (currentSessionNumber >= 10) {
@@ -1825,17 +1816,18 @@ async function endQuiz() {
                 messageHTML = `<p class="congrats-message success">Vous avez bravé tous les défis ! Félicitations, ${currentUsername} !</p>`;
                 buttonHTML = `<button id="return-menu-button" class="button-primary">Retour au Menu Principal</button>`;
             } else {
-                const nextSessionNumber = currentSessionNumber + 1;
                 titleHTML = `<h2>Session ${currentSessionNumber} Réussie !</h2>`;
                 messageHTML = `<p class="congrats-message success">Excellent travail, ${currentUsername} ! La Session ${nextSessionNumber} est débloquée.</p>`;
-                buttonHTML = `<button id="continue-button" class="button-primary">Session Suivante</button>`;
+                // ==========================================================
+                // ===             LA CORRECTION EST ICI                  ===
+                // ==========================================================
+                // On ajoute un attribut `data-next-session` pour savoir où aller.
+                buttonHTML = `<button id="continue-button" class="button-primary" data-next-session="session${nextSessionNumber}">Session Suivante</button>`;
                 if (currentSessionNumber <= 3) {
                     buttonHTML += `<button id="retry-button" class="button-secondary">Rejouer</button>`;
                 }
             }
         } else {
-            // Ici, le message s'affichera correctement car il est basé sur `sessionCompleted`, qui vient du serveur.
-            // Et le score affiché (`finalCorrectAnswers`) sera aussi basé sur les données du serveur. L'affichage est donc cohérent.
             if (currentSessionNumber >= 10) {
                 messageHTML = `<p class="congrats-message error">Presque ! Il vous faut 70% de bonnes réponses pour terminer le jeu.</p>`;
             } else {
@@ -1857,7 +1849,7 @@ async function endQuiz() {
                     <span class="result-label">Classement</span>
                 </div>
                 <div class="result-item">
-                    <span class="result-value">${userData.coins} 💰</span>
+                    <span class="result-value">${userData.coins + userData.competitionCoins} 💰</span>
                     <span class="result-label">Pièces Totales</span>
                 </div>
             </div>
@@ -1875,7 +1867,17 @@ async function endQuiz() {
         const returnMenuBtn = document.getElementById('return-menu-button');
         const retryBtn = document.getElementById('retry-button');
         
-        if (continueBtn) continueBtn.addEventListener('click', returnToMenu);
+        if (continueBtn) {
+            continueBtn.addEventListener('click', (e) => {
+                const nextSession = e.target.dataset.nextSession;
+                if (nextSession) {
+                    // Au lieu de retourner au menu, on va directement à la prochaine session.
+                    navigateTo(`/quiz?session=${nextSession}`);
+                } else {
+                    returnToMenu();
+                }
+            });
+        }
         if (returnMenuBtn) returnMenuBtn.addEventListener('click', returnToMenu);
         if (retryBtn) retryBtn.addEventListener('click', retrySession);
         

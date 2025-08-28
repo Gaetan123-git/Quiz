@@ -1,7 +1,7 @@
 {
   "themes": [
-    "Le genre et le nombre : Accord des noms et adjectifs (masculin/féminin, singulier/pluriel).",
     "L’imparfait : Utilisation pour descriptions, habitudes, comparaisons avec le passé",
+    "Le genre et le nombre : Accord des noms et adjectifs (masculin/féminin, singulier/pluriel).",
     "Les adjectifs qualificatifs : Accord en genre et en nombre avec le nom.",
     "Le présent de l’indicatif : Verbes réguliers (-er) et verbes fréquents irréguliers (avoir, être, aller, faire).",
     "Les verbes du 1er groupe : Conjugaison complète et utilisation en contexte.",
@@ -19,5 +19,5 @@
     "Révision des erreurs fréquentes : Confusions courantes (leur/leurs, ce/se, etc.).",
     "Production écrite et orale : Écrire un petit texte chaque jour + pratiquer la prononciation."
   ],
-  "currentIndex": 3
+  "currentIndex": 0
 }

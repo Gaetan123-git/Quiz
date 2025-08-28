@@ -1,213 +1,213 @@
 {
   "questions": [
     {
-      "text": "Conjuguez le verbe \"être\" au présent de l'indicatif à la troisième personne du pluriel : \"Je suis étudiant.\"",
+      "text": "Dans quelle situation utilise-t-on l'imparfait pour décrire une action passée ?",
       "options": [
-        "Ils sont étudiants.",
-        "Ils sont étudiantes.",
-        "Ils sont étudiant.",
-        "Ils étaient étudiants"
+        "Pour une action ponctuelle et brève",
+        "Pour une habitude ou une action répétée",
+        "Pour un événement futur",
+        "Pour une action en train de se dérouler au moment présent"
       ],
-      "correctAnswer": "Ils sont étudiants.",
-      "englishHint": "Conjugate the verb \"to be\" in the present tense, third person plural: \"I am a student.\"",
-      "explanation": "La troisième personne du pluriel du verbe \"être\" est \"sont\".",
-      "id": "c0893eb24c859a63",
+      "correctAnswer": "Pour une habitude ou une action répétée",
+      "englishHint": "In what situation is the imperfect tense used to describe a past action?",
+      "explanation": "L'imparfait est utilisé pour décrire des actions habituelles ou répétées dans le passé.",
+      "id": "79d6685a64272e2a",
       "type": "standard"
     },
     {
-      "text": "Quelle est la conjugaison du verbe \"aller\" au présent de l'indicatif pour la deuxième personne du pluriel ?",
+      "text": "Comment forme-t-on l’imparfait du verbe \"parler\" à la première personne du singulier ?",
       "options": [
-        "Vous allez",
-        "Vous allons",
-        "Vous aller",
-        "Vous irez"
+        "Je parlais",
+        "Je parlerai",
+        "Je parlerais",
+        "Je suis parlé"
       ],
-      "correctAnswer": "Vous allez",
-      "englishHint": "What is the conjugation of the verb \"aller\" (to go) in the present tense for the second person plural?",
-      "explanation": "Le verbe \"aller\" se conjugue \"vous allez\" au présent de l'indicatif pour la deuxième personne du pluriel.",
-      "id": "6086dd406bdb5b69",
+      "correctAnswer": "Je parlais",
+      "englishHint": "How do you form the imperfect of the verb \"parler\" in the first person singular?",
+      "explanation": "On prend le radical du présent (parl-) et on ajoute la terminaison de l'imparfait (-ais).",
+      "id": "497a50747739fbf6",
       "type": "standard"
     },
     {
-      "text": "Complétez la phrase suivante en conjuguant le verbe \"faire\" au présent de l'indicatif : \"Nous ______ du sport tous les jours.\"",
+      "text": "Quelle phrase emploie correctement l'imparfait pour décrire une action habituelle au passé ?",
       "options": [
-        "faisons",
-        "font",
-        "faites",
-        "fait"
+        "Je suis allé au cinéma hier.",
+        "J'irai au cinéma demain.",
+        "J'allais souvent au cinéma.",
+        "J'aimerais aller au cinéma."
       ],
-      "correctAnswer": "faisons",
-      "englishHint": "Complete the following sentence by conjugating the verb \"faire\" (to do) in the present tense: \"We ______ sports every day.\"",
-      "explanation": "Le verbe \"faire\" se conjugue \"faisons\" à la première personne du pluriel au présent de l'indicatif.",
-      "id": "a14abb2540e419b1",
+      "correctAnswer": "J'allais souvent au cinéma.",
+      "englishHint": "Which sentence correctly uses the imperfect tense to describe a habitual action in the past?",
+      "explanation": "L'imparfait \"j'allais\" indique une action répétée dans le passé.",
+      "id": "fc42614c47031126",
       "type": "standard"
     },
     {
-      "text": "Quel verbe irrégulier exprime l'action de posséder quelque chose ?",
+      "text": "Quelle est la terminaison de l'imparfait du verbe à la première personne du pluriel ?",
       "options": [
-        "aller",
-        "faire",
-        "être",
-        "avoir"
+        "-ais",
+        "-ions",
+        "-iez",
+        "-aient"
       ],
-      "correctAnswer": "avoir",
-      "englishHint": "Which irregular verb expresses the action of possessing something?",
-      "explanation": "Le verbe \"avoir\" est le seul verbe dans la liste qui exprime la possession.",
-      "id": "2ae30ce7794a8041",
+      "correctAnswer": "-ions",
+      "englishHint": "What is the ending of the imperfect tense in the first-person plural?",
+      "explanation": "La terminaison de l'imparfait à la première personne du pluriel est \"-ions\".",
+      "id": "cc519d5213bfa67a",
       "type": "standard"
     },
     {
-      "text": "Conjuguez le verbe régulier \"parler\" au présent de l'indicatif à la troisième personne du singulier.",
+      "text": "Quel usage de l'imparfait est illustré dans la phrase : \"Il était toujours joyeux\" ?",
       "options": [
-        "parles",
-        "parle",
-        "parlons",
-        "parlent"
+        "Description d'une action",
+        "Description d'une habitude",
+        "Description d'un état permanent",
+        "Comparaison avec le passé composé"
       ],
-      "correctAnswer": "parle",
-      "englishHint": "Conjugate the regular verb \"parler\" (to speak) in the present tense in the third person singular.",
-      "explanation": "La troisième personne du singulier des verbes réguliers en -er prend la terminaison -e.",
-      "id": "8c3b5df5a9201575",
+      "correctAnswer": "Description d'un état permanent",
+      "englishHint": "Which use of the imperfect tense is illustrated in the sentence: \"He was always cheerful\"?",
+      "explanation": "L'imparfait décrit ici un état qui durait dans le passé.",
+      "id": "1eae87db51c84fd7",
       "type": "standard"
     },
     {
-      "text": "Quelle est la conjugaison du verbe \"être\" au présent de l'indicatif à la première personne du singulier ?",
+      "text": "Pour exprimer un état permanent dans le passé, quel temps verbal utiliser ?",
       "options": [
-        "Je sont fatigué.",
-        "Je est fatigué.",
-        "Je suis fatigué.",
-        "Je sommes fatigué."
+        "Le passé composé",
+        "Le futur simple",
+        "Le présent",
+        "L'imparfait"
       ],
-      "correctAnswer": "Je suis fatigué.",
-      "englishHint": "What is the conjugation of the verb \"être\" (to be) in the present tense, first person singular?",
-      "explanation": "La conjugaison correcte du verbe \"être\" à la première personne du singulier est \"je suis\".",
-      "id": "2e9731fdd20bc560",
+      "correctAnswer": "L'imparfait",
+      "englishHint": "To express a permanent state in the past, which tense should be used?",
+      "explanation": "L'imparfait convient parfaitement pour exprimer un état qui perdurait dans le passé.",
+      "id": "2983d48db4be0202",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase \"Ils vont au cinéma\", quel est le temps verbal et quel est le verbe conjugué ?",
+      "text": "Dans la phrase : \"Il pleuvait. J'ai glissé.\", quel temps verbal décrit le contexte et quel temps verbal décrit l'action ?",
       "options": [
-        "Passé composé, aller",
-        "Présent, aller",
-        "Imparfait, aller",
-        "Futur, aller"
+        "Passé composé / Imparfait",
+        "Imparfait / Passé composé",
+        "Futur simple / Passé composé",
+        "Présent / Passé composé"
       ],
-      "correctAnswer": "Présent, aller",
-      "englishHint": "In the sentence \"Ils vont au cinéma\", what is the tense and the conjugated verb?",
-      "explanation": "La phrase est au présent de l'indicatif, et le verbe conjugué est \"aller\".",
-      "id": "eea40bc9d6c4c96a",
+      "correctAnswer": "Imparfait / Passé composé",
+      "englishHint": "In the sentence: \"It was raining. I slipped.\", which tense describes the context and which describes the action?",
+      "explanation": "L'imparfait \"Il pleuvait\" décrit le contexte, tandis que le passé composé \"J'ai glissé\" décrit l'action principale.",
+      "id": "b9ba6eddbd5223ed",
       "type": "standard"
     },
     {
-      "text": "Quelle est la terminaison verbale correcte pour la troisième personne du pluriel des verbes réguliers en -er au présent de l'indicatif ?",
+      "text": "Quelle est la différence principale entre l'emploi de l'imparfait et du passé composé pour raconter une action passée ?",
       "options": [
-        "-ons",
-        "-ez",
-        "-ent",
-        "-es"
+        "Aucun, les deux temps sont interchangeables",
+        "L'imparfait décrit l'action principale, le passé composé le contexte",
+        "L'imparfait décrit le contexte, le passé composé l'action principale",
+        "L'imparfait exprime la durée, le passé composé l'intensité"
       ],
-      "correctAnswer": "-ent",
-      "englishHint": "What is the correct verb ending for the third person plural of regular verbs ending in -er in the present indicative?",
-      "explanation": "Les verbes réguliers en -er prennent la terminaison \"-ent\" à la troisième personne du pluriel.",
-      "id": "7b913891c291d2d0",
+      "correctAnswer": "L'imparfait décrit le contexte, le passé composé l'action principale",
+      "englishHint": "What is the main difference between using the imperfect and the passé composé to describe a past action?",
+      "explanation": "L'imparfait donne le contexte, le décor de l'action, tandis que le passé composé exprime l'action principale qui s'est déroulée.",
+      "id": "cef22884d7a998e9",
       "type": "standard"
     },
     {
-      "text": "Quel verbe irrégulier faut-il utiliser pour compléter cette phrase : \"Je ______ un gâteau\" pour exprimer que je suis en train de le faire ?",
+      "text": "Comment se forme l’imparfait du verbe \"parler\" ?",
       "options": [
-        "suis",
-        "ai",
-        "vais",
-        "fais"
+        "Je parlais, tu parlais, il parlait, nous parlions",
+        "Je parlerais, tu parlerais, il parlerait, nous parlerions",
+        "Je parle, tu parles, il parle, nous parlons",
+        "Je parlais, tu parles, il parlait, nous parlons"
       ],
-      "correctAnswer": "fais",
-      "englishHint": "Which irregular verb should you use to complete this sentence: \"I ______ a cake\" to express that you are making it?",
-      "explanation": "Le verbe \"faire\" signifie \"fabriquer, créer, confectionner\". \"Je fais un gâteau\" signifie \"je suis en train de faire un gâteau\".",
-      "id": "dbe6f05e1924d871",
+      "correctAnswer": "Je parlais, tu parlais, il parlait, nous parlions",
+      "englishHint": "How is the imperfect tense of the verb \"to speak\" formed?",
+      "explanation": "L'imparfait se forme en prenant le radical du verbe au présent (parl-) et en ajoutant les terminaisons de l'imparfait (-ais, -ais, -ait, -ions, -iez, -aient).",
+      "id": "75865fa21aa545ea",
       "type": "standard"
     },
     {
-      "text": "Quel verbe irrégulier est utilisé dans la phrase : \"Nous ______ contents\" ?",
+      "text": "La phrase « Chaque soir, je lisais un livre » illustre quel usage de l’imparfait ?",
       "options": [
-        "sommes",
-        "avons",
-        "allons",
-        "faisons"
+        "Une action ponctuelle",
+        "Une description d’un lieu",
+        "Une habitude passée",
+        "Une comparaison avec le passé composé"
       ],
-      "correctAnswer": "sommes",
-      "englishHint": "Which irregular verb is used in the sentence: \"Nous ______ contents\"?",
-      "explanation": "Le verbe \"être\" conjugué à la première personne du pluriel est \"sommes\".",
-      "id": "d004a6be36a1f454",
+      "correctAnswer": "Une habitude passée",
+      "englishHint": "The sentence \"Every evening, I read a book\" illustrates which use of the imperfect tense?",
+      "explanation": "L’imparfait est utilisé pour décrire des actions habituelles ou répétées dans le passé.",
+      "id": "82b83ef3372d59ec",
       "type": "standard"
     },
     {
-      "text": "Complétez la phrase : \"Vous ______ des amis formidables.\"",
+      "text": "Dans une phrase, quel temps verbal décrit le contexte et quel temps décrit l’action principale ?",
       "options": [
-        "êtes",
-        "avez",
-        "êtes-vous",
-        "allez"
+        "Passé composé, imparfait",
+        "Imparfait, passé composé",
+        "Présent, passé composé",
+        "Plus-que-parfait, passé composé"
       ],
-      "correctAnswer": "avez",
-      "englishHint": "Complete the sentence: \"You ______ great friends.\"",
-      "explanation": "Le verbe \"avoir\", exprimant la possession, est conjugué à la deuxième personne du pluriel comme \"avez\".",
-      "id": "e43f379a017149f9",
+      "correctAnswer": "Imparfait, passé composé",
+      "englishHint": "In a sentence, which tense describes the context and which tense describes the main action?",
+      "explanation": "L’imparfait décrit le contexte, tandis que le passé composé décrit l’action principale.",
+      "id": "5d63427939a2a3d7",
       "type": "standard"
     },
     {
-      "text": "Quelle est la conjugaison du verbe \"avoir\" au présent de l'indicatif à la troisième personne du singulier ?",
+      "text": "Quelle phrase décrit une scène passée en utilisant l’imparfait ?",
       "options": [
-        "a",
-        "as",
-        "ont",
-        "avons"
+        "Le soleil brille, les oiseaux chantent.",
+        "Le soleil brillait, les oiseaux chantaient.",
+        "Le soleil brillera, les oiseaux chanteront.",
+        "Le soleil a brillé, les oiseaux ont chanté."
       ],
-      "correctAnswer": "a",
-      "englishHint": "What is the conjugation of the verb \"avoir\" (to have) in the present tense in the third person singular?",
-      "explanation": "Il a.",
-      "id": "19e96e94eba92aef",
+      "correctAnswer": "Le soleil brillait, les oiseaux chantaient.",
+      "englishHint": "Which sentence describes a past scene using the imperfect tense?",
+      "explanation": "L’imparfait est utilisé pour créer des descriptions de scènes passées en mettant l’accent sur la durée et le contexte.",
+      "id": "8cb7ca6c9add5b21",
       "type": "standard"
     },
     {
-      "text": "Choisissez la phrase correctement conjuguée au présent de l'indicatif :",
-      "options": [
-        "Ils vas au marché.",
-        "Elles vont au marché.",
-        "Ils vont aux marchés.",
-        "Elles vont les marchés."
-      ],
-      "correctAnswer": "Elles vont au marché.",
-      "englishHint": "Choose the correctly conjugated sentence in the present indicative:",
-      "explanation": "Le verbe \"aller\", conjugué au présent pour la troisième personne du pluriel féminin, est \"vont\".",
-      "id": "5ff26aceef19b2b6",
-      "type": "standard"
-    },
-    {
-      "text": "Quel verbe convient pour compléter cette phrase : \"Ce soir, je ______ au restaurant avec mes amis ?\"",
+      "text": "Complétez la phrase : « Quand j’étais enfant, je ______ souvent au parc. »",
       "options": [
         "vais",
-        "vas",
-        "va",
-        "vont"
+        "suis allé",
+        "allais",
+        "irai"
       ],
-      "correctAnswer": "vais",
-      "englishHint": "Which verb fits to complete this sentence: \"Tonight, I ______ to the restaurant with my friends?\"",
-      "explanation": "Le verbe \"aller\" à la première personne du singulier est \"vais\".",
-      "id": "6dae06b0fc8fd158",
+      "correctAnswer": "allais",
+      "englishHint": "Complete the sentence: \"When I was a child, I _______ often to the park.\"",
+      "explanation": "L’imparfait « allais » exprime une action habituelle répétée dans le passé.",
+      "id": "10fcaced0ca6a358",
       "type": "standard"
     },
     {
-      "text": "Choisissez la conjugaison correcte du verbe \"faire\" au présent de l'indicatif pour la deuxième personne du singulier :",
+      "text": "Quelle terminaison utilise-t-on pour l’imparfait à la 3ème personne du singulier ?",
       "options": [
-        "fais",
-        "faites",
-        "fait",
-        "faisons"
+        "-ais",
+        "-ait",
+        "-ions",
+        "-iez"
       ],
-      "correctAnswer": "fais",
-      "englishHint": "Choose the correct conjugation of the verb \"faire\" in the present tense for the second person singular:",
-      "explanation": "Le verbe \"faire\" se conjugue \"tu fais\" au présent de l'indicatif.",
-      "id": "b21fb32a3a947478",
+      "correctAnswer": "-ait",
+      "englishHint": "What ending is used for the imperfect tense in the 3rd person singular?",
+      "explanation": "La terminaison de l’imparfait à la 3ème personne du singulier est « -ait ».",
+      "id": "105381208a211e9a",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase : « La maison était grande et ancienne », quel temps est utilisé et que décrit-il ?",
+      "options": [
+        "Passé composé, une action",
+        "Imparfait, une description",
+        "Présent, une situation actuelle",
+        "Passé simple, une action brève"
+      ],
+      "correctAnswer": "Imparfait, une description",
+      "englishHint": "In the sentence: \"The house was large and old\", what tense is used and what does it describe?",
+      "explanation": "L’imparfait est utilisé ici pour décrire les caractéristiques d’un lieu dans le passé.",
+      "id": "0aba1422cb4e3a21",
       "type": "standard"
     }
   ]

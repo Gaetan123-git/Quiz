@@ -1334,18 +1334,28 @@ app.get('/questions', (req, res) => {
   }
 
   // ==========================================================
-  // ===      LOGIQUE D'AUTORISATION CORRIGÉE ET FINALISÉE    ===
+  // ===        LOGIQUE DE DÉVERROUILLAGE CORRIGÉE            ===
   // ==========================================================
-  // On applique les règles de déverrouillage sauf pour 'devtest'
-  if (user.username !== 'devtest' && sessionNumber > 1) {
-    // La session 4 est spéciale : elle n'a PAS de prérequis de session.
-    // Pour toutes les AUTRES sessions (>1), la session précédente doit être terminée.
-    if (sessionNumber !== 4) {
-        const requiredSession = `session${sessionNumber - 1}`;
-        if (!user.completedSessions || !user.completedSessions.includes(requiredSession)) {
-            console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Prérequis non rempli : ${requiredSession}`);
-            return res.status(403).json({ error: `Accès non autorisé. Vous devez d'abord terminer la ${requiredSession}.` });
-        }
+  // On applique les règles de déverrouillage uniquement pour les utilisateurs normaux.
+  if (user.username !== 'devtest') {
+      
+    // Règle A : Pour les sessions d'entraînement (2 et 3), la précédente doit être complétée.
+    if (sessionNumber === 2 || sessionNumber === 3) {
+      const requiredSession = `session${sessionNumber - 1}`;
+      if (!user.completedSessions || !user.completedSessions.includes(requiredSession)) {
+          console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Prérequis non rempli : ${requiredSession}`);
+          return res.status(403).json({ error: `Accès non autorisé. Vous devez d'abord terminer la ${requiredSession}.` });
+      }
+    }
+    
+    // Règle B : Pour les sessions de compétition APRES la 4 (donc 5 à 10), la précédente doit être complétée.
+    // La session 4 est volontairement exclue de cette vérification de prérequis.
+    else if (sessionNumber > 4) {
+      const requiredSession = `session${sessionNumber - 1}`;
+      if (!user.completedSessions || !user.completedSessions.includes(requiredSession)) {
+          console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Prérequis non rempli : ${requiredSession}`);
+          return res.status(403).json({ error: `Accès non autorisé. Vous devez d'abord terminer la ${requiredSession}.` });
+      }
     }
   }
 

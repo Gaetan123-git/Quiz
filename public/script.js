@@ -485,10 +485,8 @@ async function checkSessionAndShowQuiz() {
             return;
         }
 
-        // APPEL DE NOTRE NOUVELLE FONCTION CENTRALISÉE
         updateHeaderWithUserData(userData);
         
-        // On récupère les informations sur la session (nombre total de questions)
         const sessionInfoResponse = await fetch(`/api/session-info?session=${selectedSession}`);
         if (!sessionInfoResponse.ok) {
              const errorData = await sessionInfoResponse.json();
@@ -499,12 +497,16 @@ async function checkSessionAndShowQuiz() {
         const sessionInfo = await sessionInfoResponse.json();
         totalQuestions = sessionInfo.totalQuestionsInSession;
 
-        // On calcule combien de questions ont déjà été répondues pour cette session
         const answeredScores = userData.scores.filter(s => s.session === selectedSession);
         answeredQuestionsCount = answeredScores.length;
 
-        // Si l'utilisateur a déjà répondu à toutes les questions, on va directement aux résultats.
-        if (totalQuestions > 0 && answeredQuestionsCount >= totalQuestions) {
+        // ==========================================================
+        // ===            LA CORRECTION POUR DEVTEST EST ICI      ===
+        // ==========================================================
+        // On vérifie si l'utilisateur a terminé la session, MAIS on ajoute une exception :
+        // Le compte 'devtest' ne doit JAMAIS être bloqué par cette vérification,
+        // car son but est de pouvoir tester n'importe quelle session à tout moment.
+        if (currentUsername !== 'devtest' && totalQuestions > 0 && answeredQuestionsCount >= totalQuestions) {
             console.log(`[CLIENT] Session ${selectedSession} déjà terminée. Affichage des résultats...`);
             const game = document.getElementById('game');
             if (game) game.style.display = 'block';
@@ -537,9 +539,7 @@ async function checkSessionAndShowQuiz() {
         
         quizResults = { correctAnswersCount: 0, totalTime: 0, weakAreas: [] };
         
-        // Démarrage du quiz
         updateProgress();
-        // C'est ICI que le processus commence : on appelle nextQuestion pour la première fois.
         nextQuestion(); 
         
         setupLeaderboardStream();
@@ -2279,13 +2279,10 @@ async function showSongSelection() {
         const competitionData = await competitionRes.json();
         const courseData = await courseRes.json();
         
-        // Stocker la date du cours actuel
         currentCourseDate = courseData.generatedAt;
         
-        // Robust parsing: avoid NaN which would prematurely unlock
         const parsedTs = Date.parse(competitionData?.startTime);
         competitionStartTime = isNaN(parsedTs) ? (Date.now() + 24 * 60 * 60 * 1000) : parsedTs;
-        // Debug: trace times once on load
         try { console.debug('[MENU] competitionStartTime:', new Date(competitionStartTime).toISOString()); } catch (_) {}
         const completedSessions = userData.completedSessions || [];
         
@@ -2299,40 +2296,48 @@ async function showSongSelection() {
                 const playerCount = sessionCounts[sessionKey] || 0;
                 const activeClass = playerCount > 0 ? 'active' : '';
 
-                // ==========================================================
-                // ===      LOGIQUE DE VERROUILLAGE CORRIGÉE ET SIMPLIFIÉE ===
-                // ==========================================================
                 let isLocked = false;
                 let lockReason = '';
-                // Recompute current time at each render to avoid stale value
                 const now = Date.now();
                 let isTimeLocked = now < competitionStartTime;
                 let showCountdown = false;
 
-                // Si l'utilisateur n'est PAS devtest, on applique les règles normales
+                // On n'applique les règles de verrouillage que si l'utilisateur n'est pas 'devtest'
                 if (currentUsername !== 'devtest') {
-                    // Verrouillage séquentiel de base pour toutes les sessions > 1
-                    if (sessionNumber > 1 && !completedSessions.includes(`session${sessionNumber - 1}`)) {
-                        isLocked = true;
-                        lockReason = `Terminez la Session ${sessionNumber - 1}`;
-                    }
+                    // ==========================================================
+                    // ===             LOGIQUE DE VERROUILLAGE CORRIGÉE         ===
+                    // ==========================================================
 
-                    // Règle spécifique pour la Session 4 : elle peut être verrouillée par le temps
-                    // même si la session 3 est terminée.
-                    if (sessionNumber === 4 && isTimeLocked && !isLocked) {
-                        isLocked = true;
-                        lockReason = 'La compétition démarre bientôt !';
-                        showCountdown = true;
+                    // Règle 1 : Entraînement (Sessions 2 & 3)
+                    if (sessionNumber === 2 || sessionNumber === 3) {
+                        if (!completedSessions.includes(`session${sessionNumber - 1}`)) {
+                            isLocked = true;
+                            lockReason = `Terminez la Session ${sessionNumber - 1}`;
+                        }
+                    } 
+                    // Règle 2 : Compétition (Sessions 4 et plus)
+                    else if (sessionNumber >= 4) {
+                        // D'abord, toutes les sessions de compétition sont verrouillées par le temps.
+                        if (isTimeLocked) {
+                            isLocked = true;
+                            lockReason = 'La compétition démarre bientôt !';
+                            // Le compte à rebours ne s'affiche que sur la session 4.
+                            if (sessionNumber === 4) {
+                                showCountdown = true;
+                            }
+                        } 
+                        // Ensuite, si le temps est écoulé, on applique le verrouillage séquentiel à partir de la session 5.
+                        else if (sessionNumber > 4 && !completedSessions.includes(`session${sessionNumber - 1}`)) {
+                            isLocked = true;
+                            lockReason = `Terminez la Session ${sessionNumber - 1}`;
+                        }
                     }
                 }
-                // Si c'est devtest, isLocked reste 'false', et tout est déverrouillé par défaut !
-                // La règle "Compétition à venir" qui posait problème a été supprimée.
-                // ==========================================================
-
+                
+                const canChat = (sessionNumber === 4);
                 const lockedClass = isLocked ? 'locked' : '';
                 const lockIcon = isLocked && !showCountdown ? '<span class="lock-icon">🔒</span>' : '';
                 const countdownHTML = showCountdown ? `<div class="session-countdown" id="session-4-countdown">Calcul...</div>` : '';
-                const canChat = (sessionNumber === 4 && (completedSessions.includes('session3') || currentUsername === 'devtest'));
                 
                 const chatButtonHTML = canChat ? `
                     <button class="session-chat-btn" data-session="${sessionKey}" title="Rejoindre le chat de la ${subItem.name}">
@@ -2364,24 +2369,21 @@ async function showSongSelection() {
                         const sessionNumber = parseInt(link.dataset.sessionNumber);
                         const href = link.getAttribute('href');
                         
-                        // Vérifier si c'est une session de compétition (4 et plus) et si le cours n'a pas été vu
                         if (sessionNumber >= 4 && currentCourseDate) {
                             const courseViewed = sessionStorage.getItem(`course_viewed_${currentCourseDate}`);
                             if (!courseViewed) {
-                                // Afficher la modale de rappel
                                 showConfirmationModal(
                                     'Rappel : Cours du jour',
                                     'Nous vous recommandons de consulter le cours du jour avant de commencer cette session de compétition. Souhaitez-vous le voir maintenant ?',
                                     'Voir le cours',
                                     'Continuer vers le quiz',
-                                    () => navigateTo('/course'), // Aller au cours
-                                    () => navigateTo(href) // Continuer vers le quiz
+                                    () => navigateTo('/course'),
+                                    () => navigateTo(href)
                                 );
                                 return;
                             }
                         }
                         
-                        // Si pas de rappel nécessaire, naviguer normalement
                         navigateTo(href);
                     });
                 }
@@ -2389,7 +2391,6 @@ async function showSongSelection() {
             sessionList.querySelectorAll('.session-chat-btn').forEach(button => { button.addEventListener('click', (e) => { e.stopPropagation(); navigateTo(`/chat?session=${button.dataset.session}`); }); });
         };
         
-        // Open (and auto-retry) the session status stream
         openSessionStatusStream(updateSessionDisplay);
 
     } catch (error) {
@@ -2896,20 +2897,19 @@ function displaySessionDetailsModal(sessionData) {
 // Ajoutez ces deux nouvelles fonctions à la fin de votre fichier script.js
 
 function setupCompetitionNotification(startTime, completedSessions) {
-    const header = document.getElementById('main-header');
+    // On cherche l'élément de notification directement dans la page.
     let notificationElement = document.getElementById('competition-notification');
+    if (!notificationElement) return; // Si l'élément n'existe pas, on ne fait rien.
 
-    // On ne montre la notification que si la session 3 est terminée et que la compétition n'a pas commencé
-    if (completedSessions.includes('session3') && Date.now() < startTime) {
-        if (!notificationElement) {
-            notificationElement = document.createElement('div');
-            notificationElement.id = 'competition-notification';
-            notificationElement.className = 'competition-notification';
-            header.appendChild(notificationElement);
-        }
-        // Le minuteur global mettra à jour le contenu
-    } else if (notificationElement) {
-        notificationElement.remove();
+    // La condition d'affichage reste la même :
+    // l'utilisateur a accès à la compétition et celle-ci n'a pas encore commencé.
+    // NOTE : On affiche le compteur pour tout le monde, que la session 3 soit terminée ou non.
+    if (Date.now() < startTime) {
+        // On rend l'élément visible. La fonction startCountdown s'occupera de le remplir.
+        notificationElement.style.display = 'block';
+    } else {
+        // Si la compétition a déjà commencé, on s'assure que l'élément est caché.
+        notificationElement.style.display = 'none';
     }
 }
 
@@ -2927,13 +2927,20 @@ function startCountdown(endTime) {
         const countdownElement = document.getElementById('session-4-countdown');
         const notificationElement = document.getElementById('competition-notification');
         
+        // ==========================================================
+        // ===            LA CORRECTION EST APPLIQUÉE ICI         ===
+        // ==========================================================
         if (remaining <= 0) {
             clearInterval(competitionCountdownInterval);
-            // Quand le temps est écoulé, on rafraîchit la vue pour débloquer la session
+            
+            // On affiche une notification pour informer l'utilisateur.
             showToast(i18n.t('competition.opensTitle'), i18n.t('competition.session4Available'), 'success');
-            if (window.location.pathname === '/menu') {
-                updateView();
-            }
+            
+            // Anciennement, il y avait une condition `if`. Nous la retirons.
+            // On appelle `updateView()` sans condition pour forcer le rafraîchissement de la page
+            // et afficher le nouvel état des sessions (débloquées).
+            updateView();
+            
             return;
         }
 
@@ -2943,7 +2950,6 @@ function startCountdown(endTime) {
 
         const countdownText = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         
-        // Date exacte formatée selon la langue courante
         const locale = (typeof i18n !== 'undefined' && i18n.getCurrentLanguage) ? i18n.getCurrentLanguage() : 'fr';
         const exactStart = new Date(endTime).toLocaleString(locale === 'en' ? 'en-US' : 'fr-FR', {
             day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'

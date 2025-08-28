@@ -13,7 +13,7 @@ const bcrypt = require('bcrypt');
 const moment = require('moment-timezone');
 const Database = require('better-sqlite3');
 const userNotificationClients = new Map();
-const { generateHint, generateAnalysis, generateNewQuestions, generateChatResponse, generateCourse } = require('./gemini.js');
+const { generateHint, generateAnalysis, generateNewQuestions, generateChatResponse, generateCourse, validateAndRefineQuestions } = require('./gemini.js');
 let sessionStatusClients = []; // S'assurer que cette ligne est bien présente
 
 // --- NOUVEAU : Gestion de l'historique des questions générées ---
@@ -447,6 +447,24 @@ function fixGeneratedQuestion(q) {
 }
 
 /**
+ * Crée une "empreinte" normalisée d'un texte de question pour une détection de doublons sémantiques simple.
+ * @param {string} text Le texte de la question.
+ * @returns {string} L'empreinte normalisée.
+ */
+function normalizeQuestionText(text) {
+  if (!text) return '';
+  // Met en minuscule, supprime les accents et la ponctuation, puis trie les mots.
+  return text
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, "") // Enlève les accents
+    .replace(/[^\w\s]/g, '') // Enlève la ponctuation
+    .split(/\s+/) // Sépare en mots
+    .filter(word => word.length > 2) // Garde les mots significatifs
+    .sort() // Trie les mots par ordre alphabétique
+    .join(' '); // Rejoint en une chaîne unique
+}
+
+/**
  * Sauvegarde un utilisateur spécifique dans la base de données SQLite.
  * C'est beaucoup plus performant que de sauvegarder toute la liste.
  * @param {object} user L'objet utilisateur à sauvegarder.
@@ -532,7 +550,7 @@ async function saveQuestions(sessionName) {
 async function scheduleDailyThemeRotation() {
   console.log('[CRON] Préparation de la tâche de rotation des thèmes.');
 
-  const scheduleTime = '50 23 * * *'; // Remettez l'heure de votre choix
+  const scheduleTime = '30 23 * * *';
   const scheduleTimezone = 'Indian/Antananarivo';
 
   console.log(`[CRON] La tâche est planifiée pour s'exécuter à : ${scheduleTime} (Fuseau horaire: ${scheduleTimezone})`);
@@ -545,69 +563,53 @@ async function scheduleDailyThemeRotation() {
     console.log(`[CRON] Nouveau thème : "${newTheme}"`);
 
     try {
-      // ===== MODIFICATION : ARCHIVAGE DE L'ANCIEN COURS =====
-      // Avant de générer le nouveau cours, on archive l'actuel.
       try {
         const currentCourseData = await fsp.readFile('course.json', 'utf8');
         const currentCourse = JSON.parse(currentCourseData);
-
-        // On lit l'historique existant ou on crée un tableau vide.
-        let courseHistory = [];
+        let courseHistoryData = [];
         try {
           const historyData = await fsp.readFile('course_history.json', 'utf8');
-          courseHistory = JSON.parse(historyData);
+          courseHistoryData = JSON.parse(historyData);
         } catch (histError) {
-          if (histError.code !== 'ENOENT') throw histError; // On ignore si le fichier n'existe pas, sinon on propage l'erreur.
+          if (histError.code !== 'ENOENT') throw histError;
         }
-
-        // On ajoute le cours actuel au début de l'historique.
-        courseHistory.unshift(currentCourse);
-
-        // On ne garde que les 30 derniers cours pour ne pas surcharger le fichier.
-        if (courseHistory.length > 30) {
-            courseHistory = courseHistory.slice(0, 30);
+        courseHistoryData.unshift(currentCourse);
+        if (courseHistoryData.length > 30) {
+            courseHistoryData = courseHistoryData.slice(0, 30);
         }
-
-        // On sauvegarde le nouvel historique de manière asynchrone.
-        await fsp.writeFile('course_history.json', JSON.stringify(courseHistory, null, 2), 'utf8');
-        updateJsonCache('course_history.json', courseHistory);
+        await fsp.writeFile('course_history.json', JSON.stringify(courseHistoryData, null, 2), 'utf8');
+        updateJsonCache('course_history.json', courseHistoryData);
         console.log('[CRON] Ancien cours archivé avec succès.');
-
       } catch (error) {
-        // Si course.json n'existe pas (premier lancement), ce n'est pas grave.
         if (error.code !== 'ENOENT') {
           console.error('[CRON] Erreur lors de l\'archivage de l\'ancien cours:', error);
         }
       }
       
-      // Réinitialisation des utilisateurs
       users.forEach(user => {
         if (user.username !== 'devtest') {
-          user.scores = [];
-          user.currentScore = 0;
-          user.activeSession = null;
-          user.xp = 0;
-          user.level = 1;
-          user.achievements = [];
-          user.consecutiveCorrectAnswers = 0;
-          user.completedSessions = [];
-          user.rewardedQuestionIds = [];
+          user.scores = []; user.currentScore = 0; user.activeSession = null;
+          user.xp = 0; user.level = 1; user.achievements = []; user.consecutiveCorrectAnswers = 0;
+          user.completedSessions = []; user.rewardedQuestionIds = [];
         }
       });
-      for (const user of users) {
-        saveUser(user);
-      }
+      for (const user of users) { saveUser(user); }
       console.log('[CRON] Progression de tous les utilisateurs réinitialisée.');
+
+      console.log('[CRON] Purge de l\'historique des questions pour le nouveau thème...');
+      questionHistory = [];
+      await saveQuestionHistory();
+      console.log('[CRON] Historique des questions purgé avec succès.');
       
-      // === CORRECTION : GÉNÉRATION DU COURS AVANT LES QUESTIONS ===
-      // 1. On génère le contenu du cours en premier.
-      const courseContent = await generateCourse(newTheme, 'intermédiaire'); // On génère un cours de niveau intermédiaire par défaut
+      const courseContent = await generateCourse(newTheme);
       const courseData = { theme: newTheme, content: courseContent, generatedAt: new Date().toISOString() };
       await fsp.writeFile('course.json', JSON.stringify(courseData, null, 2), 'utf8');
       updateJsonCache('course.json', courseData);
       console.log('[CRON] Nouveau cours sauvegardé.');
       
-      // 2. Maintenant que `courseContent` existe, on peut l'utiliser pour générer les questions.
+      const allGeneratedInThisRun = [];
+      const fingerprints = new Set(); // NOUVEAU : Set d'empreintes pour le CRON
+
       for (const sessionFile of sessionFiles) {
         const sessionName = sessionFile.replace('.json', '');
         const sessionNumber = parseInt(sessionName.replace('session', ''));
@@ -616,25 +618,45 @@ async function scheduleDailyThemeRotation() {
         if (sessionNumber <= 3) level = 'facile';
         if (sessionNumber >= 8) level = 'difficile';
         
-        console.log(`[CRON] Génération des questions pour ${sessionName} (Niveau: ${level})...`);
-        const newQuestions = await generateNewQuestions(newTheme, level, 'Français', 15, courseContent);
-        const questionsWithIds = newQuestions.map(raw => {
+        const targetCount = 15;
+        let finalQuestionsForSession = [];
+        let attempts = 0;
+        const MAX_ATTEMPTS = 5;
+
+        while (finalQuestionsForSession.length < targetCount && attempts < MAX_ATTEMPTS) {
+          attempts++;
+          const countToGenerate = (targetCount - finalQuestionsForSession.length) + 5;
+          const rawQuestions = await generateNewQuestions(newTheme, level, 'Français', countToGenerate, courseContent, allGeneratedInThisRun);
+          const correctedQuestions = await validateAndRefineQuestions(rawQuestions, newTheme, courseContent);
+
+          for (const q of correctedQuestions) {
+              const qText = q.text ? q.text.trim() : null;
+              const fingerprint = normalizeQuestionText(qText);
+              
+              if (qText && !fingerprints.has(fingerprint) && finalQuestionsForSession.length < targetCount) {
+                  finalQuestionsForSession.push(q);
+                  fingerprints.add(fingerprint);
+                  allGeneratedInThisRun.push(qText);
+              }
+          }
+        }
+
+        const questionsWithIds = finalQuestionsForSession.map(raw => {
           const q = fixGeneratedQuestion({ ...raw });
-          return {
-            ...q,
-            id: crypto.randomBytes(8).toString('hex'),
-            type: "standard"
-          };
+          return { ...q, id: crypto.randomBytes(8).toString('hex'), type: "standard" };
         });
+
         sessionQuestions[sessionName] = questionsWithIds;
         await saveQuestions(sessionName);
       }
-      console.log('[CRON] Toutes les questions ont été régénérées.');
+      
+      // Une fois toutes les sessions générées, on met à jour l'historique global sur disque.
+      questionHistory = allGeneratedInThisRun;
+      await saveQuestionHistory();
+      console.log('[CRON] Toutes les questions ont été régénérées et l\'historique global a été sauvegardé.');
 
-      // 3. On met à jour l'index du thème.
       themeData.currentIndex = newIndex;
       await saveThemes();
-
       console.log('[CRON] Rotation du thème terminée avec succès !');
 
     } catch (error) {
@@ -1288,79 +1310,68 @@ app.get('/session-status-stream', (req, res) => {
 });
 
 app.get('/questions', (req, res) => {
-  // --- NOUVEAU : Vérification de l'état de la compétition ---
   if (competitionRules.competitionEnded) {
     const timeSinceEnd = Date.now() - new Date(competitionRules.competitionEndTime).getTime();
     const tenMinutes = 10 * 60 * 1000;
     if (timeSinceEnd < tenMinutes) {
-      // MODIFICATION : Au lieu de juste renvoyer une erreur, on signale que la compétition est terminée
-      // et on inclut la liste des gagnants pour que le client puisse l'afficher.
       return res.status(403).json({
         error: 'La compétition est terminée ! Les résultats sont affichés. Les quiz reprendront dans quelques minutes.',
-        competitionOver: true, // Un drapeau pour que le client comprenne la situation
-        winners: winners // On envoie la liste des gagnants
+        competitionOver: true,
+        winners: winners
       });
     }
   }
 
-  // --- La logique de vérification de l'utilisateur reste la même ---
   if (!req.session.user) return res.status(401).json({ error: 'Non connecté.' });
   const session = req.query.session || 'session1';
   const user = users.find(u => u.username === req.session.user.username);
   if (!user) return res.status(404).json({ error: 'Utilisateur introuvable.' });
   if (!sessionQuestions[session]) return res.status(404).json({ error: 'Session non trouvée.' });
 
-  // --- La logique de vérification des prérequis de session reste la même ---
   const sessionNumber = parseInt(session.replace('session', ''), 10);
   if (isNaN(sessionNumber)) {
       return res.status(400).json({ error: 'Format de session invalide.' });
   }
-  if (user.username !== 'devtest' && sessionNumber > 1) { // L'utilisateur devtest a toujours accès
-      const requiredSession = `session${sessionNumber - 1}`;
-      if (!user.completedSessions || !user.completedSessions.includes(requiredSession)) {
-          console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Prérequis non rempli : ${requiredSession}`);
-          return res.status(403).json({ error: `Accès non autorisé. Vous devez d'abord terminer la ${requiredSession}.` });
-      }
+
+  // ==========================================================
+  // ===      LOGIQUE D'AUTORISATION CORRIGÉE ET FINALISÉE    ===
+  // ==========================================================
+  // On applique les règles de déverrouillage sauf pour 'devtest'
+  if (user.username !== 'devtest' && sessionNumber > 1) {
+    // La session 4 est spéciale : elle n'a PAS de prérequis de session.
+    // Pour toutes les AUTRES sessions (>1), la session précédente doit être terminée.
+    if (sessionNumber !== 4) {
+        const requiredSession = `session${sessionNumber - 1}`;
+        if (!user.completedSessions || !user.completedSessions.includes(requiredSession)) {
+            console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Prérequis non rempli : ${requiredSession}`);
+            return res.status(403).json({ error: `Accès non autorisé. Vous devez d'abord terminer la ${requiredSession}.` });
+        }
+    }
   }
 
-  // ==========================================================
-  // ===           NOUVELLE LOGIQUE DE SÉCURITÉ             ===
-  // ==========================================================
-  // 1. On récupère la liste complète des questions pour la session.
   const allQuestionsForSession = sessionQuestions[session];
-
-  // 2. On identifie les IDs de toutes les questions auxquelles l'utilisateur a DÉJÀ répondu.
   const answeredQuestionIds = new Set(
     user.scores
         .filter(s => s.session === session)
         .map(s => s.questionId)
   );
-
-  // 3. On cherche la PREMIÈRE question dans la liste complète qui n'a PAS encore été répondue.
   const nextQuestionToSend = allQuestionsForSession.find(q => !answeredQuestionIds.has(q.id));
 
-  // 4. On vérifie le résultat de notre recherche.
   if (nextQuestionToSend) {
-    // Si on a trouvé une question, on la prépare pour l'envoi.
-    // On retire la bonne réponse (protection essentielle) avant de l'envoyer.
     const { correctAnswer, ...questionForClient } = nextQuestionToSend;
-    
-    // Enregistrer le temps de début de cette question
     const userKey = `${req.session.user.username}_${nextQuestionToSend.id}`;
     questionStartTimes.set(userKey, Date.now());
-    
-    // On envoie UNIQUEMENT cet objet question, pas un tableau.
     return res.json(questionForClient);
   } else {
-    // Si on n'a trouvé AUCUNE question (l'utilisateur a tout fini ou la session est vide),
-    // on renvoie null pour indiquer au client que le quiz est terminé.
     return res.json(null);
   }
 });
+
 app.post('/submit', (req, res) => {
   if (!isRequestFromActiveLogin(req)) {
     return res.status(409).json({ error: 'Session invalide: un autre appareil est actif. Rechargez et reconnectez-vous.' });
   }
+  // ... (le reste du code reste inchangé)
   const { questionId, answer, timeTaken, session: currentSession, isErrorReplay } = req.body;
   const user = users.find(u => u.username === req.session.user.username);
   if (!user) return res.status(404).json({ error: 'Utilisateur non trouvé.' });
@@ -2331,22 +2342,50 @@ app.post('/admin/regenerate-questions/:session', protectAdmin, async (req, res) 
     return res.status(400).json({ error: "Les paramètres 'theme', 'level', 'language' et 'count' sont requis." });
   }
 
+  const targetCount = parseInt(count, 10);
+
   try {
+      let finalQuestions = [];
+      const seenTexts = new Set();
+      let attempts = 0;
+      const MAX_ATTEMPTS = 5; // Sécurité pour éviter une boucle infinie
+
       let courseContent = '';
       try {
         const courseData = await readJsonCached('course.json');
         courseContent = courseData.content;
       } catch (err) {
-        console.warn('[Admin] Impossible de lire course.json pour le contexte.');
+        console.warn('[Admin] Impossible de lire course.json pour le contexte. La génération sera moins précise.');
       }
 
-      const newQuestions = await generateNewQuestions(theme, level, language, count, courseContent, questionHistory);
-      
-      if (!Array.isArray(newQuestions) || newQuestions.length === 0) {
-          throw new Error("Aucune question n'a été générée.");
+      // ==========================================================
+      // ===          NOUVEAU : Boucle de génération            ===
+      // ==========================================================
+      // Tant qu'on n'a pas 15 questions et qu'on n'a pas dépassé le nombre max d'essais
+      while (finalQuestions.length < targetCount && attempts < MAX_ATTEMPTS) {
+          attempts++;
+          console.log(`[Gemini Generation] Tentative ${attempts}: Il manque ${targetCount - finalQuestions.length} questions.`);
+
+          // On demande un peu plus de questions que nécessaire pour compenser les rejets
+          const countToGenerate = (targetCount - finalQuestions.length) + 5;
+          
+          const rawQuestions = await generateNewQuestions(theme, level, language, countToGenerate, courseContent, questionHistory);
+          const correctedQuestions = await validateAndRefineQuestions(rawQuestions, theme, courseContent);
+
+          // On ajoute les questions validées et uniques à notre liste finale
+          for (const q of correctedQuestions) {
+              if (q.text && !seenTexts.has(q.text.trim()) && finalQuestions.length < targetCount) {
+                  finalQuestions.push(q);
+                  seenTexts.add(q.text.trim());
+              }
+          }
       }
-      
-      const questionsWithIds = newQuestions.map(raw => {
+
+      if (finalQuestions.length < targetCount) {
+          throw new Error(`N'a pu générer que ${finalQuestions.length}/${targetCount} questions valides après ${MAX_ATTEMPTS} tentatives.`);
+      }
+
+      const questionsWithIds = finalQuestions.map(raw => {
           const q = fixGeneratedQuestion({ ...raw });
           return { ...q, id: crypto.randomBytes(8).toString('hex'), type: "standard" };
       });
@@ -2358,9 +2397,9 @@ app.post('/admin/regenerate-questions/:session', protectAdmin, async (req, res) 
       questionHistory.push(...newQuestionTexts);
       await saveQuestionHistory();
 
-      res.json({ success: true, message: `${questionsWithIds.length} questions uniques générées pour "${theme}" et sauvegardées.` });
+      res.json({ success: true, message: `${questionsWithIds.length} questions uniques et validées ont été générées pour "${theme}".` });
   } catch (error) {
-      console.error(`[Admin] Erreur lors de la régénération pour ${session}:`, error);
+      console.error(`[Admin] Erreur critique lors de la régénération pour ${session}:`, error);
       res.status(500).json({ error: error.message || "Une erreur interne est survenue." });
   }
 });
@@ -2372,29 +2411,47 @@ app.post('/admin/regenerate-questions-all', protectAdmin, async (req, res) => {
     return res.status(400).json({ error: "Les paramètres 'theme', 'level', 'language' et 'count' sont requis." });
   }
 
+  const targetCount = parseInt(count, 10);
+
   try {
     let courseContent = '';
     try {
       const courseData = await readJsonCached('course.json');
       courseContent = courseData.content;
     } catch (err) {
-      console.warn('[Admin] Impossible de lire course.json pour le contexte.');
+      console.warn('[Admin All] Impossible de lire course.json pour le contexte.');
     }
 
-    const allNewQuestionTexts = [];
     const results = [];
+    const allGeneratedInThisRun = []; 
+    const fingerprints = new Set();
 
     for (const sessionFile of sessionFiles) {
       const sessionName = sessionFile.replace('.json', '');
       
-      // On passe l'historique actuel (qui inclut les questions des sessions précédentes de cette même boucle)
-      const newQuestions = await generateNewQuestions(theme, level, language, count, courseContent, questionHistory);
-      
-      if (!Array.isArray(newQuestions) || newQuestions.length === 0) {
-        throw new Error(`Aucune question générée pour ${sessionName}.`);
+      let finalQuestionsForSession = [];
+      let attempts = 0;
+      const MAX_ATTEMPTS = 5;
+
+      while (finalQuestionsForSession.length < targetCount && attempts < MAX_ATTEMPTS) {
+          attempts++;
+          const countToGenerate = (targetCount - finalQuestionsForSession.length) + 5;
+          const rawQuestions = await generateNewQuestions(theme, level, language, countToGenerate, courseContent, allGeneratedInThisRun);
+          const correctedQuestions = await validateAndRefineQuestions(rawQuestions, theme, courseContent);
+		  
+          for (const q of correctedQuestions) {
+              const qText = q.text ? q.text.trim() : null;
+              const fingerprint = normalizeQuestionText(qText);
+              
+              if (qText && !fingerprints.has(fingerprint) && finalQuestionsForSession.length < targetCount) {
+                  finalQuestionsForSession.push(q);
+                  fingerprints.add(fingerprint);
+                  allGeneratedInThisRun.push(qText);
+              }
+          }
       }
 
-      const questionsWithIds = newQuestions.map(raw => {
+      const questionsWithIds = finalQuestionsForSession.map(raw => {
         const q = fixGeneratedQuestion({ ...raw });
         return { ...q, id: crypto.randomBytes(8).toString('hex'), type: "standard" };
       });
@@ -2402,26 +2459,103 @@ app.post('/admin/regenerate-questions-all', protectAdmin, async (req, res) => {
       sessionQuestions[sessionName] = questionsWithIds;
       await saveQuestions(sessionName);
       
-      // On ajoute les nouvelles questions à l'historique pour la prochaine itération
-      const newTexts = questionsWithIds.map(q => q.text);
-      questionHistory.push(...newTexts);
-      allNewQuestionTexts.push(...newTexts);
-
       results.push({ session: sessionName, count: questionsWithIds.length });
     }
 
-    // On sauvegarde l'historique complet à la fin
+    questionHistory = allGeneratedInThisRun;
     await saveQuestionHistory();
+    console.log('[Admin All] Régénération terminée. Historique global sauvegardé.');
 
     const total = results.reduce((sum, r) => sum + (r.count || 0), 0);
-    res.json({ success: true, message: `${total} questions uniques générées au total.`, details: results });
+    res.json({ success: true, message: `${total} questions uniques et validées ont été générées au total.`, details: results });
   } catch (error) {
-    console.error('[Admin] Erreur lors de la régénération globale:', error);
+    console.error('[Admin] Erreur critique lors de la régénération globale:', error);
     res.status(500).json({ error: error.message || 'Une erreur interne est survenue.' });
   }
 });
+
+// ==========================================================
+// ==    NOUVEAU : GESTION EN MASSE DES QUESTIONS (ADMIN)  ==
+// ==========================================================
+
+// On configure Multer pour gérer le fichier uploadé en mémoire, c'est plus propre.
+const inMemoryUpload = multer({ storage: multer.memoryStorage() });
+
+// 1. ROUTE POUR TÉLÉCHARGER TOUTES LES QUESTIONS (VERSION CORRIGÉE ET FORMATÉE)
+app.get('/admin/questions/download-all', protectAdmin, async (req, res) => {
+    console.log('[ADMIN] Demande de téléchargement de toutes les sessions.');
+    
+    try {
+        const allSessionsData = {};
+
+        for (const sessionFile of sessionFiles) {
+            const sessionName = sessionFile.replace('.json', '');
+            const filePath = path.join(__dirname, sessionFile);
+            
+            const fileContent = await fsp.readFile(filePath, 'utf8');
+            const sessionData = JSON.parse(fileContent);
+            
+            if (sessionData && Array.isArray(sessionData.questions)) {
+                allSessionsData[sessionName] = sessionData.questions;
+            } else {
+                allSessionsData[sessionName] = [];
+            }
+        }
+
+        res.setHeader('Content-Disposition', 'attachment; filename="all_sessions_questions.json"');
+        res.setHeader('Content-Type', 'application/json');
+        
+        // CORRECTION APPLIQUÉE ICI : On utilise JSON.stringify avec indentation.
+        // Le '2' spécifie un formatage avec 2 espaces, rendant le fichier très lisible.
+        res.send(JSON.stringify(allSessionsData, null, 2));
+
+    } catch (error) {
+        console.error('[ADMIN] Erreur lors de la construction du fichier de téléchargement :', error);
+        res.status(500).json({ error: "Impossible de créer le fichier de questions. Vérifiez les logs du serveur." });
+    }
+});
+
+// 2. ROUTE POUR IMPORTER LE FICHIER DE QUESTIONS MODIFIÉ
+app.post('/admin/questions/upload-all', protectAdmin, inMemoryUpload.single('questionsFile'), async (req, res) => {
+    console.log('[ADMIN] Tentative d\'importation d\'un fichier de questions.');
+    
+    // On vérifie qu'un fichier a bien été envoyé.
+    if (!req.file) {
+        return res.status(400).json({ error: 'Aucun fichier n\'a été fourni.' });
+    }
+
+    try {
+        // Le contenu du fichier est dans un "buffer", on le convertit en texte.
+        const fileContent = req.file.buffer.toString('utf8');
+        const importedData = JSON.parse(fileContent);
+
+        // Validation simple : on vérifie que les clés correspondent aux sessions attendues.
+        const importedKeys = Object.keys(importedData);
+        const expectedKeys = Object.keys(sessionQuestions);
+        if (importedKeys.length === 0 || !expectedKeys.every(key => importedKeys.includes(key))) {
+            throw new Error('Le fichier est invalide ou ne contient pas les bonnes sessions.');
+        }
+
+        // Si tout est bon, on sauvegarde chaque session.
+        for (const sessionName of expectedKeys) {
+            // On met à jour l'objet en mémoire.
+            sessionQuestions[sessionName] = importedData[sessionName];
+            // On sauvegarde la modification dans le fichier correspondant (ex: session1.json).
+            await saveQuestions(sessionName);
+        }
+
+        console.log('[ADMIN] Importation réussie. Toutes les sessions ont été mises à jour.');
+        res.json({ success: true, message: 'Toutes les questions ont été mises à jour avec succès !' });
+
+    } catch (error) {
+        console.error('[ADMIN] Erreur lors de l\'importation :', error);
+        res.status(500).json({ error: `Échec de l'importation : ${error.message}` });
+    }
+});
+
 app.get('/admin/questions/:session', protectAdmin, (req, res) => {
     const { session } = req.params;
+    
     loadSessionFile(session);
     if (sessionQuestions[session]) {
         res.json(sessionQuestions[session]);
@@ -2521,6 +2655,13 @@ app.post('/admin/competition-rules', protectAdmin, async (req, res) => {
 app.get('/admin/users', protectAdmin, (req, res) => {
   const userList = users.map(u => ({ username: u.username, level: u.level, xp: u.xp }));
   res.json(userList);
+});
+
+// NOUVEAU : Route pour que l'admin voie le podium à tout moment
+app.get('/admin/winners', protectAdmin, (req, res) => {
+    // Cette route renvoie toujours la liste des gagnants,
+    // que la compétition soit terminée ou non.
+    res.json(winners);
 });
 // Route pour que l'admin récupère la liste des livres
 app.get('/admin/books', protectAdmin, (req, res) => {
@@ -2801,7 +2942,6 @@ app.get('/api/ping', (req, res) => {
 });
 
 app.use('/api', router);
-
 // --- SERVIR LES PAGES HTML ET LES FICHIERS STATIQUES ---
 app.use(express.static(path.join(__dirname, 'public')));
 

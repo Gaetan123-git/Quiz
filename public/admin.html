@@ -136,6 +136,36 @@
         <p id="prompts-status" class="text-sm mt-3 h-5"></p>
     </form>
 </div>
+<!-- NOUVELLE SECTION : IMPORT / EXPORT EN MASSE -->
+<div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+    <h2 class="text-xl font-semibold text-orange-400 mb-4">Gestion en Masse des Questions</h2>
+    <p class="text-sm text-gray-400 mb-4">
+        Téléchargez un fichier JSON unique contenant toutes les questions de toutes les sessions. Modifiez-le localement, puis importez-le pour mettre à jour l'ensemble du quiz en une seule fois.
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Section Téléchargement -->
+        <div>
+            <h3 class="text-lg font-semibold mb-2">1. Télécharger</h3>
+            <p class="text-xs text-gray-400 mb-3">Cliquez pour obtenir le fichier `french_quest_questions_export.json`.</p>
+            <button id="download-all-sessions-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full">
+                Télécharger toutes les sessions
+            </button>
+        </div>
+
+        <!-- Section Importation -->
+        <div>
+            <h3 class="text-lg font-semibold mb-2">2. Importer</h3>
+            <p class="text-xs text-gray-400 mb-3">Choisissez le fichier `all_sessions.json` que vous avez modifié.</p>
+            <div class="flex items-center gap-3">
+                <input type="file" id="import-questions-file" accept=".json" class="flex-grow p-2 text-sm text-gray-300 bg-gray-700 rounded-lg border border-gray-600 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-600 file:text-gray-200 hover:file:bg-gray-500">
+                <button id="upload-all-sessions-btn" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-3 rounded-lg">
+                    Importer
+                </button>
+            </div>
+        </div>
+    </div>
+    <p id="mass-edit-status" class="text-sm mt-4 h-5"></p>
+</div>
 
         <!-- NOUVEAU : Section d'édition du cours -->
         <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">

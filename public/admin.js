@@ -124,6 +124,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const courseEditContentTextarea = document.getElementById('course-edit-content');
     const saveCourseBtn = document.getElementById('save-course-btn');
     const courseSaveStatus = document.getElementById('course-save-status');
+    // NOUVEAU : Sélecteurs pour l'import/export en masse
+    const downloadAllSessionsBtn = document.getElementById('download-all-sessions-btn');
+    const importQuestionsFile = document.getElementById('import-questions-file');
+    const uploadAllSessionsBtn = document.getElementById('upload-all-sessions-btn');
+    const massEditStatus = document.getElementById('mass-edit-status');
 
     // ---- TOGGLE AFFICHAGE PROMPTS ----
     function toggleTextarea(textareaEl, btnEl) {
@@ -240,14 +245,12 @@ document.addEventListener('DOMContentLoaded', () => {
         winnersListContainer.innerHTML = '<p class="text-gray-400">Chargement...</p>';
 
         try {
-            const response = await fetch('/api/winners', {
+            // MODIFICATION : On appelle la nouvelle route dédiée à l'admin
+            const response = await fetch('/admin/winners', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-
-            if (response.status === 403) {
-                winnersListContainer.innerHTML = '<p class="text-yellow-400">La compétition n\'est pas encore terminée.</p>';
-                return;
-            }
+            
+            // La gestion de l'erreur 403 n'est plus nécessaire ici, car cette route renvoie toujours les données.
             if (!response.ok) throw new Error('Impossible de charger les gagnants.');
 
             const winners = await response.json();
@@ -1254,6 +1257,102 @@ function hideStatusMessage() {
             winnersUpdateStatus.className = 'text-red-500 text-sm mt-3';
         }
     });
+
+    // ==========================================================
+    // ==     NOUVEAU : LOGIQUE D'IMPORT/EXPORT EN MASSE       ==
+    // ==========================================================
+
+    // Gère le clic sur le bouton de téléchargement
+    if (downloadAllSessionsBtn) {
+        downloadAllSessionsBtn.addEventListener('click', async () => {
+            const token = sessionStorage.getItem(API_TOKEN_KEY);
+            
+            massEditStatus.textContent = 'Téléchargement en cours...';
+            massEditStatus.className = 'text-yellow-400 text-sm mt-4 h-5 animate-pulse';
+
+            try {
+                const response = await fetch('/admin/questions/download-all', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!response.ok) throw new Error('Échec du téléchargement.');
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                
+                // Crée un lien invisible, le clique, puis le supprime pour lancer le téléchargement
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'french_quest_questions_export.json';
+                document.body.appendChild(a);
+                a.click();
+                
+                // Nettoyage
+                window.URL.revokeObjectURL(url);
+                a.remove();
+
+                massEditStatus.textContent = 'Fichier téléchargé !';
+                massEditStatus.className = 'text-green-400 text-sm mt-4 h-5';
+
+            } catch (error) {
+                massEditStatus.textContent = `Erreur : ${error.message}`;
+                massEditStatus.className = 'text-red-500 text-sm mt-4 h-5';
+            } finally {
+                setTimeout(() => {
+                    massEditStatus.textContent = '';
+                    massEditStatus.classList.remove('animate-pulse');
+                }, 5000);
+            }
+        });
+    }
+
+    // Gère le clic sur le bouton d'importation
+    if (uploadAllSessionsBtn) {
+        uploadAllSessionsBtn.addEventListener('click', async () => {
+            const token = sessionStorage.getItem(API_TOKEN_KEY);
+            const file = importQuestionsFile.files[0];
+
+            if (!file) {
+                massEditStatus.textContent = 'Veuillez d\'abord sélectionner un fichier.';
+                massEditStatus.className = 'text-red-500 text-sm mt-4 h-5';
+                return;
+            }
+
+            massEditStatus.textContent = 'Importation en cours...';
+            massEditStatus.className = 'text-yellow-400 text-sm mt-4 h-5 animate-pulse';
+            uploadAllSessionsBtn.disabled = true;
+
+            // On utilise FormData pour envoyer le fichier
+            const formData = new FormData();
+            formData.append('questionsFile', file);
+
+            try {
+                const response = await fetch('/admin/questions/upload-all', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData // Pas besoin de 'Content-Type', le navigateur le gère.
+                });
+
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error);
+
+                massEditStatus.textContent = result.message;
+                massEditStatus.className = 'text-green-400 text-sm mt-4 h-5';
+                
+                // On rafraîchit la liste des questions affichées pour refléter les changements
+                loadQuestionsForSelectedSession();
+
+            } catch (error) {
+                massEditStatus.textContent = `Erreur : ${error.message}`;
+                massEditStatus.className = 'text-red-500 text-sm mt-4 h-5';
+            } finally {
+                uploadAllSessionsBtn.disabled = false;
+                importQuestionsFile.value = ''; // Réinitialise le champ de fichier
+                massEditStatus.classList.remove('animate-pulse');
+                 setTimeout(() => { massEditStatus.textContent = ''; }, 8000);
+            }
+        });
+    }
 
     // Lancement initial
     if (sessionStorage.getItem(API_TOKEN_KEY)) {

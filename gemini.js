@@ -13,23 +13,17 @@ function loadPrompts() {
     prompts = JSON.parse(data);
     console.log('[Gemini] Fichier de prompts chargé avec succès.');
   } catch (error) {
-    console.error('[Gemini] ERREUR CRITIQUE: Impossible de charger prompts.json. Utilisation des prompts par défaut.', error);
-    // Prompts de secours en cas d'erreur de lecture de fichier
-    prompts = {
-      questions: "Génère exactement ${count} questions...",
-      course: "Tu es un professeur de français exceptionnel..."
-    };
+    console.error('[Gemini] ERREUR CRITIQUE: Impossible de charger prompts.json.', error);
+    prompts = { questions: "Génère exactement ${count} questions...", course: "Tu es un professeur de français exceptionnel..." };
   }
 }
-loadPrompts(); // On charge les prompts au démarrage
+loadPrompts();
 
 // --- Gestion des Clés API (inchangée) ---
 const apiKeys = (process.env.GEMINI_API_KEYS || "").split(',').filter(key => key.trim() !== '');
-
 if (apiKeys.length === 0) {
   throw new Error("Aucune clé API Gemini trouvée dans GEMINI_API_KEYS.");
 }
-
 let currentApiKeyIndex = 0;
 let genAI;
 
@@ -44,7 +38,6 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 
 async function executeWithRetryAndRotation(apiCallExecutor) {
   let lastError = null;
-
   for (let keyAttempt = 0; keyAttempt < apiKeys.length; keyAttempt++) {
     const MAX_OVERLOAD_RETRIES = 3;
     for (let retry = 0; retry < MAX_OVERLOAD_RETRIES; retry++) {
@@ -53,34 +46,67 @@ async function executeWithRetryAndRotation(apiCallExecutor) {
       } catch (error) {
         lastError = error;
         const errorMessage = error.message ? error.message.toLowerCase() : "";
-
         if (errorMessage.includes('quota') || errorMessage.includes('resource has been exhausted')) {
           console.warn(`[Gemini] Erreur de Quota pour la clé index ${currentApiKeyIndex}.`);
-          break; 
+          break;
         }
-
         if (errorMessage.includes('overloaded') || errorMessage.includes('model is overloaded')) {
           if (retry === MAX_OVERLOAD_RETRIES - 1) {
-            console.error(`[Gemini] Le modèle est toujours surchargé après ${MAX_OVERLOAD_RETRIES} tentatives pour la clé index ${currentApiKeyIndex}.`);
-            break; 
+            console.error(`[Gemini] Le modèle est toujours surchargé après ${MAX_OVERLOAD_RETRIES} tentatives.`);
+            break;
           }
           const waitTime = Math.pow(2, retry) * 1000;
           console.warn(`[Gemini] Modèle surchargé. Nouvelle tentative dans ${waitTime / 1000}s...`);
           await delay(waitTime);
-          continue; 
+          continue;
         }
-        
         throw error;
       }
     }
-
     console.log(`[Gemini] Passage à la clé d'API suivante.`);
     currentApiKeyIndex = (currentApiKeyIndex + 1) % apiKeys.length;
     initializeGenAI();
   }
+  console.error("[Gemini] L'exécution a échoué après avoir essayé toutes les clés.");
+  throw lastError || new Error("Échec de l'appel à l'API Gemini.");
+}
 
-  console.error("[Gemini] L'exécution a échoué après avoir essayé toutes les clés et toutes les tentatives.");
-  throw lastError || new Error("Échec de l'appel à l'API Gemini après plusieurs tentatives sur toutes les clés.");
+// ==========================================================
+// ===         NOUVEAU PARSEUR JSON ULTRA-ROBUSTE         ===
+// ==========================================================
+/**
+ * Tente de parser une chaîne JSON potentiellement mal formée en nettoyant les erreurs courantes.
+ * @param {string} text - Le texte brut renvoyé par l'IA.
+ * @returns {object} L'objet JavaScript parsé.
+ * @throws {Error} Si le JSON reste invalide après nettoyage.
+ */
+function robustJsonParse(text) {
+  // 1. Nettoyage initial : enlève les marqueurs de code et les espaces superflus.
+  let cleanedText = text.replace(/^```json\s*|```\s*$/g, '').trim();
+
+  // 2. Recherche du début et de la fin du JSON ([...])
+  const jsonStartIndex = cleanedText.indexOf('[');
+  const jsonEndIndex = cleanedText.lastIndexOf(']');
+  if (jsonStartIndex === -1 || jsonEndIndex === -1) {
+    throw new Error("Format JSON invalide : Délimiteurs [ ou ] non trouvés.");
+  }
+  let jsonString = cleanedText.substring(jsonStartIndex, jsonEndIndex + 1);
+
+  // 3. Correction des erreurs les plus fréquentes :
+  //    - Ajoute des guillemets doubles manquants autour des clés (ex: {text:...} -> {"text":...})
+  jsonString = jsonString.replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":');
+  //    - Supprime les virgules en trop avant une accolade ou un crochet fermant (trailing commas).
+  jsonString = jsonString.replace(/,\s*([\}\]])/g, '$1');
+
+  try {
+    return JSON.parse(jsonString);
+  } catch (error) {
+    console.error("[Gemini Parser] Le JSON est resté invalide même après nettoyage.");
+    console.error("--- JSON problématique ---");
+    console.error(jsonString);
+    console.error("--------------------------");
+    throw error;
+  }
 }
 
 async function generateContentWithRetries(prompt, options = {}) {
@@ -99,19 +125,7 @@ async function generateContentWithRetries(prompt, options = {}) {
         return result.response.text();
       });
 
-      if (expectJson) {
-        const cleanedText = responseText.replace(/^```json\s*|```\s*$/g, '').trim();
-        const jsonStart = cleanedText.indexOf('[');
-        const jsonEnd = cleanedText.lastIndexOf(']');
-        
-        if (jsonStart === -1 || jsonEnd === -1) {
-          throw new Error("Format JSON invalide : marqueurs [ et ] introuvables.");
-        }
-        const jsonString = cleanedText.substring(jsonStart, jsonEnd + 1);
-        return JSON.parse(jsonString);
-      } else {
-        return responseText;
-      }
+      return expectJson ? robustJsonParse(responseText) : responseText;
 
     } catch (error) {
       console.warn(`[Gemini] Tentative ${attempt} échouée. Raison : ${error.message}`);
@@ -143,19 +157,16 @@ async function generateAnalysis(resultsData) {
     throw new Error("Impossible de générer une analyse.");
   }
 }
-// --- FONCTION MODIFIÉE ---
+
 async function generateNewQuestions(theme, level, language, count, courseContent = null, existingQuestions = []) {
-  // On récupère le template de base depuis le fichier chargé en mémoire
   let promptTemplate = prompts.questions;
   
-  // On remplace les variables standards
   let prompt = promptTemplate
     .replace(/\$\{count\}/g, count)
     .replace(/\$\{language\}/g, language)
     .replace(/\$\{theme\}/g, theme)
     .replace(/\$\{level\}/g, level);
   
-  // NOUVEAU : Si le contenu du cours est fourni, on l'ajoute comme contexte principal
   if (courseContent && courseContent.trim() !== '') {
     prompt += `
       
@@ -167,7 +178,6 @@ async function generateNewQuestions(theme, level, language, count, courseContent
       `;
   }
   
-  // On ajoute l'historique des questions à la fin du prompt pour que l'IA sache quoi éviter.
   if (existingQuestions && existingQuestions.length > 0) {
     prompt += `
       
@@ -233,12 +243,8 @@ async function generateChatResponse(message, history, context = null) {
   }
 }
 
-// --- FONCTION MODIFIÉE ---
 async function generateCourse(theme) {
-  // On récupère le template depuis le fichier chargé en mémoire
   let promptTemplate = prompts.course;
-  
-  // On remplace la variable `${theme}`
   const prompt = promptTemplate.replace(/\$\{theme\}/g, theme);
   
   try {
@@ -251,11 +257,57 @@ async function generateCourse(theme) {
   }
 }
 
+async function validateAndRefineQuestions(questions, theme, courseContent) {
+  console.log(`[Gemini] Lancement de la phase de validation et de correction pour ${questions.length} questions...`);
+  
+  const validationPrompt = `
+    Tu es un expert en pédagogie et un excellent professeur de français. Ta mission est de valider et de réécrire un lot de questions de quiz générées par une autre IA pour qu'elles soient parfaites pour un apprenant.
+
+    ### CONTEXTE
+    - Thème original du quiz : "${theme}"
+    - Contenu du cours qui sert de RÉFÉRENCE THÉMATIQUE :
+    --- DEBUT DU COURS ---
+    ${courseContent}
+    --- FIN DU COURS ---
+
+    ### LOT DE QUESTIONS À VÉRIFIER ET CORRIGER
+    ${JSON.stringify(questions, null, 2)}
+
+    ### TES INSTRUCTIONS STRICTES (ORDRE DE PRIORITÉ)
+    1.  **AUTONOMIE DE LA QUESTION (LE PLUS IMPORTANT)** : Chaque question doit être compréhensible et répondable par elle-même, SANS avoir besoin de se souvenir du cours. **REJÈTE** les questions qui font référence à "l'exemple 1", "le texte ci-dessus", etc.
+    2.  **PERTINENCE THÉMATIQUE** : Chaque question doit tester un concept lié au thème général du cours. Si une question est hors-sujet, rejette-la.
+    3.  **REFORMULATION OBLIGATOIRE** : Si une question est pertinente mais mal formulée (ex: "Dans l'exemple 3..."), REFORMULE-LA pour la rendre autonome (ex: "Quel temps décrit une action soudaine dans le passé ?").
+    4.  **QUALITÉ PÉDAGOGIQUE** : Corrige toute erreur grammaticale. La \`correctAnswer\` doit correspondre EXACTEMENT à une des \`options\`.
+    5.  **VÉRIFICATION DES OPTIONS (TRÈS IMPORTANT)** : Le tableau \`options\` doit contenir exactement 4 chaînes de caractères DISTINCTES. S'il y a des doublons (comme deux fois "j'étais"), tu DOIS remplacer l'option en double par un nouveau distracteur pertinent.
+    6.  **LANGUE DES EXPLICATIONS** : L'explication (\`explanation\`) DOIT TOUJOURS être rédigée **en français**.
+    7.  **FORMATAGE FINAL** : Renvoie UNIQUEMENT un tableau JSON valide contenant les questions que tu as validées et/ou reformulées.
+
+    L'objectif final est d'avoir un quiz qui teste la maîtrise du thème, pas la mémorisation du cours.
+  `;
+
+  try {
+    const refinedQuestions = await generateContentWithRetries(validationPrompt, { expectJson: true });
+    
+    if (!Array.isArray(refinedQuestions)) {
+      console.warn('[Gemini Corrector] La réponse du correcteur n\'était pas un tableau. Retour des questions originales.');
+      return questions;
+    }
+    
+    console.log(`[Gemini] Correction terminée. ${refinedQuestions.length}/${questions.length} questions ont été validées.`);
+    return refinedQuestions;
+
+  } catch (error) {
+    console.error("[Gemini Corrector] Erreur durant la phase de correction. Les questions originales seront utilisées.", error);
+    return questions;
+  }
+}
+
 module.exports = {
   generateHint,
   generateAnalysis,
   generateNewQuestions,
   generateChatResponse,
   generateCourse,
-  loadPrompts // On exporte la fonction pour pouvoir la réutiliser
+  validateAndRefineQuestions,
+  loadPrompts
 };

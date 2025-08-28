@@ -1,213 +1,213 @@
 {
   "questions": [
     {
-      "text": "Quel adverbe indique la manière dont on mange ?",
+      "text": "Quel est le verbe conjugué dans la phrase : \"Mon mari est déjà parti au travail\" ?",
       "options": [
-        "vite",
-        "ici",
-        "demain",
-        "beaucoup"
+        "avoir",
+        "aller",
+        "être",
+        "faire"
       ],
-      "correctAnswer": "vite",
-      "englishHint": "Which adverb indicates how one eats?",
-      "explanation": "L'adverbe \"vite\" précise la manière de manger.  Il modifie le verbe implicite de la phrase.",
-      "id": "9fa94336709af222",
+      "correctAnswer": "être",
+      "englishHint": "What is the conjugated verb in the sentence: \"My husband has already left for work\"?",
+      "explanation": "Le verbe \"est\" est la conjugaison du verbe irrégulier \"être\" à la troisième personne du singulier.",
+      "id": "64d4073528a182a8",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe situe une action dans le futur ?",
+      "text": "Comment conjugue-t-on le verbe \"parler\" au présent de l'indicatif à la deuxième personne du pluriel ?",
       "options": [
-        "hier",
-        "aujourd'hui",
-        "demain",
-        "jamais"
+        "vous parlez",
+        "vous parles",
+        "vous parlons",
+        "vous parler"
       ],
-      "correctAnswer": "demain",
-      "englishHint": "Which adverb places an action in the future?",
-      "explanation": "L'adverbe \"demain\" indique que l'action se déroulera dans le futur.",
-      "id": "45e0bb8ea52812c7",
+      "correctAnswer": "vous parlez",
+      "englishHint": "How do you conjugate the verb \"parler\" in the present indicative in the second person plural?",
+      "explanation": "Le verbe \"parler\" est régulier et suit la terminaison \"-ez\" pour la deuxième personne du pluriel au présent de l'indicatif.",
+      "id": "cc684d935780fb57",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe indique l'endroit où un événement se produit ?",
+      "text": "Indiquez la bonne conjugaison du verbe \"avoir\" à la première personne du singulier.",
       "options": [
-        "rapidement",
-        "beaucoup",
-        "là-bas",
-        "souvent"
+        "j'ai",
+        "tu as",
+        "il a",
+        "nous avons"
       ],
-      "correctAnswer": "là-bas",
-      "englishHint": "Which adverb indicates where an event takes place?",
-      "explanation": "L'adverbe \"là-bas\" indique le lieu où se produit l'événement.",
-      "id": "29df0d566446b1cb",
+      "correctAnswer": "j'ai",
+      "englishHint": "Indicate the correct conjugation of the verb \"avoir\" in the first person singular.",
+      "explanation": "J'ai est la conjugaison correcte du verbe irrégulier avoir à la première personne du singulier.",
+      "id": "b4bbcb0c745f0e29",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe exprime une grande quantité ?",
+      "text": "Lequel de ces verbes signifie \"accomplir une action\" ?",
       "options": [
-        "peu",
-        "un peu",
-        "beaucoup",
-        "assez"
+        "être",
+        "aller",
+        "avoir",
+        "faire"
       ],
-      "correctAnswer": "beaucoup",
-      "englishHint": "Which adverb expresses a large quantity?",
-      "explanation": "L'adverbe \"beaucoup\" exprime une quantité importante ou abondante.",
-      "id": "0599f966d3c7446e",
+      "correctAnswer": "faire",
+      "englishHint": "Which of these verbs means \"to accomplish an action\"?",
+      "explanation": "Le verbe \"faire\" signifie accomplir une action, créer quelque chose.",
+      "id": "16841bb5591f280d",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe sert à nier une action ?",
+      "text": "Quelle est la terminaison du verbe \"jouer\" au présent de l'indicatif à la troisième personne du singulier ?",
       "options": [
-        "oui",
-        "si",
-        "peut-être",
-        "ne...pas"
+        "-ons",
+        "-ent",
+        "-es",
+        "-e"
       ],
-      "correctAnswer": "ne...pas",
-      "englishHint": "Which adverb serves to negate an action?",
-      "explanation": "L'expression \"ne...pas\" est un adverbe de négation qui annule le sens du verbe.",
-      "id": "8362e75194017b69",
+      "correctAnswer": "-e",
+      "englishHint": "What is the ending of the verb \"jouer\" in the present indicative in the third person singular?",
+      "explanation": "Bien que le cours ne conjugue pas explicitement \"jouer\", il suit le modèle régulier en -er, donc la terminaison à la 3ème personne du singulier est -e.",
+      "id": "54553058d1fa970d",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe affirme quelque chose de façon certaine ?",
+      "text": "Complétez la phrase : \"Nous ______ au restaurant demain soir.\"",
       "options": [
-        "peut-être",
-        "probablement",
-        "certainement",
-        "jamais"
+        "sommes",
+        "allons",
+        "avons",
+        "faisons"
       ],
-      "correctAnswer": "certainement",
-      "englishHint": "Which adverb affirms something with certainty?",
-      "explanation": "L'adverbe \"certainement\" exprime une affirmation sans doute.",
-      "id": "402a816c8c56cf7d",
+      "correctAnswer": "allons",
+      "englishHint": "Complete the sentence: \"We ______ to the restaurant tomorrow night.\"",
+      "explanation": "Le verbe \"aller\" exprime le déplacement et sa conjugaison à la première personne du pluriel au présent est \"allons\".",
+      "id": "40077abf3019a5e3",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe exprime le doute ?",
+      "text": "Dans la phrase : \"Il a promis de rapporter des croissants\", quel verbe irrégulier est utilisé ?",
       "options": [
-        "oui",
-        "non",
-        "peut-être",
-        "toujours"
+        "être",
+        "aller",
+        "avoir",
+        "faire"
       ],
-      "correctAnswer": "peut-être",
-      "englishHint": "Which adverb expresses doubt?",
-      "explanation": "L'adverbe \"peut-être\" indique une incertitude ou un doute.",
-      "id": "1fa9b4e51163bbb8",
+      "correctAnswer": "avoir",
+      "englishHint": "In the sentence: \"He promised to bring croissants\", which irregular verb is used?",
+      "explanation": "Le verbe \"a\" est la conjugaison du verbe irrégulier \"avoir\" à la troisième personne du singulier.",
+      "id": "17515304ce244aa5",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase \"Il parle doucement\", quel est l'adverbe ?",
+      "text": "Comment se conjugue le verbe \"aller\" au présent à la première personne du singulier ?",
       "options": [
-        "Il",
-        "parle",
-        "doucement",
-        "phrase"
+        "je vais",
+        "tu vas",
+        "il va",
+        "nous allons"
       ],
-      "correctAnswer": "doucement",
-      "englishHint": "In the sentence \"Il parle doucement\", what is the adverb?",
-      "explanation": "L'adverbe \"doucement\" modifie le verbe \"parle\" et indique la manière dont il parle.",
-      "id": "31e93ca27f54f217",
+      "correctAnswer": "je vais",
+      "englishHint": "How is the verb \"aller\" conjugated in the present tense in the first person singular?",
+      "explanation": "La conjugaison du verbe irrégulier \"aller\" à la première personne du singulier est \"je vais\".",
+      "id": "6e28eb05bbb42c1b",
       "type": "standard"
     },
     {
-      "text": "Dans \"Elle est très grande\", quel mot est l'adverbe ?",
+      "text": "Quelle erreur fréquente concernant la conjugaison verbale est mentionnée dans le cours ?",
       "options": [
-        "Elle",
+        "Confondre les temps verbaux",
+        "Omettre les sujets",
+        "Omettre les terminaisons verbales",
+        "Utiliser des verbes irréguliers à la place de réguliers"
+      ],
+      "correctAnswer": "Omettre les terminaisons verbales",
+      "englishHint": "What frequent mistake concerning verb conjugation is mentioned in the course?",
+      "explanation": "Le cours mentionne explicitement l'omission des terminaisons verbales comme une erreur fréquente.",
+      "id": "bcb95d0cf67d382d",
+      "type": "standard"
+    },
+    {
+      "text": "La phrase : \"Je suis fatigué, j'ai faim, je vais dormir !\" illustre quelle technique d'apprentissage ?",
+      "options": [
+        "L'utilisation de synonymes",
+        "La répétition des conjugaisons",
+        "La création de phrases courtes et amusantes",
+        "L'apprentissage par cœur"
+      ],
+      "correctAnswer": "La création de phrases courtes et amusantes",
+      "englishHint": "The sentence: \"I am tired, I am hungry, I am going to sleep!\" illustrates which learning technique?",
+      "explanation": "Le cours propose de créer des phrases courtes et amusantes pour mémoriser les conjugaisons irrégulières.",
+      "id": "871ac6bb65b512c5",
+      "type": "standard"
+    },
+    {
+      "text": "Quel verbe irrégulier est conjugué dans la phrase : \"Ils sont allés au cinéma\" ?",
+      "options": [
+        "aller",
+        "être",
+        "avoir",
+        "faire"
+      ],
+      "correctAnswer": "être",
+      "englishHint": "Which irregular verb is conjugated in the sentence: \"They went to the cinema\"?",
+      "explanation": "Le verbe \"sont\" est la conjugaison du verbe irrégulier \"être\" à la troisième personne du pluriel.",
+      "id": "592ff8938d33e0fa",
+      "type": "standard"
+    },
+    {
+      "text": "Parmi ces verbes, lequel est régulier : préparer, être, avoir, faire ?",
+      "options": [
+        "être",
+        "avoir",
+        "faire",
+        "préparer"
+      ],
+      "correctAnswer": "préparer",
+      "englishHint": "Among these verbs, which one is regular: to prepare, to be, to have, to do?",
+      "explanation": "Seul le verbe \"préparer\" suit la conjugaison régulière des verbes en -er.",
+      "id": "efb3e05a5db0d6ce",
+      "type": "standard"
+    },
+    {
+      "text": "Complétez la phrase : \"Tu ________ un livre intéressant.\"",
+      "options": [
+        "as",
+        "es",
         "est",
-        "très",
-        "grande"
+        "a"
       ],
-      "correctAnswer": "très",
-      "englishHint": "In \"Elle est très grande\", which word is the adverb?",
-      "explanation": "L'adverbe \"très\" modifie l'adjectif \"grande\" et en amplifie le sens.",
-      "id": "6294e3121978218c",
+      "correctAnswer": "as",
+      "englishHint": "Complete the sentence: \"You ________ an interesting book.\"",
+      "explanation": "La conjugaison du verbe avoir à la deuxième personne du singulier est \"as\".",
+      "id": "c6aede995e11c175",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe pourrait remplacer \"avec rapidité\" ?",
+      "text": "Quelle est la conjugaison du verbe \"faire\" au présent de l'indicatif à la troisième personne du pluriel ?",
       "options": [
-        "lentement",
-        "rapidement",
-        "doucement",
-        "calmement"
+        "ils font",
+        "ils fais",
+        "ils faisons",
+        "ils fâchent"
       ],
-      "correctAnswer": "rapidement",
-      "englishHint": "Which adverb could replace \"avec rapidité\"?",
-      "explanation": "L'adverbe \"rapidement\" est synonyme de \"avec rapidité\" et indique la vitesse de l'action.",
-      "id": "1d075073d8baf5d3",
+      "correctAnswer": "ils font",
+      "englishHint": "What is the conjugation of the verb \"faire\" in the present indicative in the third person plural?",
+      "explanation": "Le cours indique que la conjugaison de \"faire\" à la troisième personne du pluriel est \"ils font\".",
+      "id": "d4dc9e5cec7ec783",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe indique un lieu proche ?",
+      "text": "Choisissez la bonne conjugaison du verbe \"être\" pour compléter : \"Nous ______ amis.\"",
       "options": [
-        "ailleurs",
-        "là-bas",
-        "près",
-        "loin"
+        "sommes",
+        "avons",
+        "allons",
+        "faisons"
       ],
-      "correctAnswer": "près",
-      "englishHint": "Which adverb indicates a nearby place?",
-      "explanation": "L'adverbe \"près\" indique un lieu proche de celui où l'on se trouve.",
-      "id": "8bef318586e6101c",
-      "type": "standard"
-    },
-    {
-      "text": "Dans la phrase \"Ils sont déjà partis\", quel est l'adverbe ?",
-      "options": [
-        "Ils",
-        "sont",
-        "déjà",
-        "partis"
-      ],
-      "correctAnswer": "déjà",
-      "englishHint": "In the sentence \"Ils sont déjà partis\", what is the adverb?",
-      "explanation": "L'adverbe \"déjà\" indique le temps de l'action, précisant qu'elle est antérieure au moment de la parole.",
-      "id": "0f9677ed119b915c",
-      "type": "standard"
-    },
-    {
-      "text": "Quel adverbe signifie \"à un endroit opposé à l'intérieur\" ?",
-      "options": [
-        "dedans",
-        "dehors",
-        "ici",
-        "là"
-      ],
-      "correctAnswer": "dehors",
-      "englishHint": "Which adverb means \"in a place opposite to the inside\"?",
-      "explanation": "L'adverbe \"dehors\" indique un lieu extérieur, opposé à l'intérieur.",
-      "id": "a986dc7d5ee09826",
-      "type": "standard"
-    },
-    {
-      "text": "L'adverbe \"aujourd'hui\" indique :",
-      "options": [
-        "le passé",
-        "le futur",
-        "le présent",
-        "l'incertitude"
-      ],
-      "correctAnswer": "le présent",
-      "englishHint": "The adverb \"aujourd'hui\" indicates:",
-      "explanation": "L'adverbe \"aujourd'hui\" situe l'action dans le temps présent.",
-      "id": "bf60d157ce69ea58",
-      "type": "standard"
-    },
-    {
-      "text": "Dans \"Il a beaucoup travaillé\", \"beaucoup\" est un adverbe de :",
-      "options": [
-        "manière",
-        "temps",
-        "lieu",
-        "quantité"
-      ],
-      "correctAnswer": "quantité",
-      "englishHint": "In \"Il a beaucoup travaillé\", \"beaucoup\" is an adverb of:",
-      "explanation": "L'adverbe \"beaucoup\" indique la quantité de travail effectué.",
-      "id": "7922d17e43943202",
+      "correctAnswer": "sommes",
+      "englishHint": "Choose the correct conjugation of the verb \"être\" to complete: \"We are friends.\"",
+      "explanation": "Le cours fournit la conjugaison du verbe \"être\" à la première personne du pluriel : \"nous sommes\".",
+      "id": "b41b1d9367bfaaaa",
       "type": "standard"
     }
   ]

@@ -1,213 +1,208 @@
 {
   "questions": [
     {
-      "text": "Quel adverbe indique la manière dont on réalise une action ?",
+      "text": "Quelle est la conjugaison du verbe \"aller\" au présent de l'indicatif, à la deuxième personne du pluriel ?",
       "options": [
-        "Aujourd'hui",
-        "Rapidement",
-        "Là-bas",
-        "Beaucoup"
+        "Vous allez",
+        "Vous allons",
+        "Vous aller",
+        "Vous alliez"
       ],
-      "correctAnswer": "Rapidement",
-      "englishHint": "Which adverb indicates the way in which an action is performed?",
-      "explanation": "L'adverbe \"rapidement\" précise comment l'action est faite, il décrit la manière.",
-      "id": "d4abd8b5925e0eb6",
+      "correctAnswer": "Vous allez",
+      "englishHint": "What is the conjugation of the verb \"aller\" in the present indicative, second person plural?",
+      "explanation": "Le verbe aller est irrégulier.  Sa conjugaison à la deuxième personne du pluriel au présent de l'indicatif est \"vous allez\".",
+      "id": "e8495a68c61aa0c2",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe situe une action dans le temps ?",
+      "text": "Quel verbe irrégulier signifie posséder quelque chose ?",
       "options": [
-        "Silencieusement",
-        "Partout",
-        "Demain",
-        "Près"
+        "Parler",
+        "Avoir",
+        "Être",
+        "Aller"
       ],
-      "correctAnswer": "Demain",
-      "englishHint": "Which adverb locates an action in time?",
-      "explanation": "L'adverbe \"demain\" indique quand l'action aura lieu, il situe l'action dans le temps.",
-      "id": "7f0c0359a19886d1",
+      "correctAnswer": "Avoir",
+      "englishHint": "Which irregular verb means to possess something?",
+      "explanation": "Le verbe \"avoir\" est irrégulier et exprime la possession.",
+      "id": "fffcc0ef050c0ce1",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe indique l'endroit où se passe une action ?",
+      "text": "Quel est le temps et le verbe conjugué dans la phrase : \"Ils vont au cinéma\"",
       "options": [
-        "Malheureusement",
-        "Très",
-        "Ici",
-        "Souvent"
+        "Imparfait, aller",
+        "Présent, aller",
+        "Passé composé, aller",
+        "Futur, aller"
       ],
-      "correctAnswer": "Ici",
-      "englishHint": "Which adverb indicates where an action takes place?",
-      "explanation": "L'adverbe \"ici\" indique le lieu de l'action.",
-      "id": "32a019ddd175d880",
+      "correctAnswer": "Présent, aller",
+      "englishHint": "What is the tense and the conjugated verb in the sentence: \"Ils vont au cinéma\"",
+      "explanation": "La phrase est au présent de l'indicatif, et le verbe conjugué est \"aller\".",
+      "id": "17861be0477f06db",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe exprime une quantité ?",
+      "text": "Quel verbe irrégulier faut-il utiliser pour compléter la phrase : \"Je ______ un gâteau\", pour exprimer que je suis en train de le faire ?",
       "options": [
-        "Hier",
-        "Doucement",
-        "Beaucoup",
-        "Ailleurs"
+        "avoir",
+        "être",
+        "faire",
+        "aller"
       ],
-      "correctAnswer": "Beaucoup",
-      "englishHint": "Which adverb expresses a quantity?",
-      "explanation": "L'adverbe \"beaucoup\" indique une grande quantité.",
-      "id": "eda17c1d1350e12b",
+      "correctAnswer": "faire",
+      "englishHint": "Which irregular verb should be used to complete the sentence: \"I ______ a cake\", to express that I am making it?",
+      "explanation": "Le verbe \"faire\" est le seul, parmi les choix proposés, qui convient pour exprimer l'action de réaliser, de créer quelque chose.",
+      "id": "b45ada37d92c9f36",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe sert à nier une action ?",
+      "text": "Quel verbe irrégulier est conjugué dans la phrase : \"Nous ______ contents\"",
       "options": [
-        "Oui",
-        "Peut-être",
-        "Jamais",
-        "Certainement"
+        "sommes",
+        "avons",
+        "allons",
+        "faisons"
       ],
-      "correctAnswer": "Jamais",
-      "englishHint": "Which adverb serves to negate an action?",
-      "explanation": "L'adverbe \"jamais\" exprime la négation d'une action.",
-      "id": "ccdd3c77ee0d0378",
+      "correctAnswer": "sommes",
+      "englishHint": "Which irregular verb is conjugated in the sentence: \"We ______ happy\"",
+      "explanation": "Le verbe \"être\" conjugué à la première personne du pluriel (\"sommes\") exprime l'état d'être content.",
+      "id": "83013bb9a26b3d0b",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe affirme quelque chose ?",
+      "text": "Conjuguez le verbe \"être\" au présent de l'indicatif à la troisième personne du pluriel : \"Ils... étudiants\"",
       "options": [
-        "Probablement",
-        "Non",
-        "Oui",
-        "Peut-être"
+        "Ils sont étudiants",
+        "Ils étaient étudiants",
+        "Ils seront étudiants",
+        "Ils ont été étudiants"
       ],
-      "correctAnswer": "Oui",
-      "englishHint": "Which adverb affirms something?",
-      "explanation": "L'adverbe \"oui\" sert à affirmer quelque chose.",
-      "id": "3e39986835fe3288",
+      "correctAnswer": "Ils sont étudiants",
+      "explanation": "La conjugaison du verbe \"être\" au présent de l'indicatif, à la troisième personne du pluriel est \"sont\".",
+      "id": "776848f936926d79",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe exprime un doute ?",
+      "text": "Comment conjugue-t-on le verbe \"faire\" au présent de l'indicatif, à la première personne du singulier, pour dire que l'on fait ses devoirs ?",
       "options": [
-        "Absolument",
-        "Certainement",
-        "Peut-être",
-        "Toujours"
+        "Je faire mes devoirs",
+        "Je fais mes devoirs",
+        "Je fait mes devoirs",
+        "Je vais faire mes devoirs"
       ],
-      "correctAnswer": "Peut-être",
-      "englishHint": "Which adverb expresses doubt?",
-      "explanation": "L'adverbe \"peut-être\" exprime de l'incertitude ou du doute.",
-      "id": "187c86059df1aebf",
+      "correctAnswer": "Je fais mes devoirs",
+      "explanation": "La conjugaison du verbe \"faire\" au présent de l'indicatif, à la première personne du singulier est \"fais\".",
+      "id": "263ccb49fd2a0455",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase \"Il mange lentement\", quel est l'adverbe ?",
+      "text": "Conjuguez le verbe \"aller\" au présent de l'indicatif à la deuxième personne du pluriel : \"Vous... au cinéma ce soir\"",
       "options": [
-        "Il",
-        "mange",
-        "lentement",
-        "est"
+        "allez",
+        "aller",
+        "allés",
+        "alliez"
       ],
-      "correctAnswer": "lentement",
-      "englishHint": "In the sentence \"Il mange lentement\", what is the adverb?",
-      "explanation": "Le mot \"lentement\" est un adverbe car il modifie le verbe \"mange\" en précisant la manière.",
-      "id": "04bffe36b18afd47",
+      "correctAnswer": "allez",
+      "explanation": "La conjugaison du verbe \"aller\" au présent de l'indicatif, à la deuxième personne du pluriel est \"allez\".",
+      "id": "fc6dfb3a65389be0",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase \"Elle est très grande\", quel mot est l'adverbe ?",
+      "text": "Parmi ces verbes, lequel est irrégulier et exprime un déplacement ?",
       "options": [
-        "Elle",
-        "est",
-        "très",
-        "grande"
+        "parler",
+        "jouer",
+        "faire",
+        "aller"
       ],
-      "correctAnswer": "très",
-      "englishHint": "In the sentence \"Elle est très grande\", which word is the adverb?",
-      "explanation": "Le mot \"très\" est un adverbe de quantité car il modifie l'adjectif \"grande\".",
-      "id": "66f23c1e722eee20",
+      "correctAnswer": "aller",
+      "explanation": "Le verbe \"aller\" est un verbe irrégulier qui signifie \"se déplacer\".",
+      "id": "04f56d385f8687ba",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe pourrait remplacer \"avec rapidité\" ?",
+      "text": "Comment conjugue-t-on le verbe \"avoir\" au présent de l'indicatif à la troisième personne du pluriel pour dire qu'ils possèdent plusieurs chats ?",
       "options": [
-        "Lentement",
-        "Rapidement",
-        "Doucement",
-        "Maladroitement"
+        "ont",
+        "a",
+        "as",
+        "avez"
       ],
-      "correctAnswer": "Rapidement",
-      "englishHint": "Which adverb could replace \"avec rapidité\"?",
-      "explanation": "Les deux adverbes ont le même sens, ils décrivent une action effectuée de manière rapide.",
-      "id": "516200bd07868cbd",
+      "correctAnswer": "ont",
+      "explanation": "La conjugaison du verbe \"avoir\" au présent de l'indicatif à la troisième personne du pluriel est \"ont\".",
+      "id": "ccfbdb089816ce25",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase \"Ils sont déjà partis\", quel est l'adverbe ?",
+      "text": "Complétez la phrase avec la bonne conjugaison du verbe \"aller\" au présent : \"Ils… au marché tous les samedis\"",
       "options": [
-        "Ils",
-        "sont",
-        "déjà",
-        "partis"
+        "allons",
+        "allez",
+        "vont",
+        "vas"
       ],
-      "correctAnswer": "déjà",
-      "englishHint": "In the sentence \"Ils sont déjà partis\", what is the adverb?",
-      "explanation": "L'adverbe \"déjà\" précise le moment de l'action, c'est un adverbe de temps.",
-      "id": "828e94b38ad1335d",
+      "correctAnswer": "vont",
+      "explanation": "La conjugaison correcte du verbe \"aller\" au présent de l'indicatif à la troisième personne du pluriel est \"vont\".",
+      "id": "f92b67fb9521fc79",
       "type": "standard"
     },
     {
-      "text": "L'adverbe \"ici\" indique :",
+      "text": "Écrivez une phrase au présent de l’indicatif, à la première personne du singulier, exprimant un déplacement vers le marché en utilisant le verbe \"aller\".",
       "options": [
-        "Un doute",
-        "Une manière",
-        "Un lieu",
-        "Une quantité"
+        "Je suis allé au marché.",
+        "J'allais au marché.",
+        "Je vais au marché.",
+        "J'irai au marché."
       ],
-      "correctAnswer": "Un lieu",
-      "englishHint": "The adverb \"ici\" indicates:",
-      "explanation": "L'adverbe \"ici\" indique un lieu précis.",
-      "id": "8fc086b48b583598",
+      "correctAnswer": "Je vais au marché.",
+      "englishHint": "Write a sentence in the present tense, first person singular, expressing movement towards the market, using the verb \"aller\".",
+      "explanation": "La conjugaison du verbe \"aller\" au présent de l’indicatif, à la première personne du singulier, est \"je vais\".",
+      "id": "1aad564945f04cd7",
       "type": "standard"
     },
     {
-      "text": "Dans \"Il a beaucoup travaillé\", \"beaucoup\" est un adverbe de :",
+      "text": "Quels verbes irréguliers sont utilisés dans la phrase : \"Aujourd’hui, je vais au marché, ensuite je fais le ménage et je prépare le dîner\" ?",
       "options": [
-        "Manière",
-        "Lieu",
-        "Temps",
-        "Quantité"
+        "Aller, préparer, faire",
+        "Aller, faire, être",
+        "Avoir, être, faire",
+        "Aller, avoir, préparer",
+        "Aller, faire, préparer"
       ],
-      "correctAnswer": "Quantité",
-      "englishHint": "In \"Il a beaucoup travaillé\", \"beaucoup\" is an adverb of:",
-      "explanation": "L'adverbe \"beaucoup\" précise la quantité de travail effectué.",
-      "id": "1c3989bac75fdd97",
+      "correctAnswer": "Aller, faire, préparer",
+      "englishHint": "Which irregular verbs are used in the sentence: \"Today, I go to the market, then I do the cleaning and I prepare dinner\"?",
+      "explanation": "Les verbes \"aller\", \"faire\" et \"préparer\" sont des verbes irréguliers.",
+      "id": "3de796e0a6bb78e2",
       "type": "standard"
     },
     {
-      "text": "Quel type d'adverbe est \"rapidement\" dans la phrase : \"Il court rapidement\" ?",
+      "text": "Quelle est la forme correcte du verbe \"faire\" au présent de l’indicatif, à la troisième personne du pluriel ?",
       "options": [
-        "De temps",
-        "De lieu",
-        "De manière",
-        "De quantité"
+        "Ils font",
+        "Ils faisent",
+        "Ils fait",
+        "Ils faisons"
       ],
-      "correctAnswer": "De manière",
-      "englishHint": "What type of adverb is \"rapidement\" in the sentence: \"Il court rapidement\"?",
-      "explanation": "L'adverbe \"rapidement\" décrit la manière dont il court.",
-      "id": "e108b5baff03dbad",
+      "correctAnswer": "Ils font",
+      "englishHint": "What is the correct form of the verb \"faire\" in the present tense, third person plural?",
+      "explanation": "La conjugaison du verbe \"faire\" au présent de l’indicatif, à la troisième personne du pluriel, est \"ils font\".",
+      "id": "163bbeeb74485882",
       "type": "standard"
     },
     {
-      "text": "Parmi ces mots, lequel est un adverbe de temps : aujourd'hui, ici, rapidement, beaucoup ?",
+      "text": "Quel verbe irrégulier et quelle conjugaison utilisez-vous pour dire « je suis étudiant » ?",
       "options": [
-        "ici",
-        "rapidement",
-        "beaucoup",
-        "aujourd'hui"
+        "Avoir, j'ai",
+        "Être, je suis",
+        "Aller, je vais",
+        "Faire, je fais"
       ],
-      "correctAnswer": "aujourd'hui",
-      "englishHint": "Among these words, which one is an adverb of time: today, here, quickly, a lot?",
-      "explanation": "L'adverbe \"aujourd'hui\" indique un moment précis dans le temps.",
-      "id": "9edba5d8a8dcfb68",
+      "correctAnswer": "Être, je suis",
+      "englishHint": "Which irregular verb and conjugation do you use to say \"I am a student\"?",
+      "explanation": "Le verbe \"être\" est un verbe irrégulier qui signifie \"être\", et sa conjugaison à la première personne du singulier est \"je suis\".",
+      "id": "24b1c3bacb1b9e16",
       "type": "standard"
     }
   ]

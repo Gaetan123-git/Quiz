@@ -1,213 +1,213 @@
 {
   "questions": [
     {
-      "text": "Quel adverbe indique la manière dont on mange ?",
+      "text": "Quelle est la terminaison du verbe \"parler\" au présent de l'indicatif, à la première personne du singulier?",
       "options": [
-        "vite",
-        "demain",
-        "ici",
-        "beaucoup"
+        "-ons",
+        "-es",
+        "-e",
+        "-ent"
       ],
-      "correctAnswer": "vite",
-      "englishHint": "Which adverb indicates the manner in which one eats?",
-      "explanation": "L'adverbe \"vite\" précise la manière de manger, par opposition à des adverbes de temps, lieu ou quantité.",
-      "id": "43c4056e6eb93aa3",
+      "correctAnswer": "-e",
+      "englishHint": "What is the ending of the verb \"parler\" in the present tense, first person singular?",
+      "explanation": "Les verbes réguliers en -er suivent un modèle précis au présent de l'indicatif ; à la première personne du singulier, la terminaison est -e.",
+      "id": "d2070f00c92bc1d7",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe situe une action dans le futur ?",
+      "text": "Quel verbe exprime le mouvement ou le déplacement?",
       "options": [
-        "hier",
-        "maintenant",
-        "demain",
-        "avant"
+        "faire",
+        "avoir",
+        "être",
+        "aller"
       ],
-      "correctAnswer": "demain",
-      "englishHint": "Which adverb locates an action in the future?",
-      "explanation": "L'adverbe \"demain\" indique un temps futur, contrairement aux autres options qui indiquent le passé ou le présent.",
-      "id": "f5be41b35f8ac7f2",
+      "correctAnswer": "aller",
+      "englishHint": "Which verb expresses movement or displacement?",
+      "explanation": "Le verbe \"aller\" signifie se déplacer ou aller quelque part.",
+      "id": "83e4ee46bf1fbb78",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe indique l'endroit où un événement se produit ?",
+      "text": "Comment conjugue-t-on le verbe \"avoir\" au présent de l'indicatif à la première personne du pluriel?",
       "options": [
-        "rapidement",
-        "souvent",
-        "là-bas",
-        "plus"
+        "sommes",
+        "avons",
+        "allons",
+        "faisons"
       ],
-      "correctAnswer": "là-bas",
-      "englishHint": "Which adverb indicates the place where an event occurs?",
-      "explanation": "L'adverbe \"là-bas\" précise le lieu, contrairement aux autres options qui indiquent la manière, la fréquence ou la quantité.",
-      "id": "9a5ca241073b9459",
+      "correctAnswer": "avons",
+      "englishHint": "How do you conjugate the verb \"avoir\" in the present tense, first person plural?",
+      "explanation": "Le verbe \"avoir\" au présent de l'indicatif, à la première personne du pluriel, est \"avons\".",
+      "id": "0da6088965d7dac3",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe exprime une grande quantité ?",
+      "text": "Quelle est la conjugaison du verbe \"faire\" au présent de l'indicatif à la deuxième personne du singulier?",
       "options": [
-        "un peu",
-        "jamais",
-        "beaucoup",
-        "peu"
+        "fait",
+        "fais",
+        "faites",
+        "faisons"
       ],
-      "correctAnswer": "beaucoup",
-      "englishHint": "Which adverb expresses a large quantity?",
-      "explanation": "L'adverbe \"beaucoup\" indique une grande quantité, tandis que les autres indiquent une petite quantité, une négation ou une quantité faible.",
-      "id": "0704dfcc48816032",
+      "correctAnswer": "fais",
+      "englishHint": "What is the conjugation of the verb \"faire\" in the present indicative, second person singular?",
+      "explanation": "Le verbe \"faire\" est irrégulier ; à la deuxième personne du singulier du présent de l'indicatif, il se conjugue en \"fais\".",
+      "id": "1e21def502a04eb2",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe sert à nier une action ?",
+      "text": "Comment conjugue-t-on le verbe \"aller\" au présent de l'indicatif à la troisième personne du pluriel?",
       "options": [
-        "oui",
-        "peut-être",
-        "non",
-        "certainement"
-      ],
-      "correctAnswer": "non",
-      "englishHint": "Which adverb serves to negate an action?",
-      "explanation": "L'adverbe \"non\" est utilisé pour nier une action, tandis que les autres expriment l'affirmation, le doute ou l'affirmation certaine.",
-      "id": "14aa17415228ee69",
-      "type": "standard"
-    },
-    {
-      "text": "Quel adverbe affirme quelque chose de façon certaine ?",
-      "options": [
-        "peut-être",
-        "probablement",
-        "certainement",
-        "peut-être que"
-      ],
-      "correctAnswer": "certainement",
-      "englishHint": "Which adverb affirms something with certainty?",
-      "explanation": "L'adverbe \"certainement\" exprime une affirmation absolue, contrairement aux autres qui expriment le doute ou une probabilité.",
-      "id": "9e29c3ad49c51fc9",
-      "type": "standard"
-    },
-    {
-      "text": "Quel adverbe exprime le doute ?",
-      "options": [
-        "toujours",
-        "jamais",
-        "peut-être",
-        "souvent"
-      ],
-      "correctAnswer": "peut-être",
-      "englishHint": "Which adverb expresses doubt?",
-      "explanation": "L'adverbe \"peut-être\" exprime une incertitude ou un doute, contrairement aux autres options qui indiquent des affirmations de certitude ou de fréquence.",
-      "id": "95012308592513bf",
-      "type": "standard"
-    },
-    {
-      "text": "Dans la phrase \"Il parle doucement\", quel est l'adverbe ?",
-      "options": [
-        "Il",
-        "parle",
-        "doucement",
-        "est"
-      ],
-      "correctAnswer": "doucement",
-      "englishHint": "In the sentence \"He speaks softly\", what is the adverb?",
-      "explanation": "L'adverbe \"doucement\" modifie le verbe \"parle\" pour indiquer la manière dont il parle.",
-      "id": "0c08993cd424eca4",
-      "type": "standard"
-    },
-    {
-      "text": "Dans \"Elle est très grande\", quel mot est l'adverbe ?",
-      "options": [
-        "Elle",
-        "est",
-        "très",
-        "grande"
-      ],
-      "correctAnswer": "très",
-      "englishHint": "In \"She is very tall\", which word is the adverb?",
-      "explanation": "L'adverbe \"très\" modifie l'adjectif \"grande\" pour amplifier son sens.",
-      "id": "3d64dc5630481c6c",
-      "type": "standard"
-    },
-    {
-      "text": "Quel adverbe pourrait remplacer \"avec rapidité\" ?",
-      "options": [
-        "lentement",
-        "rapidement",
-        "calmement",
-        "doucement"
-      ],
-      "correctAnswer": "rapidement",
-      "englishHint": "Which adverb could replace \"with speed\"?",
-      "explanation": "L'adverbe \"rapidement\" est synonyme de \"avec rapidité\", exprimant la même idée de vitesse.",
-      "id": "8debd5aae09d8ef6",
-      "type": "standard"
-    },
-    {
-      "text": "Quel adverbe indique un lieu proche ?",
-      "options": [
-        "loin",
-        "ailleurs",
-        "près",
-        "partout"
-      ],
-      "correctAnswer": "près",
-      "englishHint": "Which adverb indicates a nearby place?",
-      "explanation": "L'adverbe \"près\" indique une proximité, contrairement aux autres qui indiquent une distance, un autre lieu ou tous les lieux.",
-      "id": "beb6d56617f35817",
-      "type": "standard"
-    },
-    {
-      "text": "Dans la phrase \"Ils sont déjà partis\", quel est l'adverbe ?",
-      "options": [
-        "Ils",
         "sont",
-        "déjà",
-        "partis"
+        "ont",
+        "vont",
+        "fassent"
       ],
-      "correctAnswer": "déjà",
-      "englishHint": "In the sentence \"They have already left\", what is the adverb?",
-      "explanation": "L'adverbe \"déjà\" indique un temps antérieur à celui attendu, modifiant le sens de la phrase.",
-      "id": "05bebe197d139ba0",
+      "correctAnswer": "vont",
+      "englishHint": "How do you conjugate the verb \"aller\" in the present tense, third person plural?",
+      "explanation": "Le verbe \"aller\" signifie se déplacer et sa conjugaison à la troisième personne du pluriel au présent de l'indicatif est \"vont\".",
+      "id": "3b4dfd68c12e6a50",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe signifie \"à un endroit opposé à l'intérieur\" ?",
+      "text": "Quel est le verbe régulier dans la phrase : \"Je prépare le dîner\" ?",
       "options": [
-        "dedans",
-        "dehors",
-        "ici",
-        "là"
+        "prépare",
+        "suis",
+        "ai",
+        "vais"
       ],
-      "correctAnswer": "dehors",
-      "englishHint": "Which adverb means \"in a place opposite to inside\"?",
-      "explanation": "L'adverbe \"dehors\" indique l'extérieur, contrairement à \"dedans\" qui indique l'intérieur.",
-      "id": "c368330ac0fda68d",
+      "correctAnswer": "prépare",
+      "englishHint": "What is the regular verb in the sentence: \"Je prépare le dîner\"?",
+      "explanation": "Le verbe \"préparer\" est un verbe régulier en -er, conjugué ici à la première personne du singulier au présent de l'indicatif.",
+      "id": "a958d7f339c8d055",
       "type": "standard"
     },
     {
-      "text": "L'adverbe \"aujourd'hui\" indique :",
+      "text": "Comment se conjugue le verbe \"avoir\" au présent de l'indicatif à la troisième personne du singulier?",
       "options": [
-        "le futur",
-        "le passé",
-        "le présent",
-        "l'avenir"
+        "avons",
+        "avez",
+        "a",
+        "ai"
       ],
-      "correctAnswer": "le présent",
-      "englishHint": "The adverb \"today\" indicates:",
-      "explanation": "L'adverbe \"aujourd'hui\" situe l'action dans le présent.",
-      "id": "36fc302b4bf1ccf8",
+      "correctAnswer": "a",
+      "englishHint": "How is the verb \"avoir\" conjugated in the present indicative, third person singular?",
+      "explanation": "La conjugaison du verbe \"avoir\" au présent de l'indicatif à la troisième personne du singulier est \"a\".",
+      "id": "3d0a924e7e6209b0",
       "type": "standard"
     },
     {
-      "text": "Dans \"Il a beaucoup travaillé\", \"beaucoup\" est un adverbe de :",
+      "text": "Lequel de ces verbes est un verbe régulier?",
       "options": [
-        "manière",
-        "lieu",
-        "temps",
-        "quantité"
+        "être",
+        "aller",
+        "avoir",
+        "parler"
       ],
-      "correctAnswer": "quantité",
-      "englishHint": "In \"He worked a lot\", \"a lot\" is an adverb of:",
-      "explanation": "L'adverbe \"beaucoup\" indique la quantité de travail effectué.",
-      "id": "2d12321e27192b35",
+      "correctAnswer": "parler",
+      "englishHint": "Which of these verbs is a regular verb?",
+      "explanation": "Parmi les verbes proposés, seul \"parler\" est un verbe régulier en -er.",
+      "id": "c3e49dcf080049b5",
+      "type": "standard"
+    },
+    {
+      "text": "Quelle erreur fréquente est mentionnée concernant la conjugaison des verbes au présent?",
+      "options": [
+        "Utiliser le mauvais temps verbal",
+        "Ajouter des consonnes inutiles",
+        "Omettre les terminaisons",
+        "Confondre les genres"
+      ],
+      "correctAnswer": "Omettre les terminaisons",
+      "englishHint": "What frequent mistake is mentioned concerning the conjugation of verbs in the present tense?",
+      "explanation": "L'omission des terminaisons verbales est mentionnée comme une erreur fréquente dans la conjugaison du présent.",
+      "id": "a499b15690da3bdb",
+      "type": "standard"
+    },
+    {
+      "text": "Quel verbe conjugué convient pour compléter la phrase : \"Il ____ un livre\" ?",
+      "options": [
+        "est",
+        "a",
+        "va",
+        "fait"
+      ],
+      "correctAnswer": "a",
+      "englishHint": "Which conjugated verb fits to complete the sentence: \"Il ____ un livre\" ?",
+      "explanation": "Le verbe \"avoir\" s'emploie pour exprimer la possession et se conjugue à la troisième personne du singulier par \"a\".",
+      "id": "b784ecedcdc06d8f",
+      "type": "standard"
+    },
+    {
+      "text": "Complétez la phrase : \"Vous ______ enseignants.\"",
+      "options": [
+        "êtes",
+        "avez",
+        "allez",
+        "parlez"
+      ],
+      "correctAnswer": "êtes",
+      "englishHint": "Complete the sentence: \"Vous ______ enseignants.\"",
+      "explanation": "Le verbe \"être\" à la deuxième personne du pluriel au présent de l'indicatif est \"êtes\".",
+      "id": "aa65fa02aa12a3e8",
+      "type": "standard"
+    },
+    {
+      "text": "Quelle est la conjugaison du verbe \"aller\" à la première personne du pluriel au présent de l'indicatif?",
+      "options": [
+        "vais",
+        "vas",
+        "allons",
+        "allez"
+      ],
+      "correctAnswer": "allons",
+      "englishHint": "What is the conjugation of the verb \"aller\" in the first person plural in the present tense?",
+      "explanation": "La conjugaison du verbe \"aller\" au présent de l'indicatif à la première personne du pluriel est \"allons\".",
+      "id": "09d37b07313c8167",
+      "type": "standard"
+    },
+    {
+      "text": "Quel verbe et quel sens sont employés dans la phrase : \"Je fais du sport\" ?",
+      "options": [
+        "être (être actif)",
+        "avoir (posséder des capacités)",
+        "aller (se rendre à un endroit)",
+        "faire (accomplir une action)"
+      ],
+      "correctAnswer": "faire (accomplir une action)",
+      "englishHint": "What verb and meaning are used in the sentence: \"Je fais du sport\"?",
+      "explanation": "Le verbe \"faire\" signifie accomplir une action.",
+      "id": "d968f0485becee4f",
+      "type": "standard"
+    },
+    {
+      "text": "Quel verbe irrégulier est utilisé dans la phrase : \"Nous sommes en vacances\" ?",
+      "options": [
+        "aller",
+        "faire",
+        "avoir",
+        "être"
+      ],
+      "correctAnswer": "être",
+      "englishHint": "Which irregular verb is used in the sentence: \"Nous sommes en vacances\"?",
+      "explanation": "Le verbe \"être\" est utilisé ici à la première personne du pluriel du présent de l'indicatif.",
+      "id": "22cb7bcbaca21bbe",
+      "type": "standard"
+    },
+    {
+      "text": "Complétez la phrase : \"Ils ____ des amis en commun.\"",
+      "options": [
+        "sont",
+        "ont",
+        "vont",
+        "font"
+      ],
+      "correctAnswer": "ont",
+      "englishHint": "Complete the sentence: \"Ils ____ des amis en commun.\"",
+      "explanation": "Le verbe \"avoir\" conjugué à la troisième personne du pluriel au présent de l'indicatif est \"ont\".",
+      "id": "c4e83ca53f420425",
       "type": "standard"
     }
   ]

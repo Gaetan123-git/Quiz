@@ -1,199 +1,213 @@
 {
   "questions": [
     {
-      "text": "Quel adverbe indique la manière dont on mange une pomme ?",
+      "text": "Quelle est la différence de sens entre \"il est\" et \"il a\" ?",
       "options": [
-        "vite",
-        "lentement",
-        "délicieusement",
-        "aujourd'hui"
+        "Il n'y a pas de différence de sens.",
+        "Ils sont interchangeables.",
+        "\"Il est\" indique un état d'être, \"il a\" indique la possession.",
+        "\"Il a\" indique un état d'être, \"il est\" indique la possession."
       ],
-      "correctAnswer": "délicieusement",
-      "englishHint": "Which adverb indicates the way one eats an apple?",
-      "explanation": "L'adverbe \"délicieusement\" décrit comment l'action de manger est effectuée, ce qui correspond à un adverbe de manière.",
-      "id": "28889f61c216ac28",
+      "correctAnswer": "\"Il est\" indique un état d'être, \"il a\" indique la possession.",
+      "englishHint": "What is the difference in meaning between \"he is\" and \"he has\"?",
+      "explanation": "Le verbe \"être\" indique un état d'être tandis que \"avoir\" indique la possession ou est utilisé dans de nombreuses expressions idiomatiques.",
+      "id": "092c2a3e360a995e",
       "type": "standard"
     },
     {
-      "text": "Identifiez l'adverbe de temps dans la phrase suivante : \"Nous partirons bientôt.\"",
+      "text": "Donnez la conjugaison du verbe \"aller\" au présent de l’indicatif à la troisième personne du singulier.",
       "options": [
-        "bientôt",
-        "nous",
-        "partir",
-        "partons"
+        "Il vas",
+        "Il allons",
+        "Il va",
+        "Il allez"
       ],
-      "correctAnswer": "bientôt",
-      "englishHint": "Identify the adverb of time in the following sentence: \"We will leave soon.\"",
-      "explanation": "L'adverbe \"bientôt\" indique quand l'action de partir aura lieu, c'est donc un adverbe de temps.",
-      "id": "51b03fb943e0d88c",
+      "correctAnswer": "Il va",
+      "englishHint": "Give the conjugation of the verb \"to go\" in the present tense, third person singular.",
+      "explanation": "La forme correcte à la troisième personne du singulier du verbe aller est \"Il va\".",
+      "id": "35371e948e7cd471",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe de lieu convient à cette phrase : \"Le livre est ________ sur la table.\"",
+      "text": "Indiquez la nature du verbe \"préparer\" dans la phrase : \"Aujourd'hui, je prépare le dîner\".",
       "options": [
-        "rapidement",
-        "beaucoup",
-        "là",
-        "jamais"
+        "Verbe irrégulier",
+        "Verbe régulier",
+        "Verbe auxiliaire",
+        "Verbe modal"
       ],
-      "correctAnswer": "là",
-      "englishHint": "Which adverb of place suits this sentence: \"The book is ________ on the table.\"",
-      "explanation": "L'adverbe \"là\" indique l'endroit où se trouve le livre, ce qui en fait un adverbe de lieu.",
-      "id": "86615455945430ad",
+      "correctAnswer": "Verbe régulier",
+      "englishHint": "Indicate the nature of the verb \"préparer\" in the sentence: \"Today, I am preparing dinner\".",
+      "explanation": "Le verbe \"préparer\" est un verbe régulier en -er.",
+      "id": "b95bee67dd314dc3",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase \"Il travaille beaucoup\", quel est le rôle de \"beaucoup\" ?",
+      "text": "Quelle est la terminaison du verbe \"parler\" au présent de l’indicatif, à la deuxième personne du singulier ?",
       "options": [
-        "adverbe de manière",
-        "adverbe de temps",
-        "adverbe de quantité",
-        "adverbe de lieu"
+        "-e",
+        "-es",
+        "-ent",
+        "-ons"
       ],
-      "correctAnswer": "adverbe de quantité",
-      "englishHint": "In the sentence \"He works a lot\", what is the role of \"a lot\"?",
-      "explanation": "\"Beaucoup\" indique la quantité de travail, donc c'est un adverbe de quantité.",
-      "id": "1cdd9e553f1c45f6",
+      "correctAnswer": "-es",
+      "englishHint": "What is the ending of the verb \"parler\" in the present tense, second person singular?",
+      "explanation": "Les verbes réguliers en -er suivent un modèle unique au présent de l’indicatif ; la terminaison à la deuxième personne du singulier est toujours -es.",
+      "id": "f614064681ece2b6",
       "type": "standard"
     },
     {
-      "text": "Laquelle de ces options est un adverbe de négation ?",
+      "text": "Comment se conjugue le verbe \"être\" au présent de l’indicatif à la troisième personne du pluriel ?",
       "options": [
-        "oui",
-        "non",
-        "peut-être",
-        "souvent"
+        "est",
+        "sommes",
+        "êtes",
+        "sont"
       ],
-      "correctAnswer": "non",
-      "englishHint": "Which of these options is an adverb of negation?",
-      "explanation": "L'adverbe \"non\" exprime la négation, contrairement à \"oui\" qui est d'affirmation.",
-      "id": "119c69f99f2d1123",
+      "correctAnswer": "sont",
+      "englishHint": "How is the verb \"être\" conjugated in the present tense, third person plural?",
+      "explanation": "Le verbe irrégulier \"être\" se conjugue \"ils/elles sont\" à la troisième personne du pluriel.",
+      "id": "2e68fb300bb03aa5",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe pourrait compléter la phrase : \"Elle est ________ fatiguée\" ?",
+      "text": "Quel verbe irrégulier exprime la possession et comment se conjugue-t-il à la première personne du singulier ?",
       "options": [
-        "très",
-        "ici",
-        "hier",
-        "vite"
+        "aller, je vais",
+        "être, je suis",
+        "avoir, j'ai",
+        "faire, je fais"
       ],
-      "correctAnswer": "très",
-      "englishHint": "Which adverb could complete the sentence: \"She is ________ tired\"?",
-      "explanation": "L'adverbe \"très\" modifie l'adjectif \"fatiguée\" et précise le degré de fatigue.",
-      "id": "77883878ef389ca2",
+      "correctAnswer": "avoir, j'ai",
+      "englishHint": "Which irregular verb expresses possession and how is it conjugated in the first person singular?",
+      "explanation": "Le verbe avoir signifie posséder et se conjugue \"j'ai\" à la première personne du singulier.",
+      "id": "80bb17e0e9450813",
       "type": "standard"
     },
     {
-      "text": "Identifiez l'adverbe dans la phrase : \"Ils sont déjà partis.\"",
+      "text": "Comment se conjugue le verbe \"aller\" au présent de l’indicatif à la deuxième personne du pluriel ?",
       "options": [
-        "ils",
-        "sont",
-        "déjà",
-        "partis"
+        "allez",
+        "allons",
+        "vas",
+        "vais"
       ],
-      "correctAnswer": "déjà",
-      "englishHint": "Identify the adverb in the sentence: \"They have already left.\"",
-      "explanation": "L'adverbe \"déjà\" modifie le verbe \"sont partis\" et précise le temps de l'action.",
-      "id": "e1a7e30428d0412c",
+      "correctAnswer": "allez",
+      "englishHint": "Indicate the conjugation of the verb \"aller\" in the present tense, second person plural.",
+      "explanation": "Le verbe irrégulier \"aller\" se conjugue \"vous allez\" à la deuxième personne du pluriel au présent de l’indicatif.",
+      "id": "fcf392bb6d73ac51",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe d'affirmation est souvent utilisé ?",
+      "text": "Parmi les verbes suivants, lequel est irrégulier et exprime un déplacement : parler, jouer, faire, aller ?",
       "options": [
-        "peut-être",
-        "jamais",
-        "oui",
-        "non"
+        "parler",
+        "jouer",
+        "faire",
+        "aller"
       ],
-      "correctAnswer": "oui",
-      "englishHint": "Which adverb of affirmation is often used?",
-      "explanation": "L'adverbe \"oui\" est l'adverbe le plus courant pour exprimer l'affirmation.",
-      "id": "b45386410a2bbb7d",
+      "correctAnswer": "aller",
+      "englishHint": "Among the following verbs, which one is irregular and expresses movement: parler, jouer, faire, aller?",
+      "explanation": "Le verbe \"aller\" est irrégulier et exprime le mouvement ou le déplacement.",
+      "id": "e0774d35c6f463f2",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase \"Il travaille prudemment\", quel type d'adverbe est \"prudemment\" ?",
+      "text": "Comment se conjugue le verbe \"faire\" au présent de l’indicatif, à la première personne du pluriel ?",
       "options": [
-        "de temps",
-        "de lieu",
-        "de quantité",
-        "de manière"
+        "faisons",
+        "faites",
+        "fait",
+        "fais"
       ],
-      "correctAnswer": "de manière",
-      "englishHint": "In the sentence \"He works cautiously\", what type of adverb is \"cautiously\"?",
-      "explanation": "\"Prudemment\" décrit comment il travaille, c'est donc un adverbe de manière.",
-      "id": "2b98af2c5f96b0ca",
+      "correctAnswer": "faisons",
+      "englishHint": "How is the verb \"faire\" conjugated in the present tense, first person plural?",
+      "explanation": "Le verbe irrégulier \"faire\" se conjugue \"nous faisons\" à la première personne du pluriel au présent de l’indicatif.",
+      "id": "8832e8ccad193930",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe pourrait exprimer un doute ?",
+      "text": "Laquelle de ces phrases utilise correctement le verbe \"être\" au présent de l’indicatif à la troisième personne du singulier ?",
       "options": [
-        "certainement",
-        "peut-être",
-        "toujours",
-        "jamais"
+        "Il sont étudiant",
+        "Elle est étudiante",
+        "Il es étudiant",
+        "Elle sont étudiante"
       ],
-      "correctAnswer": "peut-être",
-      "englishHint": "Which adverb could express doubt?",
-      "explanation": "\"Peut-être\" indique une incertitude, exprimant ainsi un doute.",
-      "id": "5904eb8434292720",
+      "correctAnswer": "Elle est étudiante",
+      "englishHint": "Which of these sentences correctly uses the verb \"être\" in the present tense, third person singular?",
+      "explanation": "La conjugaison correcte du verbe \"être\" à la troisième personne du singulier est \"il/elle/on est\".",
+      "id": "c57e293a0b7e627e",
       "type": "standard"
     },
     {
-      "text": "Choisissez l'adverbe qui convient le mieux : \"Elle est arrivée ______ à la réunion.\"",
+      "text": "Quel est le verbe conjugué dans la phrase : \"Aujourd’hui, je prépare le dîner\" ?",
       "options": [
-        "hier",
-        "rapidement",
-        "beaucoup",
-        "ici"
+        "avoir",
+        "faire",
+        "être",
+        "préparer"
       ],
-      "correctAnswer": "rapidement",
-      "englishHint": "Choose the adverb that best suits the sentence: \"She arrived ______ at the meeting.\"",
-      "explanation": "L'adverbe \"rapidement\" décrit la façon dont elle est arrivée.",
-      "id": "c8042ec9167ca001",
+      "correctAnswer": "préparer",
+      "englishHint": "What is the conjugated verb in the sentence: \"Today, I am preparing dinner\"?",
+      "explanation": "Le verbe principal de la phrase est \"préparer\", conjugué à la première personne du singulier au présent de l’indicatif.",
+      "id": "e9948533be31799a",
       "type": "standard"
     },
     {
-      "text": "L'adverbe \"ailleurs\" indique :",
+      "text": "Si je dis : \"Nous ______ un chat\", quel verbe dois-je utiliser pour exprimer la possession ?",
       "options": [
-        "une quantité",
-        "un temps",
-        "un lieu",
-        "une manière"
+        "sommes",
+        "allons",
+        "avons",
+        "êtes"
       ],
-      "correctAnswer": "un lieu",
-      "englishHint": "The adverb \"ailleurs\" indicates:",
-      "explanation": "\"Ailleurs\" indique un autre lieu que celui déjà mentionné.",
-      "id": "89c5ad843c4ba652",
+      "correctAnswer": "avons",
+      "englishHint": "If I say: \"We ______ a cat\", which verb should I use to express possession?",
+      "explanation": "Le verbe \"avoir\", conjugué à la première personne du pluriel au présent, s’écrit \"avons\" et exprime la possession.",
+      "id": "9258f2fee5793d32",
       "type": "standard"
     },
     {
-      "text": "Dans quelle phrase l'adverbe modifie-t-il un adjectif ?",
+      "text": "Complétez la phrase suivante avec la bonne conjugaison du verbe \"aller\" au présent : \"Ils ______ au marché tous les samedis\"",
       "options": [
-        "Il court vite.",
-        "Elle est très intelligente.",
-        "Ils sont déjà partis.",
-        "Il mange beaucoup."
+        "vont",
+        "vas",
+        "vais",
+        "allons"
       ],
-      "correctAnswer": "Elle est très intelligente.",
-      "englishHint": "In which sentence does the adverb modify an adjective?",
-      "explanation": "Dans \"Elle est très intelligente\", \"très\" modifie l'adjectif \"intelligente\".",
-      "id": "41f9f67f8ffccb49",
+      "correctAnswer": "vont",
+      "englishHint": "Complete the following sentence with the correct conjugation of the verb \"aller\" in the present tense: \"They ______ to the market every Saturday.\"",
+      "explanation": "La conjugaison correcte du verbe \"aller\" au présent de l’indicatif à la troisième personne du pluriel est \"vont\".",
+      "id": "3c990bc37b196662",
       "type": "standard"
     },
     {
-      "text": "Quel adverbe pourrait remplacer \"avec rapidité\" ?",
+      "text": "Quelle erreur fréquente dans la conjugaison au présent de l’indicatif est mentionnée dans le cours ?",
       "options": [
-        "lentement",
-        "rapidement",
-        "souvent",
-        "jamais"
+        "La confusion entre le passé composé et le futur simple",
+        "L’ajout de prépositions inutiles",
+        "L’omission des terminaisons verbales",
+        "L’utilisation excessive de verbes irréguliers"
       ],
-      "correctAnswer": "rapidement",
-      "englishHint": "Which adverb could replace \"with speed\"?",
-      "explanation": "L'adverbe \"rapidement\" est un synonyme de \"avec rapidité\".",
-      "id": "1b7b6f2c7ad2561f",
+      "correctAnswer": "L’omission des terminaisons verbales",
+      "englishHint": "What is the frequent mistake mentioned in the course concerning conjugation in the present tense?",
+      "explanation": "Le cours souligne que l’omission des terminaisons verbales est une erreur fréquente conduisant à des phrases incorrectes et incompréhensibles.",
+      "id": "a47a14f2c2c793eb",
+      "type": "standard"
+    },
+    {
+      "text": "Quelle technique est suggérée pour mémoriser plus facilement les conjugaisons irrégulières ?",
+      "options": [
+        "Créer des acrostiches",
+        "Utiliser des flashcards",
+        "Créer des phrases courtes et amusantes",
+        "Écrire des poèmes"
+      ],
+      "correctAnswer": "Créer des phrases courtes et amusantes",
+      "englishHint": "What technique is suggested in the course to more easily memorize irregular conjugations?",
+      "explanation": "Le cours propose de créer des phrases courtes et amusantes incluant les verbes irréguliers pour faciliter leur mémorisation.",
+      "id": "f53e25efff21722f",
       "type": "standard"
     }
   ]

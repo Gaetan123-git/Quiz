@@ -1445,21 +1445,25 @@ main.main-container, .container {
 /* ==   STYLES POUR LA COMPÉTITION (Compte à rebours)    == */
 /* ======================================================== */
 
-/* Notification dans l'en-tête */
+/* Notification pour le compte à rebours sur la page de sélection */
 .competition-notification {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    /* Styles pour le positionnement et l'apparence */
+    width: fit-content; /* S'adapte à la largeur du texte */
+    margin: 0 auto 1.5rem auto; /* Centre horizontalement et ajoute une marge en bas */
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    
+    /* Couleurs et police */
     background-color: var(--color-accent);
-    color: #1a2238;
-    padding: 4px 12px;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-    font-size: 0.8em;
-    font-weight: 600;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    white-space: nowrap;
+    color: #1a2238; /* Texte sombre pour un bon contraste sur fond jaune */
+    font-size: 1.1em;
+    font-weight: 700;
+    
+    /* Ombre subtile */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+
+    /* Animation d'apparition */
+    animation: fadeIn 0.5s ease-out;
 }
 
 /* Compte à rebours dans la liste des sessions */

@@ -1,8 +1,7 @@
 {
   "themes": [
-    "Les classes de mots : Identifier les noms, verbes, adjectifs, pronoms, adverbes, articles.",
-    "Les articles et le genre des noms : Articles définis (le, la, les), indéfinis (un, une, des), partitifs (du, de la, des).",
     "Le genre et le nombre : Accord des noms et adjectifs (masculin/féminin, singulier/pluriel).",
+    "L’imparfait : Utilisation pour descriptions, habitudes, comparaisons avec le passé",
     "Les adjectifs qualificatifs : Accord en genre et en nombre avec le nom.",
     "Le présent de l’indicatif : Verbes réguliers (-er) et verbes fréquents irréguliers (avoir, être, aller, faire).",
     "Les verbes du 1er groupe : Conjugaison complète et utilisation en contexte.",
@@ -20,5 +19,5 @@
     "Révision des erreurs fréquentes : Confusions courantes (leur/leurs, ce/se, etc.).",
     "Production écrite et orale : Écrire un petit texte chaque jour + pratiquer la prononciation."
   ],
-  "currentIndex": 0
+  "currentIndex": 3
 }

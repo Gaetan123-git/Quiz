@@ -28,6 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const MIN_OPTIONS = 2;
 
     const competitionStatusLoading = document.getElementById('competition-status-loading');
+    
+    // AJOUTEZ CES SÉLECTEURS
+    const competitionPriceInput = document.getElementById('competition-price');
+    const updatePriceBtn = document.getElementById('update-price-btn');
+    const priceUpdateStatus = document.getElementById('price-update-status');
     const competitionFormContainer = document.getElementById('competition-form-container');
     const competitionDatetimeInput = document.getElementById('competition-datetime');
     const updateCompetitionBtn = document.getElementById('update-competition-btn');
@@ -238,7 +243,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             if (!response.ok) throw new Error('Impossible de charger les règles.');
             const rules = await response.json();
+            
+            // On met à jour les deux champs : le nombre de gagnants et le nouveau prix
             maxWinnersInput.value = rules.maxWinners;
+            competitionPriceInput.value = rules.price !== undefined ? rules.price : 1000; // Valeur par défaut si non défini
+
         } catch (error) {
             winnersUpdateStatus.textContent = `Erreur : ${error.message}`;
             winnersUpdateStatus.className = 'text-red-500 text-sm mt-3 h-5';
@@ -1263,6 +1272,42 @@ function hideStatusMessage() {
             winnersUpdateStatus.className = 'text-red-500 text-sm mt-3';
         }
     });
+
+    // AJOUTEZ CE BLOC
+    if (updatePriceBtn) {
+        updatePriceBtn.addEventListener('click', async () => {
+            const price = competitionPriceInput.value;
+            const token = sessionStorage.getItem(API_TOKEN_KEY);
+
+            if (!price || parseInt(price, 10) < 0) {
+                alert('Veuillez entrer un prix valide (0 ou plus).');
+                return;
+            }
+
+            priceUpdateStatus.textContent = 'Mise à jour...';
+            priceUpdateStatus.className = 'text-yellow-400 text-sm mt-3';
+
+            try {
+                const response = await fetch('/admin/competition-rules', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ price: parseInt(price, 10) })
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error);
+                
+                priceUpdateStatus.textContent = result.message;
+                priceUpdateStatus.className = 'text-green-400 text-sm mt-3';
+
+            } catch (error) {
+                priceUpdateStatus.textContent = `Erreur : ${error.message}`;
+                priceUpdateStatus.className = 'text-red-500 text-sm mt-3';
+            }
+        });
+    }
 
     // ==========================================================
     // ==     NOUVEAU : LOGIQUE D'IMPORT/EXPORT EN MASSE       ==

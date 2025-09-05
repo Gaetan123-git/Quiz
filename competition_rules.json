@@ -1,5 +1,6 @@
 {
   "maxWinners": 4,
   "competitionEnded": false,
-  "competitionEndTime": null
+  "competitionEndTime": null,
+  "price": 500
 }

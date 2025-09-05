@@ -2003,6 +2003,7 @@ async function showAnalysisModal() {
         }
     }
 }
+// REMPLACEZ CETTE FONCTION EN ENTIER
 async function nextQuestion() {
     const gameContent = document.querySelector('.game-content');
     if (gameContent) {
@@ -2013,58 +2014,46 @@ async function nextQuestion() {
         try {
             let questionToShow = null;
 
-            // On vérifie si on est en mode "Rejouer les erreurs".
             if (isErrorReplay) {
-                // Si OUI, on prend la prochaine question depuis la liste LOCALE.
                 if (questions.length > 0) {
-                    questionToShow = questions.shift(); // On dépile la question suivante.
+                    questionToShow = questions.shift();
                 }
             } else {
-                // Si NON (mode quiz normal), on contacte le SERVEUR.
                 const response = await fetch(`/questions?session=${selectedSession}`);
                 
-                // ==========================================================
-                // ==          CORRECTION APPLIQUÉE ICI (PAIEMENT)         ==
-                // ==========================================================
+                // --- GESTION DES ERREURS SERVEUR AMÉLIORÉE ---
                 if (!response.ok) {
                     const errorData = await response.json();
                     
-                    // Gère le cas "Solde insuffisant"
-                    if (response.status === 402) {
+                    if (response.status === 402) { // 402 = Paiement Requis
                         showToast('Paiement Requis', errorData.error, 'error');
                         navigateTo('/wallet'); // On l'envoie directement recharger
                     } 
-                    // Gère le cas "Compétition terminée"
                     else if (errorData.competitionOver) {
                         showToast('Compétition Terminée', errorData.error, 'info');
                         showGameOverScreen(); 
                     } 
-                    // Gère les autres erreurs (session verrouillée, etc.)
                     else {
                         showToast('Accès Verrouillé', errorData.error, 'error');
                         navigateTo('/menu');
                     }
-                    return; // Arrête l'exécution
+                    return; // Arrête l'exécution pour ne pas essayer d'afficher une question
                 }
                 questionToShow = await response.json();
             }
 
-            // Si aucune question à afficher, le quiz est terminé.
             if (!questionToShow) {
                 endQuiz();
                 return;
             }
             
-            // On met à jour la question actuelle et on continue l'affichage normalement.
             currentQuestion = questionToShow;
             answeredQuestionsCount++;
             updateProgress();
             
-            // Le reste de la logique pour afficher la question est inchangée.
             const feedback = document.getElementById('feedback');
             const correctTranslation = document.getElementById('correct-translation');
             const explanationDiv = document.getElementById('answer-explanation');
-            const options = document.getElementById('options');
             const continueControls = document.getElementById('continue-controls');
             
             if (feedback) feedback.textContent = '';
@@ -2097,10 +2086,9 @@ async function nextQuestion() {
                 });
             }
 
-            // *** ACTIVATION DE LA PROTECTION ***
             activateAntiCheating();
-
             startTimer();
+
             if (gameContent) {
                 gameContent.classList.remove('question-slide-out');
                 gameContent.classList.add('question-slide-in');

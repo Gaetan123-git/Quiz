@@ -59,6 +59,19 @@
                      </div>
                      <p id="winners-update-status" class="text-sm mt-3 h-5"></p>
                 </div>
+                <!-- AJOUTEZ CE BLOC JUSTE APRÈS LE DIV QUI CONTIENT "winners-update-status" -->
+                <div class="mt-6 border-t border-gray-700 pt-4">
+                    <label for="competition-price" class="block mb-2 text-sm font-medium">Prix d'Entrée à la Compétition (Ar)</label>
+                    <p class="text-xs text-gray-400 mb-2">Définissez le coût en Ariary pour qu'un joueur puisse participer aux sessions de compétition (4 à 10). Le montant sera déduit de son portefeuille une seule fois, lors de sa première tentative.</p>
+                    <div class="flex items-center gap-4">
+                        <input type="number" id="competition-price" value="1000" min="0" 
+                               class="w-32 p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                        <button id="update-price-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                            Mettre à jour le Prix
+                        </button>
+                    </div>
+                    <p id="price-update-status" class="text-sm mt-3 h-5"></p>
+                </div>
                 <div class="mt-6 border-t border-gray-700 pt-4">
                     <h3 class="text-lg font-semibold mb-2">Podium Actuel</h3>
                     <div id="admin-winners-list" class="space-y-2">

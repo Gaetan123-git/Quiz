@@ -1333,43 +1333,27 @@ app.get('/questions', async (req, res) => {
   const sessionNumber = parseInt(session.replace('session', ''), 10);
   if (isNaN(sessionNumber)) return res.status(400).json({ error: 'Format de session invalide.' });
 
-  // ==========================================================
-  // ==         NOUVELLE LOGIQUE DE PAIEMENT DU TOURNOI      ==
-  // ==========================================================
   const isTournamentSession = sessionNumber >= 4;
   
-  // On applique la logique de paiement uniquement pour les sessions de compétition et si ce n'est pas le compte devtest
+  // ==========================================================
+  // ==        LOGIQUE DE VÉRIFICATION DU PAIEMENT           ==
+  // ==========================================================
+  // On applique la logique uniquement pour les sessions de compétition et si ce n'est pas le compte devtest
   if (isTournamentSession && user.username !== 'devtest') {
-      const tournamentEntryFee = competitionRules.price !== undefined ? competitionRules.price : 1000; // Prix depuis les règles, avec un fallback
-
-      // Vérifier si l'utilisateur a déjà payé en consultant la table competition_participants
+      const tournamentEntryFee = competitionRules.price !== undefined ? competitionRules.price : 1000;
       const participant = db.prepare('SELECT * FROM competition_participants WHERE username = ?').get(user.username);
       
+      // SI l'utilisateur n'a PAS ENCORE payé
       if (!participant) {
-          // C'est sa première tentative d'entrer dans le tournoi.
           const currentBalance = user.balance || 0;
-          if (currentBalance < tournamentEntryFee) {
-              console.log(`[PAIEMENT REFUSÉ] ${user.username} - Solde: ${currentBalance} Ar, Requis: ${tournamentEntryFee} Ar`);
-              return res.status(402).json({ // 402 = Payment Required
-                  error: `Solde insuffisant. L'entrée au tournoi coûte ${tournamentEntryFee} Ar. Votre solde actuel: ${currentBalance} Ar. Veuillez recharger votre portefeuille.`
-              });
-          } else {
-              // Transaction atomique pour déduire le solde et enregistrer le participant
-              const transaction = db.transaction(() => {
-                  user.balance = currentBalance - tournamentEntryFee;
-                  saveUser(user);
-                  
-                  // Enregistrer le participant dans la base de données
-                  const stmt = db.prepare('INSERT INTO competition_participants (username, entry_fee, participation_date) VALUES (?, ?, ?)');
-                  stmt.run(user.username, tournamentEntryFee, new Date().toISOString());
-              });
-              
-              transaction();
-              console.log(`[PAIEMENT ACCEPTÉ] ${user.username} a payé ${tournamentEntryFee} Ar pour le tournoi. Nouveau solde: ${user.balance} Ar.`);
-          }
+          // On renvoie un code 402 pour que le client déclenche la modale de confirmation.
+          console.log(`[PAIEMENT REQUIS] ${user.username} - Solde: ${currentBalance} Ar, Requis: ${tournamentEntryFee} Ar`);
+          return res.status(402).json({
+              error: `L'entrée au tournoi coûte ${tournamentEntryFee} Ar. Votre solde actuel est de ${currentBalance} Ar. Confirmez-vous le paiement ?`
+          });
       }
   }
-  // === FIN DE LA LOGIQUE DE PAIEMENT ===
+  // === FIN DE LA LOGIQUE DE VÉRIFICATION ===
 
   if (user.username !== 'devtest') {
       if (sessionNumber >= 4) {
@@ -1564,54 +1548,60 @@ app.post('/end-quiz-session', async (req, res) => {
     if (!req.session.user) {
         return res.status(401).json({ error: 'Non connecté.' });
     }
-    const { session } = req.body; // On ne récupère que la session, le reste sera calculé ici.
+    const { session } = req.body;
     const user = users.find(u => u.username === req.session.user.username);
     if (!user) {
         return res.status(404).json({ error: 'Utilisateur introuvable.' });
     }
 
-    // ========== AMÉLIORATION DE FIABILITÉ ET SÉCURITÉ ==========
-    // 1. Le serveur récupère le nombre total de questions depuis sa propre source, pas depuis le client.
     const totalQuestionsInSession = (sessionQuestions[session] || []).length;
-    
-    // 2. Le serveur calcule le nombre de bonnes réponses en se basant sur les scores enregistrés, pas sur ce que le client envoie.
     const sessionScores = user.scores.filter(s => s.session === session);
     const correctAnswers = sessionScores.filter(s => s.score > 0).length;
-
     const finalScoreForSession = sessionScores.reduce((total, score) => total + score.score, 0);
     user.currentScore = finalScoreForSession;
 
-    // 3. Le calcul du pourcentage est maintenant basé sur des données 100% fiables (côté serveur).
     const successPercentage = totalQuestionsInSession > 0 ? (correctAnswers / totalQuestionsInSession) * 100 : 0;
     const SUCCESS_THRESHOLD = 70;
 
-    let sessionCompleted = false;
-    // On vérifie aussi si la session n'était pas déjà complétée
-    if (user.completedSessions.includes(session)) {
-        sessionCompleted = true; 
-    } else if (successPercentage >= SUCCESS_THRESHOLD) {
-        // On ne l'ajoute que si le seuil est atteint ET qu'elle n'y était pas déjà
+    let sessionCompleted = user.completedSessions.includes(session) || successPercentage >= SUCCESS_THRESHOLD;
+    if (sessionCompleted && !user.completedSessions.includes(session)) {
         user.completedSessions.push(session);
-        sessionCompleted = true;
     }
 
-    // --- LOGIQUE DE FIN DE COMPÉTITION (inchangée) ---
     if (session === 'session10' && sessionCompleted && !competitionRules.competitionEnded) {
         const isAlreadyWinner = winners.some(winner => winner.username === user.username);
 
         if (!isAlreadyWinner) {
-            console.log(`[COMPETITION] ${user.username} a terminé la session 10 !`);
+            const newRank = winners.length + 1;
+            let prizeAmount = 0;
+
+            // ==========================================================
+            // ===        ATTRIBUTION DU PRIX SELON LE MODE CHOISI    ===
+            // ==========================================================
+            if (competitionRules.prizeMode === 'manual') {
+                const prizeRule = (competitionRules.prizes || []).find(p => p.rank === newRank);
+                prizeAmount = prizeRule ? prizeRule.amount : 0;
+            } else { // Mode 'automatic'
+                const participantsCount = db.prepare('SELECT COUNT(*) as count FROM competition_participants').get().count;
+                const entryFee = competitionRules.price !== undefined ? competitionRules.price : 1000;
+                const totalPrizePool = participantsCount * entryFee;
+                const adminCommission = Math.floor(totalPrizePool * 0.15);
+                const prizesPool = totalPrizePool - adminCommission;
+                
+                if (newRank === 1) prizeAmount = Math.floor(prizesPool * 0.50);
+                else if (newRank === 2) prizeAmount = Math.floor(prizesPool * 0.30);
+                else if (newRank === 3) prizeAmount = Math.floor(prizesPool * 0.20);
+            }
+
+            console.log(`[COMPETITION] ${user.username} termine au rang ${newRank} et gagne ${prizeAmount} Ar ! (Mode: ${competitionRules.prizeMode})`);
+
             winners.push({
-                username: user.username,
-                score: finalScoreForSession,
-                rank: winners.length + 1,
-                avatarUrl: user.avatarUrl || null,
-                paymentPhone: user.paymentPhone || 'Non renseigné' // On ajoute le numéro ici
+                username: user.username, score: finalScoreForSession, rank: newRank, prize: prizeAmount,
+                avatarUrl: user.avatarUrl || null, paymentPhone: user.paymentPhone || 'Non renseigné'
             });
             await saveWinners();
 
             if (winners.length >= competitionRules.maxWinners) {
-                console.log(`[COMPETITION] Le nombre maximum de gagnants (${competitionRules.maxWinners}) est atteint. FIN DU JEU !`);
                 competitionRules.competitionEnded = true;
                 competitionRules.competitionEndTime = new Date().toISOString();
                 await saveCompetitionRules();
@@ -1621,9 +1611,7 @@ app.post('/end-quiz-session', async (req, res) => {
                         try {
                             clientRes.write('event: competition-over\n');
                             clientRes.write('data: La compétition est terminée !\n\n');
-                        } catch (e) {
-                            // Ignorer
-                        }
+                        } catch (e) {}
                     });
                 });
             }
@@ -1671,6 +1659,50 @@ app.get('/api/session-info', (req, res) => {
   res.json({
       totalQuestionsInSession: sessionQuestions[session].length
   });
+});
+
+// NOUVELLE ROUTE DÉDIÉE AU PAIEMENT DES FRAIS D'ENTRÉE
+app.post('/api/pay-entry-fee', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Non connecté.' });
+    }
+    const user = users.find(u => u.username === req.session.user.username);
+    if (!user) {
+        return res.status(404).json({ error: 'Utilisateur non trouvé.' });
+    }
+
+    const tournamentEntryFee = competitionRules.price !== undefined ? competitionRules.price : 1000;
+    const participant = db.prepare('SELECT * FROM competition_participants WHERE username = ?').get(user.username);
+
+    // Sécurité : ne rien faire si l'utilisateur a déjà payé.
+    if (participant) {
+        return res.json({ success: true, message: 'Frais déjà payés.' });
+    }
+
+    const currentBalance = user.balance || 0;
+    if (currentBalance < tournamentEntryFee) {
+        return res.status(402).json({ error: 'Solde insuffisant pour payer les frais.' });
+    }
+
+    try {
+        const transaction = db.transaction(() => {
+            // On déduit les frais du solde de l'utilisateur
+            user.balance = currentBalance - tournamentEntryFee;
+            saveUser(user);
+            
+            // On enregistre sa participation pour ne pas le facturer à nouveau
+            const stmt = db.prepare('INSERT INTO competition_participants (username, entry_fee, participation_date) VALUES (?, ?, ?)');
+            stmt.run(user.username, tournamentEntryFee, new Date().toISOString());
+        });
+        
+        transaction();
+        console.log(`[PAIEMENT CONFIRMÉ] ${user.username} a payé ${tournamentEntryFee} Ar. Nouveau solde: ${user.balance} Ar.`);
+        res.json({ success: true, message: `Paiement de ${tournamentEntryFee} Ar effectué avec succès !`, newBalance: user.balance });
+
+    } catch (error) {
+        console.error('[PAIEMENT] Erreur durant la transaction de paiement:', error);
+        res.status(500).json({ error: 'Une erreur est survenue durant le paiement.' });
+    }
 });
 
 app.get('/api/course', async (req, res) => {
@@ -2299,11 +2331,29 @@ app.get('/api/deposit/history', (req, res) => {
     }
     const username = req.session.user.username;
     try {
-        const stmt = db.prepare("SELECT id, amount, transaction_ref, status, requested_at FROM deposits WHERE username = ? ORDER BY requested_at DESC");
-        const history = stmt.all(username);
-        res.json(history);
+        // Étape 1 : Récupérer les dépôts (transactions entrantes)
+        const depositsStmt = db.prepare("SELECT amount, transaction_ref, status, requested_at as date FROM deposits WHERE username = ?");
+        const deposits = depositsStmt.all(username).map(d => ({ ...d, type: 'deposit' }));
+
+        // Étape 2 : Récupérer les retraits (frais de compétition)
+        const withdrawalsStmt = db.prepare("SELECT entry_fee as amount, participation_date as date FROM competition_participants WHERE username = ?");
+        const withdrawals = withdrawalsStmt.all(username).map(w => ({
+            ...w,
+            type: 'withdrawal',
+            status: 'approved', // Un retrait est toujours "approuvé"
+            transaction_ref: "Frais de compétition"
+        }));
+
+        // Étape 3 : Combiner les deux listes
+        const combinedHistory = [...deposits, ...withdrawals];
+
+        // Étape 4 : Trier la liste combinée par date, de la plus récente à la plus ancienne
+        combinedHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        res.json(combinedHistory);
+
     } catch (error) {
-        console.error('[DEPOSIT] Erreur lors de la récupération de l\'historique:', error);
+        console.error('[DEPOSIT] Erreur lors de la récupération de l\'historique combiné:', error);
         res.status(500).json({ error: 'Impossible de charger l\'historique des transactions.' });
     }
 });
@@ -2878,37 +2928,38 @@ app.get('/admin/competition-rules', protectAdmin, (req, res) => {
 });
 // REMPLACEZ CETTE ROUTE
 app.post('/admin/competition-rules', protectAdmin, async (req, res) => {
-  // On lit les règles actuelles pour ne pas écraser les valeurs non modifiées
   const currentRules = { ...competitionRules };
   
-  // On vérifie si un nouveau nombre de gagnants a été envoyé
   if (req.body.maxWinners !== undefined) {
       const newMaxWinners = parseInt(req.body.maxWinners, 10);
       if (isNaN(newMaxWinners) || newMaxWinners <= 0) {
           return res.status(400).json({ error: 'Le nombre de gagnants doit être un nombre positif.' });
       }
-      // Mise à jour et réinitialisation de la compétition
       currentRules.maxWinners = newMaxWinners;
       competitionRules.competitionEnded = false;
       competitionRules.competitionEndTime = null;
       winners = [];
       await saveWinners();
-      console.log(`[ADMIN] Règles de compétition mises à jour. Max gagnants: ${newMaxWinners}. La compétition est réinitialisée.`);
   }
 
-  // On vérifie si un nouveau prix a été envoyé
   if (req.body.price !== undefined) {
-      const newPrice = parseInt(req.body.price, 10);
-      if (isNaN(newPrice) || newPrice < 0) {
-          return res.status(400).json({ error: 'Le prix doit être un nombre positif ou nul.' });
-      }
-      currentRules.price = newPrice;
-      console.log(`[ADMIN] Prix de la compétition mis à jour : ${newPrice} Ar.`);
+      currentRules.price = parseInt(req.body.price, 10);
   }
-  
-  // On sauvegarde les nouvelles règles (qu'elles aient été modifiées ou non)
+
+  if (req.body.prizes !== undefined && Array.isArray(req.body.prizes)) {
+      currentRules.prizes = req.body.prizes.filter(p =>
+          typeof p.rank === 'number' && typeof p.amount === 'number' && p.amount >= 0
+      );
+  }
+
+  // NOUVEAU : On sauvegarde le mode de distribution
+  if (req.body.prizeMode && ['automatic', 'manual'].includes(req.body.prizeMode)) {
+      currentRules.prizeMode = req.body.prizeMode;
+  }
+
   competitionRules = { ...competitionRules, ...currentRules };
   await saveCompetitionRules();
+  console.log('[ADMIN] Règles de compétition mises à jour :', competitionRules);
 
   res.json({ success: true, message: 'Règles mises à jour avec succès.' });
 });
@@ -2928,55 +2979,44 @@ app.get('/admin/winners', protectAdmin, (req, res) => {
 // Route admin pour récupérer les informations de la cagnotte
 app.get('/admin/prize-pool', protectAdmin, (req, res) => {
     try {
-        // Récupérer le nombre de participants
         const participantsCount = db.prepare('SELECT COUNT(*) as count FROM competition_participants').get().count;
-        
-        // Récupérer le prix d'entrée depuis les règles de compétition
         const entryFee = competitionRules.price !== undefined ? competitionRules.price : 1000;
-        
-        // Calculer la cagnotte totale
         const totalPrizePool = participantsCount * entryFee;
-        
-        // Commission admin (15%)
         const adminCommission = Math.floor(totalPrizePool * 0.15);
-        
-        // Cagnotte distribuée aux gagnants
         const prizesPool = totalPrizePool - adminCommission;
-        
-        // Nombre maximum de gagnants
         const maxWinners = competitionRules.maxWinners || 3;
         
-        // Distribution des prix (50% au 1er, 30% au 2ème, 20% au 3ème, etc.)
-        const prizeDistribution = [];
-        if (maxWinners >= 1) {
-            prizeDistribution.push({ position: 1, percentage: 50, amount: Math.floor(prizesPool * 0.50) });
-        }
-        if (maxWinners >= 2) {
-            prizeDistribution.push({ position: 2, percentage: 30, amount: Math.floor(prizesPool * 0.30) });
-        }
-        if (maxWinners >= 3) {
-            prizeDistribution.push({ position: 3, percentage: 20, amount: Math.floor(prizesPool * 0.20) });
-        }
-        
-        // Si plus de 3 gagnants, distribuer le reste équitablement
-        if (maxWinners > 3) {
-            const remainingAmount = prizesPool - prizeDistribution.reduce((sum, p) => sum + p.amount, 0);
-            const remainingWinners = maxWinners - 3;
-            const amountPerRemaining = Math.floor(remainingAmount / remainingWinners);
+        let prizeDistribution = [];
+
+        // ==========================================================
+        // ===            LOGIQUE CONDITIONNELLE ICI              ===
+        // ==========================================================
+        if (competitionRules.prizeMode === 'manual') {
+            // Mode Manuel : On utilise les prix fixes saisis par l'admin
+            prizeDistribution = (competitionRules.prizes || []).map(p => ({
+                position: p.rank,
+                percentage: 0, // Pas de pourcentage en mode manuel
+                amount: p.amount
+            }));
+
+        } else {
+            // Mode Automatique : On calcule les prix avec les pourcentages
+            if (maxWinners >= 1) prizeDistribution.push({ position: 1, percentage: 50, amount: Math.floor(prizesPool * 0.50) });
+            if (maxWinners >= 2) prizeDistribution.push({ position: 2, percentage: 30, amount: Math.floor(prizesPool * 0.30) });
+            if (maxWinners >= 3) prizeDistribution.push({ position: 3, percentage: 20, amount: Math.floor(prizesPool * 0.20) });
             
-            for (let i = 4; i <= maxWinners; i++) {
-                prizeDistribution.push({ position: i, percentage: 0, amount: amountPerRemaining });
+            if (maxWinners > 3) {
+                const remainingAmount = prizesPool - prizeDistribution.reduce((sum, p) => sum + p.amount, 0);
+                const remainingWinners = maxWinners - 3;
+                const amountPerRemaining = remainingWinners > 0 ? Math.floor(remainingAmount / remainingWinners) : 0;
+                for (let i = 4; i <= maxWinners; i++) {
+                    prizeDistribution.push({ position: i, percentage: 0, amount: amountPerRemaining });
+                }
             }
         }
         
         res.json({
-            participantsCount,
-            entryFee,
-            totalPrizePool,
-            adminCommission,
-            prizesPool,
-            maxWinners,
-            prizeDistribution
+            participantsCount, entryFee, totalPrizePool, adminCommission, prizesPool, maxWinners, prizeDistribution
         });
     } catch (error) {
         console.error('[ADMIN] Erreur lors du calcul de la cagnotte:', error);

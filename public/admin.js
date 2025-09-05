@@ -47,6 +47,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const prizesPool = document.getElementById('prizes-pool');
     const maxWinners = document.getElementById('max-winners');
     const prizeDistributionList = document.getElementById('prize-distribution-list');
+
+    // NOUVEAUX SÉLECTEURS pour le mode de distribution
+    const prizeModeAutomaticRadio = document.getElementById('prize-mode-automatic');
+    const prizeModeManualRadio = document.getElementById('prize-mode-manual');
+    const prizeInputsContainer = document.getElementById('prize-inputs-container');
+    const labelModeAutomatic = document.getElementById('label-mode-automatic');
+    const labelModeManual = document.getElementById('label-mode-manual');
     const prizePoolStatus = document.getElementById('prize-pool-status');
 
     // ---- COMPÉTITION: Valeur par défaut à 20h et mise à jour quotidienne ----
@@ -246,6 +253,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // NOUVELLE FONCTION pour générer les champs de saisie des prix
+    function renderPrizeInputs(numberOfWinners, prizes = []) {
+        const container = document.getElementById('prize-inputs-container');
+        if (!container) return;
+
+        container.innerHTML = ''; // On vide le conteneur
+        for (let i = 1; i <= numberOfWinners; i++) {
+            // On cherche si un prix a déjà été défini pour ce rang
+            const existingPrize = prizes.find(p => p.rank === i);
+            const value = existingPrize ? existingPrize.amount : '';
+
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'flex items-center gap-2';
+            inputGroup.innerHTML = `
+                <label for="prize-rank-${i}" class="block text-sm font-medium w-32">Prix ${i}${i === 1 ? 'er' : 'ème'} (Ar):</label>
+                <input type="number" id="prize-rank-${i}" data-rank="${i}" value="${value}"
+                       class="prize-input w-48 p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                       placeholder="Montant pour le rang ${i}">
+            `;
+            container.appendChild(inputGroup);
+        }
+    }
+
     async function loadCompetitionRules() {
         const token = sessionStorage.getItem(API_TOKEN_KEY);
         try {
@@ -255,13 +285,77 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error('Impossible de charger les règles.');
             const rules = await response.json();
             
-            // On met à jour les deux champs : le nombre de gagnants et le nouveau prix
             maxWinnersInput.value = rules.maxWinners;
-            competitionPriceInput.value = rules.price !== undefined ? rules.price : 1000; // Valeur par défaut si non défini
+            competitionPriceInput.value = rules.price !== undefined ? rules.price : 1000;
+
+            // NOUVEAU : Gestion de l'affichage en fonction du mode
+            const currentMode = rules.prizeMode || 'automatic';
+            if (currentMode === 'manual') {
+                prizeModeManualRadio.checked = true;
+            } else {
+                prizeModeAutomaticRadio.checked = true;
+            }
+            
+            togglePrizeInputsVisibility(currentMode);
+            renderPrizeInputs(rules.maxWinners, rules.prizes || []);
+            updateRadioLabels();
+
+            // Ajout des écouteurs d'événements s'ils n'existent pas déjà
+            if (!maxWinnersInput.hasListener) {
+                maxWinnersInput.addEventListener('input', () => {
+                    const numWinners = parseInt(maxWinnersInput.value, 10) || 0;
+                    const prizes = Array.from(document.querySelectorAll('.prize-input')).map(input => ({ rank: parseInt(input.dataset.rank), amount: parseInt(input.value) || '' }));
+                    renderPrizeInputs(numWinners, prizes);
+                });
+                prizeModeAutomaticRadio.addEventListener('change', () => togglePrizeInputsVisibility('automatic'));
+                prizeModeManualRadio.addEventListener('change', () => togglePrizeInputsVisibility('manual'));
+                maxWinnersInput.hasListener = true;
+            }
 
         } catch (error) {
             winnersUpdateStatus.textContent = `Erreur : ${error.message}`;
             winnersUpdateStatus.className = 'text-red-500 text-sm mt-3 h-5';
+        }
+    }
+
+    // NOUVELLE FONCTION pour gérer la visibilité des champs de prix
+    function togglePrizeInputsVisibility(mode) {
+        if (mode === 'manual') {
+            prizeInputsContainer.classList.remove('hidden');
+        } else {
+            prizeInputsContainer.classList.add('hidden');
+        }
+        updateRadioLabels();
+    }
+
+    // NOUVELLE FONCTION pour mettre à jour le style des labels radio
+    function updateRadioLabels() {
+        if (prizeModeManualRadio.checked) {
+            labelModeManual.classList.add('bg-cyan-600', 'text-white');
+            labelModeAutomatic.classList.remove('bg-cyan-600', 'text-white');
+        } else {
+            labelModeAutomatic.classList.add('bg-cyan-600', 'text-white');
+            labelModeManual.classList.remove('bg-cyan-600', 'text-white');
+        }
+    }
+
+    function renderPrizeInputs(numberOfWinners, prizes = []) {
+        if (!prizeInputsContainer) return;
+
+        prizeInputsContainer.innerHTML = '';
+        for (let i = 1; i <= numberOfWinners; i++) {
+            const existingPrize = prizes.find(p => p.rank === i);
+            const value = existingPrize ? existingPrize.amount : '';
+
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'flex items-center gap-2';
+            inputGroup.innerHTML = `
+                <label for="prize-rank-${i}" class="block text-sm font-medium w-32">Prix ${i}${i === 1 ? 'er' : 'ème'} (Ar):</label>
+                <input type="number" id="prize-rank-${i}" data-rank="${i}" value="${value}"
+                       class="prize-input w-48 p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                       placeholder="Montant pour le rang ${i}">
+            `;
+            prizeInputsContainer.appendChild(inputGroup);
         }
     }
 
@@ -1257,17 +1351,26 @@ function hideStatusMessage() {
             return;
         }
 
+        const prizeMode = prizeModeManualRadio.checked ? 'manual' : 'automatic';
+        
+        const prizeInputs = document.querySelectorAll('.prize-input');
+        const prizes = Array.from(prizeInputs).map(input => ({
+            rank: parseInt(input.dataset.rank, 10),
+            amount: parseInt(input.value, 10) || 0
+        }));
+
         winnersUpdateStatus.textContent = 'Mise à jour...';
         winnersUpdateStatus.className = 'text-yellow-400 text-sm mt-3';
 
         try {
             const response = await fetch('/admin/competition-rules', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ maxWinners: parseInt(maxWinners, 10) })
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ 
+                    maxWinners: parseInt(maxWinners, 10),
+                    prizes: prizes,
+                    prizeMode: prizeMode // On envoie le mode choisi
+                })
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.error);
@@ -1275,7 +1378,6 @@ function hideStatusMessage() {
             winnersUpdateStatus.textContent = result.message;
             winnersUpdateStatus.className = 'text-green-400 text-sm mt-3';
 
-            // On rafraîchit la liste des gagnants, qui devrait maintenant être vide
             loadAndDisplayWinners();
 
         } catch (error) {

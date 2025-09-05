@@ -2024,13 +2024,42 @@ async function nextQuestion() {
             } else {
                 const response = await fetch(`/questions?session=${selectedSession}`);
                 
-                // --- GESTION DES ERREURS SERVEUR AMÉLIORÉE ---
                 if (!response.ok) {
                     const errorData = await response.json();
                     
-                    if (response.status === 402) { // 402 = Paiement Requis
-                        showToast('Paiement Requis', errorData.error, 'error');
-                        navigateTo('/wallet'); // On l'envoie directement recharger
+                    // ==========================================================
+                    // ===            LA MODIFICATION EST ICI                 ===
+                    // ==========================================================
+                    // Si le serveur renvoie une erreur 402 (Paiement Requis),
+                    // nous déclenchons la modale de confirmation.
+                    if (response.status === 402) {
+                        showConfirmationModal(
+                            'Confirmation de Paiement',
+                            errorData.error, // Le message d'erreur du serveur est réutilisé ici.
+                            'Confirmer et Payer',
+                            'Annuler',
+                            () => {
+                                // Si l'utilisateur confirme, on appelle une NOUVELLE route dédiée au paiement.
+                                fetch('/api/pay-entry-fee', { method: 'POST' })
+                                    .then(payRes => {
+                                        if (!payRes.ok) throw new Error('Le paiement a échoué.');
+                                        return payRes.json();
+                                    })
+                                    .then(payData => {
+                                        showToast('Paiement Réussi', payData.message, 'success');
+                                        nextQuestion(); // On relance la fonction pour charger la question.
+                                    })
+                                    .catch(err => {
+                                        showToast('Erreur', err.message, 'error');
+                                        navigateTo('/menu');
+                                    });
+                            },
+                            () => {
+                                // Si l'utilisateur annule, on le renvoie au menu.
+                                showToast('Paiement Annulé', 'Vous avez été redirigé vers le menu.', 'info');
+                                navigateTo('/menu');
+                            }
+                        );
                     } 
                     else if (errorData.competitionOver) {
                         showToast('Compétition Terminée', errorData.error, 'info');
@@ -2040,7 +2069,7 @@ async function nextQuestion() {
                         showToast('Accès Verrouillé', errorData.error, 'error');
                         navigateTo('/menu');
                     }
-                    return; // Arrête l'exécution pour ne pas essayer d'afficher une question
+                    return; // On arrête l'exécution ici.
                 }
                 questionToShow = await response.json();
             }
@@ -3500,12 +3529,10 @@ async function loadWalletHistory() {
     
     try {
         const response = await fetch('/api/deposit/history');
-        
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.error);
         }
-        
         const history = await response.json();
         
         if (history.length === 0) {
@@ -3514,30 +3541,32 @@ async function loadWalletHistory() {
         }
         
         historyContainer.innerHTML = history.map(transaction => {
-            const date = new Date(transaction.requested_at);
+            const date = new Date(transaction.date); // On utilise la clé "date" unifiée
             const formattedDate = date.toLocaleDateString('fr-FR', {
-                day: '2-digit',
-                month: '2-digit', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
             });
             
+            // ==========================================================
+            // ==              LA MODIFICATION EST ICI                 ==
+            // ==========================================================
+            // On personnalise l'affichage en fonction du type de transaction
+            const isWithdrawal = transaction.type === 'withdrawal';
+            
+            const amountClass = isWithdrawal ? 'text-red-500' : 'text-green-500';
+            const amountPrefix = isWithdrawal ? '-' : '+';
+            const statusText = isWithdrawal ? 'Retrait' : 
+                (transaction.status === 'approved' ? 'Approuvé' : 
+                (transaction.status === 'rejected' ? 'Rejeté' : 'En attente'));
+            
             let statusClass = 'status-pending';
-            let statusText = 'En attente';
-            
-            if (transaction.status === 'approved') {
-                statusClass = 'status-approved';
-                statusText = 'Approuvé';
-            } else if (transaction.status === 'rejected') {
-                statusClass = 'status-rejected';
-                statusText = 'Rejeté';
-            }
-            
+            if (transaction.status === 'approved' && !isWithdrawal) statusClass = 'status-approved';
+            if (transaction.status === 'rejected') statusClass = 'status-rejected';
+            if (isWithdrawal) statusClass = 'status-rejected'; // Utilise le style rouge pour les retraits
+
             return `
                 <div class="transaction-item">
                     <div class="transaction-info">
-                        <div class="transaction-amount">${transaction.amount} Ar</div>
+                        <div class="transaction-amount ${amountClass}">${amountPrefix} ${transaction.amount} Ar</div>
                         <div class="transaction-ref">Réf: ${transaction.transaction_ref}</div>
                     </div>
                     <div>

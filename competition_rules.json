@@ -2,5 +2,23 @@
   "maxWinners": 4,
   "competitionEnded": false,
   "competitionEndTime": null,
-  "price": 500
+  "price": 1000,
+  "prizes": [
+    {
+      "rank": 1,
+      "amount": 0
+    },
+    {
+      "rank": 2,
+      "amount": 0
+    },
+    {
+      "rank": 3,
+      "amount": 0
+    },
+    {
+      "rank": 4,
+      "amount": 0
+    }
+  ]
 }

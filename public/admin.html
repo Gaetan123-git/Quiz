@@ -48,14 +48,33 @@
                 </button>
                 <p id="competition-update-status" class="text-sm mt-3"></p>
                 <div class="mt-6 border-t border-gray-700 pt-4">
+                    <!-- NOUVEAU : Sélecteur de mode de distribution -->
+                    <div class="mb-4">
+                        <label class="block mb-2 text-sm font-medium">Mode de Distribution des Gains</label>
+                        <div class="flex items-center gap-4 bg-gray-900 p-2 rounded-lg">
+                            <label class="flex-1 text-center p-2 rounded-md cursor-pointer transition-colors" id="label-mode-automatic">
+                                <input type="radio" name="prize-mode" id="prize-mode-automatic" value="automatic" class="sr-only">
+                                <span>🤖 Calcul Automatique (Cagnotte)</span>
+                            </label>
+                            <label class="flex-1 text-center p-2 rounded-md cursor-pointer transition-colors" id="label-mode-manual">
+                                <input type="radio" name="prize-mode" id="prize-mode-manual" value="manual" class="sr-only">
+                                <span>✍️ Saisie Manuelle (Prix Fixes)</span>
+                            </label>
+                        </div>
+                    </div>
+
                      <label for="max-winners" class="block mb-2 text-sm font-medium">Nombre de Gagnants Autorisés</label>
-                     <p class="text-xs text-gray-400 mb-2">Définissez le nombre de joueurs qui peuvent terminer la compétition (Session 10) avant qu'elle ne se termine pour tout le monde. Changer cette valeur réinitialisera la compétition.</p>
+                     <p class="text-xs text-gray-400 mb-2">Définissez le nombre de joueurs qui peuvent terminer la compétition. Changer cette valeur réinitialisera la compétition.</p>
                      <div class="flex items-center gap-4">
                         <input type="number" id="max-winners" value="3" min="1" 
                                class="w-24 p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500">
                         <button id="update-winners-btn" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
                             Mettre à jour et Réinitialiser
                         </button>
+                     </div>
+                     <!-- Conteneur pour les prix manuels, caché par défaut -->
+                     <div id="prize-inputs-container" class="mt-4 space-y-2 hidden">
+                         <!-- Les champs de saisie pour les prix seront injectés ici par JavaScript -->
                      </div>
                      <p id="winners-update-status" class="text-sm mt-3 h-5"></p>
                 </div>

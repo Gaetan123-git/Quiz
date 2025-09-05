@@ -38,6 +38,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateCompetitionBtn = document.getElementById('update-competition-btn');
     const competitionUpdateStatus = document.getElementById('competition-update-status');
 
+    // SÉLECTEURS POUR LA CAGNOTTE
+    const refreshPrizePoolBtn = document.getElementById('refresh-prize-pool-btn');
+    const participantsCount = document.getElementById('participants-count');
+    const entryFee = document.getElementById('entry-fee');
+    const totalPrizePool = document.getElementById('total-prize-pool');
+    const adminCommission = document.getElementById('admin-commission');
+    const prizesPool = document.getElementById('prizes-pool');
+    const maxWinners = document.getElementById('max-winners');
+    const prizeDistributionList = document.getElementById('prize-distribution-list');
+    const prizePoolStatus = document.getElementById('prize-pool-status');
+
     // ---- COMPÉTITION: Valeur par défaut à 20h et mise à jour quotidienne ----
     function formatForDatetimeLocal(date) {
         // Retourne 'YYYY-MM-DDTHH:MM' en heure locale
@@ -1561,6 +1572,70 @@ if (refreshDepositsBtn) {
     refreshDepositsBtn.addEventListener('click', loadPendingDeposits);
 }
 
+// ---- GESTION DE LA CAGNOTTE ----
+async function loadPrizePoolInfo() {
+    try {
+        const token = sessionStorage.getItem(API_TOKEN_KEY);
+        const response = await fetch('/admin/prize-pool', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+            throw new Error('Erreur lors du chargement de la cagnotte');
+        }
+
+        const data = await response.json();
+        
+        // Mettre à jour les éléments d'affichage
+        if (participantsCount) participantsCount.textContent = data.participantsCount;
+        if (entryFee) entryFee.textContent = `${data.entryFee} Ar`;
+        if (totalPrizePool) totalPrizePool.textContent = `${data.totalPrizePool} Ar`;
+        if (adminCommission) adminCommission.textContent = `${data.adminCommission} Ar`;
+        if (prizesPool) prizesPool.textContent = `${data.prizesPool} Ar`;
+        if (maxWinners) maxWinners.textContent = data.maxWinners;
+        
+        // Afficher la distribution des prix
+        if (prizeDistributionList && data.prizeDistribution) {
+            prizeDistributionList.innerHTML = '';
+            data.prizeDistribution.forEach(prize => {
+                const prizeDiv = document.createElement('div');
+                prizeDiv.className = 'flex justify-between items-center p-2 bg-gray-600 rounded';
+                
+                const positionText = prize.position === 1 ? '🥇 1er place' : 
+                                   prize.position === 2 ? '🥈 2ème place' : 
+                                   prize.position === 3 ? '🥉 3ème place' : 
+                                   `🏆 ${prize.position}ème place`;
+                
+                const percentageText = prize.percentage > 0 ? ` (${prize.percentage}%)` : '';
+                
+                prizeDiv.innerHTML = `
+                    <span class="font-medium">${positionText}${percentageText}</span>
+                    <span class="font-bold text-yellow-400">${prize.amount} Ar</span>
+                `;
+                prizeDistributionList.appendChild(prizeDiv);
+            });
+        }
+        
+        if (prizePoolStatus) {
+            prizePoolStatus.textContent = 'Cagnotte mise à jour avec succès';
+            prizePoolStatus.className = 'text-green-500 text-sm mt-4 h-5';
+            setTimeout(() => { prizePoolStatus.textContent = ''; }, 3000);
+        }
+        
+    } catch (error) {
+        console.error('Erreur lors du chargement de la cagnotte:', error);
+        if (prizePoolStatus) {
+            prizePoolStatus.textContent = `Erreur: ${error.message}`;
+            prizePoolStatus.className = 'text-red-500 text-sm mt-4 h-5';
+            setTimeout(() => { prizePoolStatus.textContent = ''; }, 5000);
+        }
+    }
+}
+
+if (refreshPrizePoolBtn) {
+    refreshPrizePoolBtn.addEventListener('click', loadPrizePoolInfo);
+}
+
     // Lancement initial
     if (sessionStorage.getItem(API_TOKEN_KEY)) {
         adminLoginSection.classList.add('hidden');
@@ -1574,5 +1649,6 @@ if (refreshDepositsBtn) {
         loadAndDisplayThemes();
         loadPrompts();
         loadPendingDeposits(); // Charger les dépôts
+        loadPrizePoolInfo(); // Charger la cagnotte
     }
 });

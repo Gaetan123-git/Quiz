@@ -2951,3 +2951,104 @@ main.main-container, .container {
 [data-theme="dark"] .transaction-date {
   color: var(--color-dark-muted);
 }
+
+/* ==== BANNIÈRE DE CAGNOTTE ==== */
+.prize-pool-banner {
+  background: linear-gradient(135deg, #ffd700, #ffb347);
+  border-bottom: 3px solid #ff8c00;
+  padding: 12px 20px;
+  box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
+  animation: prizePoolPulse 2s ease-in-out infinite alternate;
+}
+
+.prize-pool-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.prize-pool-icon {
+  font-size: 2rem;
+  animation: bounce 1s ease-in-out infinite alternate;
+}
+
+.prize-pool-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.prize-pool-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #8b4513;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.prize-pool-amount {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #b8860b;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.prize-pool-participants {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #8b4513;
+  font-weight: 600;
+}
+
+.prize-pool-participants span:first-child {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #b8860b;
+}
+
+@keyframes prizePoolPulse {
+  0% { box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3); }
+  100% { box-shadow: 0 4px 16px rgba(255, 140, 0, 0.6); }
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-3px); }
+}
+
+/* Responsive design pour la bannière */
+@media (max-width: 768px) {
+  .prize-pool-banner {
+    padding: 10px 15px;
+  }
+  
+  .prize-pool-content {
+    gap: 10px;
+  }
+  
+  .prize-pool-icon {
+    font-size: 1.5rem;
+  }
+  
+  .prize-pool-title {
+    font-size: 0.8rem;
+  }
+  
+  .prize-pool-amount {
+    font-size: 1.4rem;
+  }
+  
+  .prize-pool-participants {
+    font-size: 0.7rem;
+  }
+  
+  .prize-pool-participants span:first-child {
+    font-size: 1rem;
+  }
+}

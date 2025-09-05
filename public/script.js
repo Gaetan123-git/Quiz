@@ -1591,6 +1591,9 @@ async function initializeApp() {
     if (floatingChatButton) floatingChatButton.addEventListener('click', () => navigateTo('/chat'));
 
     setupUserStatusStream(); 
+    
+    // Démarrer les mises à jour de la cagnotte
+    startPrizePoolUpdates();
 
     const courseHistoryList = document.getElementById('course-history-list');
     if (courseHistoryList) {
@@ -3551,6 +3554,51 @@ async function loadWalletHistory() {
     }
 }
 
+// ---- GESTION DE LA CAGNOTTE ----
+async function displayPrizePoolBanner() {
+    try {
+        const response = await fetch('/api/prize-pool');
+        
+        if (!response.ok) {
+            console.error('Erreur lors du chargement de la cagnotte');
+            return;
+        }
+        
+        const data = await response.json();
+        
+        // Mettre à jour les éléments d'affichage
+        const prizePoolDisplay = document.getElementById('prize-pool-display');
+        const participantsDisplay = document.getElementById('participants-display');
+        const prizePoolBanner = document.getElementById('prize-pool-banner');
+        
+        if (prizePoolDisplay) {
+            prizePoolDisplay.textContent = `${data.prizesPool} Ar`;
+        }
+        
+        if (participantsDisplay) {
+            participantsDisplay.textContent = data.participantsCount;
+        }
+        
+        // Afficher la bannière si la cagnotte existe et qu'il y a des participants
+        if (prizePoolBanner && data.participantsCount > 0) {
+            prizePoolBanner.style.display = 'block';
+        }
+        
+    } catch (error) {
+        console.error('Erreur lors du chargement de la cagnotte:', error);
+    }
+}
+
+// Fonction pour mettre à jour périodiquement la cagnotte
+function startPrizePoolUpdates() {
+    // Charger la cagnotte immédiatement
+    displayPrizePoolBanner();
+    
+    // Mettre à jour toutes les 30 secondes
+    setInterval(displayPrizePoolBanner, 30000);
+}
+
 // Exposer les fonctions sur window pour compatibilité SPA
 window.showUserErrorsPage = showUserErrorsPage;
 window.startReplayErrorQuestions = startReplayErrorQuestions;
+window.displayPrizePoolBanner = displayPrizePoolBanner;

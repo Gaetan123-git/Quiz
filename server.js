@@ -215,10 +215,22 @@ const createDepositsTable = `
   );
 `;
 
+// NOUVELLE TABLE POUR GÉRER LES PARTICIPANTS DE LA COMPÉTITION
+const createCompetitionParticipantsTable = `
+  CREATE TABLE IF NOT EXISTS competition_participants (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    entry_fee INTEGER NOT NULL,
+    participation_date TEXT NOT NULL,
+    FOREIGN KEY (username) REFERENCES users(username)
+  );
+`;
+
 // Exécute les commandes de création de table.
 db.exec(createUsersTable);
 db.exec(createErrorCorrectionsTable);
 db.exec(createDepositsTable);
+db.exec(createCompetitionParticipantsTable);
 
 // Migration pour ajouter la colonne balance si elle n'existe pas
 try {
@@ -232,7 +244,7 @@ try {
     }
 }
 
-console.log("[DB] Vérification des tables 'users', 'error_corrections' et 'deposits' terminée.");
+console.log("[DB] Vérification des tables 'users', 'error_corrections', 'deposits' et 'competition_participants' terminée.");
 const app = express();
 console.log(`[TEST] Heure actuelle serveur (locale) : ${new Date().toString()}`);
 console.log(`[TEST] Heure à Paris via moment-timezone : ${moment().tz('Europe/Paris').format('YYYY-MM-DD HH:mm:ss Z')}`);
@@ -1330,11 +1342,10 @@ app.get('/questions', async (req, res) => {
   if (isTournamentSession && user.username !== 'devtest') {
       const tournamentEntryFee = competitionRules.price !== undefined ? competitionRules.price : 1000; // Prix depuis les règles, avec un fallback
 
-      // A-t-il déjà payé pour ce tournoi ?
-      // On considère qu'il a payé s'il a déjà répondu à une question des sessions 4 à 10.
-      const hasAlreadyPaidOrStarted = user.scores.some(s => parseInt(s.session.replace('session', ''), 10) >= 4);
-
-      if (!hasAlreadyPaidOrStarted) {
+      // Vérifier si l'utilisateur a déjà payé en consultant la table competition_participants
+      const participant = db.prepare('SELECT * FROM competition_participants WHERE username = ?').get(user.username);
+      
+      if (!participant) {
           // C'est sa première tentative d'entrer dans le tournoi.
           const currentBalance = user.balance || 0;
           if (currentBalance < tournamentEntryFee) {
@@ -1343,8 +1354,17 @@ app.get('/questions', async (req, res) => {
                   error: `Solde insuffisant. L'entrée au tournoi coûte ${tournamentEntryFee} Ar. Votre solde actuel: ${currentBalance} Ar. Veuillez recharger votre portefeuille.`
               });
           } else {
-              user.balance = currentBalance - tournamentEntryFee;
-              saveUser(user);
+              // Transaction atomique pour déduire le solde et enregistrer le participant
+              const transaction = db.transaction(() => {
+                  user.balance = currentBalance - tournamentEntryFee;
+                  saveUser(user);
+                  
+                  // Enregistrer le participant dans la base de données
+                  const stmt = db.prepare('INSERT INTO competition_participants (username, entry_fee, participation_date) VALUES (?, ?, ?)');
+                  stmt.run(user.username, tournamentEntryFee, new Date().toISOString());
+              });
+              
+              transaction();
               console.log(`[PAIEMENT ACCEPTÉ] ${user.username} a payé ${tournamentEntryFee} Ar pour le tournoi. Nouveau solde: ${user.balance} Ar.`);
           }
       }
@@ -2903,6 +2923,99 @@ app.get('/admin/winners', protectAdmin, (req, res) => {
     // Cette route renvoie toujours la liste des gagnants,
     // que la compétition soit terminée ou non.
     res.json(winners);
+});
+
+// Route admin pour récupérer les informations de la cagnotte
+app.get('/admin/prize-pool', protectAdmin, (req, res) => {
+    try {
+        // Récupérer le nombre de participants
+        const participantsCount = db.prepare('SELECT COUNT(*) as count FROM competition_participants').get().count;
+        
+        // Récupérer le prix d'entrée depuis les règles de compétition
+        const entryFee = competitionRules.price !== undefined ? competitionRules.price : 1000;
+        
+        // Calculer la cagnotte totale
+        const totalPrizePool = participantsCount * entryFee;
+        
+        // Commission admin (15%)
+        const adminCommission = Math.floor(totalPrizePool * 0.15);
+        
+        // Cagnotte distribuée aux gagnants
+        const prizesPool = totalPrizePool - adminCommission;
+        
+        // Nombre maximum de gagnants
+        const maxWinners = competitionRules.maxWinners || 3;
+        
+        // Distribution des prix (50% au 1er, 30% au 2ème, 20% au 3ème, etc.)
+        const prizeDistribution = [];
+        if (maxWinners >= 1) {
+            prizeDistribution.push({ position: 1, percentage: 50, amount: Math.floor(prizesPool * 0.50) });
+        }
+        if (maxWinners >= 2) {
+            prizeDistribution.push({ position: 2, percentage: 30, amount: Math.floor(prizesPool * 0.30) });
+        }
+        if (maxWinners >= 3) {
+            prizeDistribution.push({ position: 3, percentage: 20, amount: Math.floor(prizesPool * 0.20) });
+        }
+        
+        // Si plus de 3 gagnants, distribuer le reste équitablement
+        if (maxWinners > 3) {
+            const remainingAmount = prizesPool - prizeDistribution.reduce((sum, p) => sum + p.amount, 0);
+            const remainingWinners = maxWinners - 3;
+            const amountPerRemaining = Math.floor(remainingAmount / remainingWinners);
+            
+            for (let i = 4; i <= maxWinners; i++) {
+                prizeDistribution.push({ position: i, percentage: 0, amount: amountPerRemaining });
+            }
+        }
+        
+        res.json({
+            participantsCount,
+            entryFee,
+            totalPrizePool,
+            adminCommission,
+            prizesPool,
+            maxWinners,
+            prizeDistribution
+        });
+    } catch (error) {
+        console.error('[ADMIN] Erreur lors du calcul de la cagnotte:', error);
+        res.status(500).json({ error: 'Erreur lors du calcul de la cagnotte.' });
+    }
+});
+
+// Route publique pour récupérer les informations de base de la cagnotte
+app.get('/api/prize-pool', (req, res) => {
+    try {
+        // Récupérer le nombre de participants
+        const participantsCount = db.prepare('SELECT COUNT(*) as count FROM competition_participants').get().count;
+        
+        // Récupérer le prix d'entrée depuis les règles de compétition
+        const entryFee = competitionRules.price !== undefined ? competitionRules.price : 1000;
+        
+        // Calculer la cagnotte totale
+        const totalPrizePool = participantsCount * entryFee;
+        
+        // Commission admin (15%)
+        const adminCommission = Math.floor(totalPrizePool * 0.15);
+        
+        // Cagnotte distribuée aux gagnants
+        const prizesPool = totalPrizePool - adminCommission;
+        
+        // Nombre maximum de gagnants
+        const maxWinners = competitionRules.maxWinners || 3;
+        
+        res.json({
+            participantsCount,
+            entryFee,
+            totalPrizePool,
+            prizesPool,
+            maxWinners
+        });
+    } catch (error) {
+        console.error('[API] Erreur lors du calcul de la cagnotte:', error);
+        res.status(500).json({ error: 'Erreur lors du calcul de la cagnotte.' });
+    }
 });
 // Route pour que l'admin récupère la liste des livres
 app.get('/admin/books', protectAdmin, (req, res) => {

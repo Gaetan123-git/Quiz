@@ -37,6 +37,20 @@ CREATE TABLE IF NOT EXISTS users (
 db.exec(createTableQuery);
 console.log('[DB] La table "users" a été créée ou existe déjà avec la nouvelle structure.');
 
+// Créer la table competition_participants pour le système de cagnotte
+const createCompetitionParticipantsQuery = `
+CREATE TABLE IF NOT EXISTS competition_participants (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    entry_fee INTEGER NOT NULL,
+    participation_date TEXT NOT NULL,
+    FOREIGN KEY (username) REFERENCES users(username)
+);
+`;
+
+db.exec(createCompetitionParticipantsQuery);
+console.log('[DB] La table "competition_participants" a été créée ou existe déjà.');
+
 // Migration douce: ajouter les colonnes manquantes si la table existante ne les possède pas.
 try {
   const columns = db.prepare('PRAGMA table_info(users)').all();

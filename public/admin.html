@@ -121,6 +121,53 @@
         </div>
 
         <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+            <h2 class="text-xl font-semibold text-blue-400 mb-4">💰 Cagnotte de la Compétition</h2>
+            <p class="text-sm text-gray-400 mb-4">Suivez en temps réel la cagnotte de la compétition et sa distribution entre les gagnants.</p>
+            
+            <div class="mb-4">
+                <button id="refresh-prize-pool-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                    🔄 Actualiser la cagnotte
+                </button>
+            </div>
+            
+            <div id="prize-pool-info" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <h3 class="text-sm font-medium text-gray-300 mb-1">Participants</h3>
+                    <p id="participants-count" class="text-2xl font-bold text-blue-400">-</p>
+                </div>
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <h3 class="text-sm font-medium text-gray-300 mb-1">Prix d'entrée</h3>
+                    <p id="entry-fee" class="text-2xl font-bold text-green-400">- Ar</p>
+                </div>
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <h3 class="text-sm font-medium text-gray-300 mb-1">Cagnotte totale</h3>
+                    <p id="total-prize-pool" class="text-2xl font-bold text-yellow-400">- Ar</p>
+                </div>
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <h3 class="text-sm font-medium text-gray-300 mb-1">Commission admin (15%)</h3>
+                    <p id="admin-commission" class="text-2xl font-bold text-red-400">- Ar</p>
+                </div>
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <h3 class="text-sm font-medium text-gray-300 mb-1">Cagnotte gagnants</h3>
+                    <p id="prizes-pool" class="text-2xl font-bold text-purple-400">- Ar</p>
+                </div>
+                <div class="bg-gray-700 p-4 rounded-lg">
+                    <h3 class="text-sm font-medium text-gray-300 mb-1">Nombre de gagnants</h3>
+                    <p id="max-winners" class="text-2xl font-bold text-orange-400">-</p>
+                </div>
+            </div>
+            
+            <div id="prize-distribution" class="bg-gray-700 p-4 rounded-lg">
+                <h3 class="text-lg font-semibold text-gray-200 mb-3">Distribution des prix</h3>
+                <div id="prize-distribution-list" class="space-y-2">
+                    <p class="text-gray-400">Chargement de la distribution...</p>
+                </div>
+            </div>
+            
+            <p id="prize-pool-status" class="text-sm mt-4 h-5"></p>
+        </div>
+
+        <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
             <h2 class="text-xl font-semibold text-purple-400 mb-4">File d'Attente des Thèmes Journaliers</h2>
             <p class="text-sm text-gray-400 mb-4">Gérez la liste des thèmes qui tourneront automatiquement chaque jour à minuit. Le système réinitialisera la progression des joueurs et générera un nouveau cours et de nouvelles questions basées sur le thème suivant de la liste.</p>
             

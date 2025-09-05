@@ -1296,86 +1296,113 @@ app.get('/session-status-stream', (req, res) => {
   };
   req.on('close', cleanup);
 });
-app.get('/questions', async (req, res) => { // <-- AJOUT DU MOT-CLÉ 'async' ICI
-  if (competitionRules.competitionEnded) {
-    const timeSinceEnd = Date.now() - new Date(competitionRules.competitionEndTime).getTime();
-    const tenMinutes = 10 * 60 * 1000;
-    if (timeSinceEnd < tenMinutes) {
-      return res.status(403).json({
-        error: 'La compétition est terminée ! Les résultats sont affichés. Les quiz reprendront dans quelques minutes.',
-        competitionOver: true,
-        winners: winners
-      });
-    }
-  }
 
-  if (!req.session.user) return res.status(401).json({ error: 'Non connecté.' });
-  const session = req.query.session || 'session1';
-  const user = users.find(u => u.username === req.session.user.username);
-  if (!user) return res.status(404).json({ error: 'Utilisateur introuvable.' });
-  if (!sessionQuestions[session]) return res.status(404).json({ error: 'Session non trouvée.' });
-
-  const sessionNumber = parseInt(session.replace('session', ''), 10);
-  if (isNaN(sessionNumber)) {
-      return res.status(400).json({ error: 'Format de session invalide.' });
-  }
-
-  // ==========================================================
-  // ===        LOGIQUE DE DÉVERROUILLAGE CORRIGÉE            ===
-  // ==========================================================
-  // On applique les règles de déverrouillage uniquement pour les utilisateurs normaux.
-  if (user.username !== 'devtest') {
-      
-    // Règle 1 : Verrouillage temporel pour la compétition (sessions 4 et plus)
-    if (sessionNumber >= 4) {
-      try {
-        const competitionData = await readJsonCached('competition.json');
-        const startTime = new Date(competitionData.startTime);
-        
-        // Si l'heure actuelle est AVANT l'heure de début de la compétition
-        if (Date.now() < startTime.getTime()) {
-          // On formate l'heure pour l'afficher à l'utilisateur
-          const formattedTime = startTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'Indian/Antananarivo' });
-          console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Compétition pas encore commencée.`);
-          // On retourne une erreur claire au client
-          return res.status(403).json({ error: `La compétition commence à ${formattedTime}. Accès non autorisé.` });
+app.get('/questions', async (req, res) => {
+    if (competitionRules.competitionEnded) {
+        const timeSinceEnd = Date.now() - new Date(competitionRules.competitionEndTime).getTime();
+        const tenMinutes = 10 * 60 * 1000;
+        if (timeSinceEnd < tenMinutes) {
+            return res.status(403).json({
+                error: 'La compétition est terminée ! Les résultats sont affichés. Les quiz reprendront dans quelques minutes.',
+                competitionOver: true,
+                winners: winners
+            });
         }
-      } catch (e) {
-        console.error('[SERVER] Impossible de lire competition.json, accès bloqué par sécurité:', e);
-        return res.status(500).json({ error: 'Erreur de configuration de la compétition.' });
-      }
     }
 
-    // Règle 2 : Verrouillage séquentiel (la session N-1 doit être terminée)
-    // Elle s'applique aux sessions 2, 3, 5, 6, 7, etc. (la 4 est débloquée uniquement par le temps).
-    const isSequentialSession = (sessionNumber > 1 && sessionNumber < 4) || sessionNumber > 4;
-    
-    if (isSequentialSession) {
-      const requiredSession = `session${sessionNumber - 1}`;
-      if (!user.completedSessions || !user.completedSessions.includes(requiredSession)) {
-        console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Prérequis non rempli : ${requiredSession}`);
-        return res.status(403).json({ error: `Accès non autorisé. Vous devez d'abord terminer la ${requiredSession}.` });
-      }
+    if (!req.session.user) return res.status(401).json({ error: 'Non connecté.' });
+
+    const session = req.query.session || 'session1';
+    const user = users.find(u => u.username === req.session.user.username);
+    if (!user) return res.status(404).json({ error: 'Utilisateur introuvable.' });
+
+    if (!sessionQuestions[session]) return res.status(404).json({ error: 'Session non trouvée.' });
+
+    const sessionNumber = parseInt(session.replace('session', ''), 10);
+    if (isNaN(sessionNumber)) return res.status(400).json({ error: 'Format de session invalide.' });
+
+    // ==========================================================
+    // ==         NOUVELLE LOGIQUE DE PAIEMENT DU TOURNOI      ==
+    // ==========================================================
+    const isTournamentSession = sessionNumber >= 4;
+    const TOURNAMENT_ENTRY_FEE = 1000; // Frais d'inscription en Ar
+
+    if (isTournamentSession && user.username !== 'devtest') {
+        // A-t-il déjà payé pour ce tournoi ?
+        // On considère qu'il a payé s'il a déjà répondu à une question des sessions 4 à 10.
+        const hasAlreadyPaid = user.scores.some(s => parseInt(s.session.replace('session', '')) >= 4);
+
+        if (!hasAlreadyPaid) {
+            // C'est sa première tentative d'entrer dans le tournoi.
+            const currentBalance = user.balance || 0; // Assurer que balance n'est pas undefined
+            if (currentBalance < TOURNAMENT_ENTRY_FEE) {
+                // Pas assez d'argent !
+                console.log(`[PAIEMENT REFUSÉ] ${user.username} - Solde: ${currentBalance} Ar, Requis: ${TOURNAMENT_ENTRY_FEE} Ar`);
+                return res.status(402).json({ // 402 = Payment Required
+                    error: `Solde insuffisant. L'entrée au tournoi coûte ${TOURNAMENT_ENTRY_FEE} Ar. Votre solde actuel: ${currentBalance} Ar. Veuillez recharger votre portefeuille.`
+                });
+            } else {
+                // Assez d'argent, on déduit le montant !
+                user.balance = currentBalance - TOURNAMENT_ENTRY_FEE;
+                saveUser(user); // On sauvegarde immédiatement la déduction.
+                console.log(`[PAIEMENT ACCEPTÉ] ${user.username} a payé ${TOURNAMENT_ENTRY_FEE} Ar pour le tournoi. Nouveau solde: ${user.balance} Ar.`);
+            }
+        }
     }
-  }
+    // === FIN DE LA LOGIQUE DE PAIEMENT ===
 
-  const allQuestionsForSession = sessionQuestions[session];
-  const answeredQuestionIds = new Set(
-    user.scores
-        .filter(s => s.session === session)
-        .map(s => s.questionId)
-  );
-  const nextQuestionToSend = allQuestionsForSession.find(q => !answeredQuestionIds.has(q.id));
+    // Logique de déverrouillage de session (inchangée)
+    if (user.username !== 'devtest') {
+        
+        // Règle 1 : Verrouillage temporel pour la compétition (sessions 4 et plus)
+        if (sessionNumber >= 4) {
+            try {
+                const competitionData = await readJsonCached('competition.json');
+                const startTime = new Date(competitionData.startTime);
+                
+                // Si l'heure actuelle est AVANT l'heure de début de la compétition
+                if (Date.now() < startTime.getTime()) {
+                    // On formate l'heure pour l'afficher à l'utilisateur
+                    const formattedTime = startTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'Indian/Antananarivo' });
+                    console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Compétition pas encore commencée.`);
+                    // On retourne une erreur claire au client
+                    return res.status(403).json({ error: `La compétition commence à ${formattedTime}. Accès non autorisé.` });
+                }
+            } catch (e) {
+                console.error('[SERVER] Impossible de lire competition.json, accès bloqué par sécurité:', e);
+                return res.status(500).json({ error: 'Erreur de configuration de la compétition.' });
+            }
+        }
 
-  if (nextQuestionToSend) {
-    const { correctAnswer, ...questionForClient } = nextQuestionToSend;
-    const userKey = `${req.session.user.username}_${nextQuestionToSend.id}`;
-    questionStartTimes.set(userKey, Date.now());
-    return res.json(questionForClient);
-  } else {
-    return res.json(null);
-  }
+        // Règle 2 : Verrouillage séquentiel (la session N-1 doit être terminée)
+        // Elle s'applique aux sessions 2, 3, 5, 6, 7, etc. (la 4 est débloquée uniquement par le temps).
+        const isSequentialSession = (sessionNumber > 1 && sessionNumber < 4) || sessionNumber > 4;
+        
+        if (isSequentialSession) {
+            const requiredSession = `session${sessionNumber - 1}`;
+            if (!user.completedSessions || !user.completedSessions.includes(requiredSession)) {
+                console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Prérequis non rempli : ${requiredSession}`);
+                return res.status(403).json({ error: `Accès non autorisé. Vous devez d'abord terminer la ${requiredSession}.` });
+            }
+        }
+    }
+
+    const allQuestionsForSession = sessionQuestions[session];
+    const answeredQuestionIds = new Set(
+        user.scores.filter(s => s.session === session).map(s => s.questionId)
+    );
+    const nextQuestionToSend = allQuestionsForSession.find(q => !answeredQuestionIds.has(q.id));
+
+    if (nextQuestionToSend) {
+        const { correctAnswer, ...questionForClient } = nextQuestionToSend;
+        const userKey = `${req.session.user.username}_${nextQuestionToSend.id}`;
+        questionStartTimes.set(userKey, Date.now());
+        return res.json(questionForClient);
+    } else {
+        return res.json(null);
+    }
 });
+
 app.post('/submit', (req, res) => {
   if (!isRequestFromActiveLogin(req)) {
     return res.status(409).json({ error: 'Session invalide: un autre appareil est actif. Rechargez et reconnectez-vous.' });

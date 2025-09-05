@@ -2022,22 +2022,29 @@ async function nextQuestion() {
             } else {
                 // Si NON (mode quiz normal), on contacte le SERVEUR.
                 const response = await fetch(`/questions?session=${selectedSession}`);
+                
+                // ==========================================================
+                // ==          CORRECTION APPLIQUÉE ICI (PAIEMENT)         ==
+                // ==========================================================
                 if (!response.ok) {
                     const errorData = await response.json();
                     
-                    // --- MODIFICATION PRINCIPALE ---
-                    // On vérifie si l'erreur est due à la fin de la compétition.
-                    if (errorData.competitionOver) {
-                        // On affiche la notification de blocage.
+                    // Gère le cas "Solde insuffisant"
+                    if (response.status === 402) {
+                        showToast('Paiement Requis', errorData.error, 'error');
+                        navigateTo('/wallet'); // On l'envoie directement recharger
+                    } 
+                    // Gère le cas "Compétition terminée"
+                    else if (errorData.competitionOver) {
                         showToast('Compétition Terminée', errorData.error, 'info');
-                        // On affiche directement l'écran des gagnants.
                         showGameOverScreen(); 
-                    } else {
-                        // Si c'est une autre erreur (ex: session verrouillée), on applique le comportement normal.
+                    } 
+                    // Gère les autres erreurs (session verrouillée, etc.)
+                    else {
                         showToast('Accès Verrouillé', errorData.error, 'error');
                         navigateTo('/menu');
                     }
-                    return; // On arrête l'exécution de la fonction ici.
+                    return; // Arrête l'exécution
                 }
                 questionToShow = await response.json();
             }

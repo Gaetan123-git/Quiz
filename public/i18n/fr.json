@@ -9,6 +9,7 @@
     "course": "Cours",
     "courseHistory": "Archives des Cours",
     "freeBooks": "Livres Gratuits",
+    "wallet": "Portefeuille",
     "history": "Historique",
     "settings": "Paramètres",
     "logout": "Déconnexion"
@@ -177,6 +178,7 @@
       "pending": "En attente",
       "approved": "Approuvé",
       "rejected": "Rejeté"
-    }
+    },
+    "returnToMenu": "Retour au menu"
   }
 }

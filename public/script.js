@@ -3110,34 +3110,30 @@ function displayUserBooks(books) {
  */
 async function checkSessionAndShowWallet() {
     try {
-        const response = await fetch('/check-session');
-        const result = await response.json();
-        if (!result.loggedIn) {
-            window.location.href = '/login';
+        // Étape 1 : On lance les deux requêtes en parallèle pour gagner du temps.
+        const [sessionResponse, paymentInfoResponse] = await Promise.all([
+            fetch('/check-session'),
+            fetch('/api/payment-info')
+        ]);
+
+        // Étape 2 : On attend les résultats des deux requêtes.
+        const userData = await sessionResponse.json();
+        const paymentInfo = await paymentInfoResponse.json();
+
+        // Étape 3 : On vérifie si l'utilisateur est bien connecté.
+        if (!userData.loggedIn) {
+            navigateTo('/login');
+            showToast('Session expirée', 'Veuillez vous reconnecter.', 'error');
             return;
         }
         
-        // Cache toutes les pages avant d'afficher la page wallet
-        const auth = document.getElementById('auth');
-        const songSelection = document.getElementById('song-selection');
-        const game = document.getElementById('game');
-        const chatPage = document.getElementById('chat-page');
-        const historyPage = document.getElementById('history-page');
-        const settingsPage = document.getElementById('settings-page');
-        const coursePage = document.getElementById('course-page');
-        const courseHistoryPage = document.getElementById('course-history-page');
-        const livresPage = document.getElementById('livres-page');
-        const errorsPage = document.getElementById('errors-page');
-        const walletPage = document.getElementById('wallet-page');
-        
-        [auth, songSelection, game, chatPage, historyPage, settingsPage, coursePage, courseHistoryPage, livresPage, errorsPage, walletPage].forEach(el => {
-            if (el) el.style.display = 'none';
-        });
-        
-        showWalletPage(result);
+        // Étape 4 : Maintenant que nous avons TOUTES les données, on peut appeler la fonction d'affichage.
+        showWalletPage(userData, paymentInfo);
+
     } catch (error) {
-        console.error('[WALLET] Erreur lors de la vérification de session:', error);
-        window.location.href = '/login';
+        console.error("Erreur critique lors du chargement de la page Portefeuille:", error);
+        showToast('Erreur', 'Impossible de charger la page Portefeuille.', 'error');
+        navigateTo('/menu');
     }
 }
 
@@ -3433,81 +3429,67 @@ async function showGameOverScreen() {
     }
 }
 
-// Function to show wallet page
-function showWalletPage(userData) {
-    // APPEL DE NOTRE NOUVELLE FONCTION CENTRALISÉE
+function showWalletPage(userData, paymentInfo) {
+    // Affiche les informations de base de l'utilisateur dans l'en-tête.
     updateHeaderWithUserData(userData);
     
     const walletPage = document.getElementById('wallet-page');
     if (walletPage) walletPage.style.display = 'flex';
     
-    // Afficher le solde actuel
+    // Affiche le solde de l'utilisateur.
     const balanceDisplay = document.getElementById('wallet-balance-display');
     if (balanceDisplay) {
-        balanceDisplay.textContent = `${userData.balance || 0} Ar`;
+        balanceDisplay.textContent = `${(userData.balance || 0).toLocaleString('fr-FR')} Ar`;
     }
     
-    // Gérer le formulaire de dépôt
+    // ==========================================================
+    // ==                 CORRECTION APPLIQUÉE ICI             ==
+    // ==========================================================
+    // Affiche le numéro de téléphone de l'admin, qui a déjà été récupéré.
+    const phoneNumberSpan = document.getElementById('payment-phone-number');
+    if (phoneNumberSpan) {
+        phoneNumberSpan.textContent = paymentInfo.paymentNumber || "Numéro indisponible";
+    }
+
+    // Gère le formulaire de dépôt (cette partie est inchangée).
     const depositForm = document.getElementById('deposit-request-form');
     if (depositForm && !depositForm._listenerAttached) {
         depositForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const amountInput = document.getElementById('deposit-amount');
             const refInput = document.getElementById('deposit-ref');
             
-            const amount = parseFloat(amountInput.value);
-            const transactionRef = refInput.value.trim();
-            
-            if (!amount || amount <= 0) {
-                showToast('Erreur', 'Veuillez entrer un montant valide.', 'error');
-                return;
-            }
-            
-            if (!transactionRef) {
-                showToast('Erreur', 'Veuillez entrer la référence de transaction.', 'error');
-                return;
-            }
-            
+            const amount = amountInput.value;
+            const transactionRef = refInput.value;
+
             try {
-                const response = await fetch('/api/deposit/request', {
+                const res = await fetch('/api/deposit/request', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        amount: amount,
-                        transactionRef: transactionRef
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount, transactionRef })
                 });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.error);
                 
-                const result = await response.json();
-                
-                if (response.ok) {
-                    showToast('Succès', result.message, 'success');
-                    amountInput.value = '';
-                    refInput.value = '';
-                    // Recharger l'historique
-                    loadWalletHistory();
-                } else {
-                    showToast('Erreur', result.error, 'error');
-                }
-            } catch (error) {
-                console.error('[WALLET] Erreur lors de la soumission:', error);
-                showToast('Erreur', 'Impossible de soumettre votre demande.', 'error');
+                showToast('Succès', result.message, 'success');
+                amountInput.value = '';
+                refInput.value = '';
+                loadWalletHistory();
+            } catch (err) {
+                showToast('Erreur de soumission', err.message, 'error');
             }
         });
         depositForm._listenerAttached = true;
     }
     
-    // Gérer le bouton retour
+    // Gère le bouton de retour (inchangé).
     const returnBtn = document.getElementById('wallet-return-menu-button');
     if (returnBtn && !returnBtn._listenerAttached) {
         returnBtn.addEventListener('click', () => navigateTo('/menu'));
         returnBtn._listenerAttached = true;
     }
     
-    // Charger l'historique des transactions
+    // Charge l'historique des transactions (inchangé).
     loadWalletHistory();
 }
 

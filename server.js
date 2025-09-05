@@ -2219,6 +2219,17 @@ app.get('/api/user-errors', (req, res) => {
   }
 });
 
+// NOUVELLE ROUTE PUBLIQUE POUR OBTENIR LES INFORMATIONS DE PAIEMENT
+app.get('/api/payment-info', async (req, res) => {
+    try {
+        const config = await readJsonCached('admin_config.json');
+        res.json({ paymentNumber: config.paymentNumber });
+    } catch (error) {
+        console.error('[SERVER] Erreur lors de la lecture de admin_config.json:', error);
+        res.status(500).json({ error: 'Impossible de récupérer les informations de paiement.' });
+    }
+});
+
 // === NOUVELLES ROUTES POUR LE PORTEFEUILLE (DÉPÔTS) ===
 
 // Route pour qu'un utilisateur soumette une demande de dépôt
@@ -2236,8 +2247,12 @@ app.post('/api/deposit/request', (req, res) => {
     }
 
     try {
-        const stmt = db.prepare('INSERT INTO deposits (username, amount, transaction_ref) VALUES (?, ?, ?)');
-        stmt.run(username, parsedAmount, transactionRef.trim());
+        // CORRECTION : Nous générons nous-mêmes la date avec le bon fuseau horaire
+        const requestedAt = moment().tz('Indian/Antananarivo').format(); // Format ISO 8601
+        
+        const stmt = db.prepare('INSERT INTO deposits (username, amount, transaction_ref, requested_at) VALUES (?, ?, ?, ?)');
+        stmt.run(username, parsedAmount, transactionRef.trim(), requestedAt);
+        
         res.json({ success: true, message: 'Votre demande de dépôt a été envoyée et est en attente de validation.' });
     } catch (error) {
         console.error('[DEPOSIT] Erreur lors de la création de la demande:', error);
@@ -2316,7 +2331,10 @@ app.post('/admin/deposits/:id/approve', protectAdmin, (req, res) => {
 
             // Mettre à jour la base de données
             db.prepare("UPDATE users SET balance = ? WHERE username = ?").run(newBalance, deposit.username);
-            db.prepare("UPDATE deposits SET status = 'approved', processed_at = CURRENT_TIMESTAMP WHERE id = ?").run(depositId);
+            
+            // CORRECTION : Nous générons la date de traitement avec le bon fuseau horaire
+            const processedAt = moment().tz('Indian/Antananarivo').format();
+            db.prepare("UPDATE deposits SET status = 'approved', processed_at = ? WHERE id = ?").run(processedAt, depositId);
             
             // On stocke le résultat pour l'utiliser après la transaction
             updateResult = { 

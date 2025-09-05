@@ -9,6 +9,7 @@
     "course": "Course",
     "courseHistory": "Course Archives",
     "freeBooks": "Free Books",
+    "wallet": "Wallet",
     "history": "History",
     "settings": "Settings",
     "logout": "Logout"
@@ -177,6 +178,7 @@
       "pending": "Pending",
       "approved": "Approved",
       "rejected": "Rejected"
-    }
+    },
+    "returnToMenu": "Return to menu"
   }
 }

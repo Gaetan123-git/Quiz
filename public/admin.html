@@ -90,6 +90,24 @@
         </div>
 
         <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+            <h2 class="text-xl font-semibold text-yellow-400 mb-4">Gestion des Dépôts</h2>
+            <p class="text-sm text-gray-400 mb-4">Gérez les demandes de dépôt des utilisateurs. Approuvez ou rejetez les transactions Mobile Money.</p>
+            
+            <div class="mb-4">
+                <button id="refresh-deposits-btn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                    🔄 Actualiser la liste
+                </button>
+                <span id="deposits-count" class="ml-4 text-sm text-gray-400"></span>
+            </div>
+            
+            <div id="deposits-list" class="space-y-3">
+                <p class="text-gray-400">Chargement des dépôts en attente...</p>
+            </div>
+            
+            <p id="deposits-status" class="text-sm mt-4 h-5"></p>
+        </div>
+
+        <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
             <h2 class="text-xl font-semibold text-purple-400 mb-4">File d'Attente des Thèmes Journaliers</h2>
             <p class="text-sm text-gray-400 mb-4">Gérez la liste des thèmes qui tourneront automatiquement chaque jour à minuit. Le système réinitialisera la progression des joueurs et générera un nouveau cours et de nouvelles questions basées sur le thème suivant de la liste.</p>
             
@@ -179,8 +197,14 @@
                     <input type="text" id="course-edit-theme" required class="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500">
                 </div>
                 <div class="mb-6">
-                    <label for="course-edit-content" class="block mb-2 text-sm font-medium">Contenu du cours (Markdown)</label>
-                    <textarea id="course-edit-content" rows="20" class="w-full p-3 font-mono text-sm rounded bg-gray-900 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Le contenu du cours apparaîtra ici..."></textarea>
+                    <!-- NOUVEAU : Conteneur flexible pour le titre et le bouton -->
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="course-edit-content" class="text-lg font-medium">Contenu du cours (Markdown)</label>
+                        <!-- NOUVEAU : Bouton pour afficher/masquer -->
+                        <button type="button" id="edit-course-content-btn" class="text-teal-300 hover:text-teal-200 text-sm underline">Modifier</button>
+                    </div>
+                    <!-- MODIFICATION : La classe "hidden" est ajoutée ici pour masquer le champ par défaut -->
+                    <textarea id="course-edit-content" rows="20" class="hidden w-full p-3 font-mono text-sm rounded bg-gray-900 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Le contenu du cours apparaîtra ici..."></textarea>
                 </div>
                 <button type="submit" id="save-course-btn" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg">
                     Sauvegarder les modifications du cours

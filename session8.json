@@ -1,213 +1,207 @@
 {
   "questions": [
     {
-      "text": "Dans quelle situation utilise-t-on l'imparfait pour décrire une action passée ?",
+      "text": "Choisissez la phrase correctement accentuée.",
       "options": [
-        "Pour une action ponctuelle et brève",
-        "Pour une habitude ou une action répétée",
-        "Pour un événement futur",
-        "Pour une action en train de se dérouler au moment présent"
+        "L'éléve préfère étudier le soir."
       ],
-      "correctAnswer": "Pour une habitude ou une action répétée",
-      "englishHint": "In what situation is the imperfect tense used to describe a past action?",
-      "explanation": "L'imparfait est utilisé pour décrire des actions habituelles ou répétées dans le passé.",
-      "id": "79d6685a64272e2a",
+      "correctAnswer": "L'éléve préfère étudier le soir.",
+      "englishHint": "Choose the correctly accented sentence.",
+      "explanation": "Les formes correctes sont « élève » (avec un accent aigu puis un grave) et « préfère » (avec un accent aigu puis un grave). L'accent grave est souvent utilisé devant une syllabe avec un 'e' muet.",
+      "id": "560fabff03e77794",
       "type": "standard"
     },
     {
-      "text": "Comment forme-t-on l’imparfait du verbe \"parler\" à la première personne du singulier ?",
+      "text": "L'accent aigu (é), comme dans le mot « café », produit un son...",
       "options": [
-        "Je parlais",
-        "Je parlerai",
-        "Je parlerais",
-        "Je suis parlé"
+        "ouvert, comme dans le mot anglais « bed »",
+        "fermé, comme dans le mot anglais « say »",
+        "muet, comme à la fin de « table »",
+        "nasal, comme dans le mot « an »"
       ],
-      "correctAnswer": "Je parlais",
-      "englishHint": "How do you form the imperfect of the verb \"parler\" in the first person singular?",
-      "explanation": "On prend le radical du présent (parl-) et on ajoute la terminaison de l'imparfait (-ais).",
-      "id": "497a50747739fbf6",
+      "correctAnswer": "fermé, comme dans le mot anglais « say »",
+      "englishHint": "The acute accent (é), as in the word 'café', produces a...",
+      "explanation": "L'accent aigu (é) indique un son fermé [e], qui est un son clair et pointu, similaire au son 'ay' dans le mot anglais 'say'.",
+      "id": "c6283798dc7b970c",
       "type": "standard"
     },
     {
-      "text": "Quelle phrase emploie correctement l'imparfait pour décrire une action habituelle au passé ?",
+      "text": "Les accents grave (è) et circonflexe (ê), comme dans les mots « mère » et « fête », produisent un son...",
       "options": [
-        "Je suis allé au cinéma hier.",
-        "J'irai au cinéma demain.",
-        "J'allais souvent au cinéma.",
-        "J'aimerais aller au cinéma."
+        "ouvert, comme dans le mot anglais « bed »",
+        "fermé, comme dans le mot anglais « say »",
+        "long, comme dans le mot « pâte »",
+        "bref, comme dans le mot « patte »"
       ],
-      "correctAnswer": "J'allais souvent au cinéma.",
-      "englishHint": "Which sentence correctly uses the imperfect tense to describe a habitual action in the past?",
-      "explanation": "L'imparfait \"j'allais\" indique une action répétée dans le passé.",
-      "id": "fc42614c47031126",
+      "correctAnswer": "ouvert, comme dans le mot anglais « bed »",
+      "englishHint": "The grave (è) and circumflex (ê) accents, as in 'mère' and 'fête', produce a...",
+      "explanation": "L'accent grave (è) et l'accent circonflexe (ê) indiquent un son ouvert [ɛ], similaire au son 'e' dans le mot anglais 'bed'.",
+      "id": "f12a68115b78f2ab",
       "type": "standard"
     },
     {
-      "text": "Quelle est la terminaison de l'imparfait du verbe à la première personne du pluriel ?",
+      "text": "Quelle est l'erreur de ponctuation dans la phrase suivante : « Le chat, dort sur le canapé. » ?",
       "options": [
-        "-ais",
-        "-ions",
-        "-iez",
-        "-aient"
+        "Il manque un point à la fin.",
+        "Une virgule sépare le sujet du verbe.",
+        "La virgule devrait être un point-virgule.",
+        "Il ne faut jamais de virgule dans une phrase si courte."
       ],
-      "correctAnswer": "-ions",
-      "englishHint": "What is the ending of the imperfect tense in the first-person plural?",
-      "explanation": "La terminaison de l'imparfait à la première personne du pluriel est \"-ions\".",
-      "id": "cc519d5213bfa67a",
+      "correctAnswer": "Une virgule sépare le sujet du verbe.",
+      "englishHint": "What is the punctuation error in the following sentence: 'Le chat, dort sur le canapé.'?",
+      "explanation": "En français, il est interdit de séparer le sujet (« Le chat ») de son verbe (« dort ») par une seule virgule. C'est une règle fondamentale de la ponctuation.",
+      "id": "f7265b0847805167",
       "type": "standard"
     },
     {
-      "text": "Quel usage de l'imparfait est illustré dans la phrase : \"Il était toujours joyeux\" ?",
+      "text": "Quelle ponctuation faut-il ajouter pour correctement isoler l'information complémentaire dans la phrase : « Mon oncle __ qui habite à Lyon __ est musicien » ?",
       "options": [
-        "Description d'une action",
-        "Description d'une habitude",
-        "Description d'un état permanent",
-        "Comparaison avec le passé composé"
+        "Une virgule après 'oncle'",
+        "Deux virgules, encadrant 'qui habite à Lyon'",
+        "Un point après 'Lyon'",
+        "Aucune ponctuation n'est nécessaire"
       ],
-      "correctAnswer": "Description d'un état permanent",
-      "englishHint": "Which use of the imperfect tense is illustrated in the sentence: \"He was always cheerful\"?",
-      "explanation": "L'imparfait décrit ici un état qui durait dans le passé.",
-      "id": "1eae87db51c84fd7",
+      "correctAnswer": "Deux virgules, encadrant 'qui habite à Lyon'",
+      "englishHint": "What punctuation should be added to correctly isolate the additional information in the sentence: 'Mon oncle __ qui habite à Lyon __ est musicien'?",
+      "explanation": "Pour isoler une proposition subordonnée (une information complémentaire), on l'encadre de deux virgules. La phrase correcte est : « Mon oncle, qui habite à Lyon, est musicien. »",
+      "id": "bd991f5d3759d6c4",
       "type": "standard"
     },
     {
-      "text": "Pour exprimer un état permanent dans le passé, quel temps verbal utiliser ?",
+      "text": "L'accent circonflexe (ê) dans un mot comme « forêt » indique souvent la disparition d'une ancienne lettre. Quelle lettre, souvent conservée en anglais (forest), a disparu ?",
       "options": [
-        "Le passé composé",
-        "Le futur simple",
-        "Le présent",
-        "L'imparfait"
+        "la lettre 's'",
+        "la lettre 'p'",
+        "la lettre 't'",
+        "la lettre 'e'"
       ],
-      "correctAnswer": "L'imparfait",
-      "englishHint": "To express a permanent state in the past, which tense should be used?",
-      "explanation": "L'imparfait convient parfaitement pour exprimer un état qui perdurait dans le passé.",
-      "id": "2983d48db4be0202",
+      "correctAnswer": "la lettre 's'",
+      "englishHint": "The circumflex accent (ê) in a word like 'forêt' (forest) often indicates the disappearance of an old letter. Which letter, often kept in English, has disappeared?",
+      "explanation": "L'accent circonflexe a souvent une origine historique et remplace une lettre disparue, le plus souvent un 's'. C'est pourquoi 'forêt' correspond à 'forest' en anglais.",
+      "id": "277821c91722727f",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase : \"Il pleuvait. J'ai glissé.\", quel temps verbal décrit le contexte et quel temps verbal décrit l'action ?",
+      "text": "Pourquoi est-il crucial de ne pas oublier les accents en français, par exemple dans le mot « salé » ?",
       "options": [
-        "Passé composé / Imparfait",
-        "Imparfait / Passé composé",
-        "Futur simple / Passé composé",
-        "Présent / Passé composé"
+        "C'est une simple préférence esthétique.",
+        "Cela peut changer complètement le sens du mot (ex: sale).",
+        "Seuls les professeurs y prêtent attention.",
+        "Les accents ne sont importants qu'à l'oral."
       ],
-      "correctAnswer": "Imparfait / Passé composé",
-      "englishHint": "In the sentence: \"It was raining. I slipped.\", which tense describes the context and which describes the action?",
-      "explanation": "L'imparfait \"Il pleuvait\" décrit le contexte, tandis que le passé composé \"J'ai glissé\" décrit l'action principale.",
-      "id": "b9ba6eddbd5223ed",
+      "correctAnswer": "Cela peut changer complètement le sens du mot (ex: sale).",
+      "englishHint": "Why is it crucial not to forget accents in French, for example in the word 'salé' (salty)?",
+      "explanation": "L'oubli d'un accent n'est pas une petite erreur car il peut changer la prononciation et le sens d'un mot. Par exemple, « salé » (salty) est très différent de « sale » (dirty).",
+      "id": "002939a79a358b7b",
       "type": "standard"
     },
     {
-      "text": "Quelle est la différence principale entre l'emploi de l'imparfait et du passé composé pour raconter une action passée ?",
+      "text": "En français, comment appelle-t-on l'utilisation des guillemets (« ») pour rapporter les paroles exactes de quelqu'un, comme dans : « Je serai là demain » ?",
       "options": [
-        "Aucun, les deux temps sont interchangeables",
-        "L'imparfait décrit l'action principale, le passé composé le contexte",
-        "L'imparfait décrit le contexte, le passé composé l'action principale",
-        "L'imparfait exprime la durée, le passé composé l'intensité"
+        "Le discours indirect",
+        "La proposition subordonnée",
+        "Le discours direct",
+        "Le style narratif"
       ],
-      "correctAnswer": "L'imparfait décrit le contexte, le passé composé l'action principale",
-      "englishHint": "What is the main difference between using the imperfect and the passé composé to describe a past action?",
-      "explanation": "L'imparfait donne le contexte, le décor de l'action, tandis que le passé composé exprime l'action principale qui s'est déroulée.",
-      "id": "cef22884d7a998e9",
+      "correctAnswer": "Le discours direct",
+      "englishHint": "In French, what is the term for using quotation marks (« ») to report someone's exact words, as in: 'Je serai là demain'?",
+      "explanation": "Le discours direct consiste à citer les paroles exactes d'une personne. On l'encadre avec des guillemets français (« »).",
+      "id": "02e7a0d615380315",
       "type": "standard"
     },
     {
-      "text": "Comment se forme l’imparfait du verbe \"parler\" ?",
+      "text": "Quel type de ponctuation marque la fin d'une idée complète dans une phrase déclarative ?",
       "options": [
-        "Je parlais, tu parlais, il parlait, nous parlions",
-        "Je parlerais, tu parlerais, il parlerait, nous parlerions",
-        "Je parle, tu parles, il parle, nous parlons",
-        "Je parlais, tu parles, il parlait, nous parlons"
+        "La virgule (,)",
+        "Le point (.)",
+        "Le point-virgule (;)",
+        "Les deux-points (:)"
       ],
-      "correctAnswer": "Je parlais, tu parlais, il parlait, nous parlions",
-      "englishHint": "How is the imperfect tense of the verb \"to speak\" formed?",
-      "explanation": "L'imparfait se forme en prenant le radical du verbe au présent (parl-) et en ajoutant les terminaisons de l'imparfait (-ais, -ais, -ait, -ions, -iez, -aient).",
-      "id": "75865fa21aa545ea",
+      "correctAnswer": "Le point (.)",
+      "englishHint": "What type of punctuation marks the end of a complete idea in a declarative sentence?",
+      "explanation": "Le point (.) est utilisé pour marquer la fin d'une phrase qui déclare une information. Il indique une pause longue et la conclusion d'une pensée.",
+      "id": "34146a319d776671",
       "type": "standard"
     },
     {
-      "text": "La phrase « Chaque soir, je lisais un livre » illustre quel usage de l’imparfait ?",
+      "text": "Dans des mots comme « père » ou « première », pourquoi utilise-t-on un accent grave (è) ?",
       "options": [
-        "Une action ponctuelle",
-        "Une description d’un lieu",
-        "Une habitude passée",
-        "Une comparaison avec le passé composé"
+        "Parce que le 'e' est en début de mot.",
+        "Parce que le 'e' précède une syllabe avec un 'e' muet.",
+        "Parce que le mot vient de l'anglais.",
+        "Parce que le 'e' suit une double consonne."
       ],
-      "correctAnswer": "Une habitude passée",
-      "englishHint": "The sentence \"Every evening, I read a book\" illustrates which use of the imperfect tense?",
-      "explanation": "L’imparfait est utilisé pour décrire des actions habituelles ou répétées dans le passé.",
-      "id": "82b83ef3372d59ec",
+      "correctAnswer": "Parce que le 'e' précède une syllabe avec un 'e' muet.",
+      "englishHint": "In words like 'père' or 'première', why is a grave accent (è) used?",
+      "explanation": "La règle principale de l'accent grave (è) est son utilisation devant une syllabe contenant un 'e' muet (un 'e' non prononcé), ce qui 'ouvre' le son du 'e' précédent.",
+      "id": "7f3c403ac6260e0f",
       "type": "standard"
     },
     {
-      "text": "Dans une phrase, quel temps verbal décrit le contexte et quel temps décrit l’action principale ?",
+      "text": "Quelle règle explique la présence de l'accent aigu (é) sur le 'e' final du mot « marché » ?",
       "options": [
-        "Passé composé, imparfait",
-        "Imparfait, passé composé",
-        "Présent, passé composé",
-        "Plus-que-parfait, passé composé"
+        "Il est au début du mot",
+        "Il est à la fin du mot",
+        "Il précède une syllabe avec un 'e' muet",
+        "Il remplace une lettre disparue"
       ],
-      "correctAnswer": "Imparfait, passé composé",
-      "englishHint": "In a sentence, which tense describes the context and which tense describes the main action?",
-      "explanation": "L’imparfait décrit le contexte, tandis que le passé composé décrit l’action principale.",
-      "id": "5d63427939a2a3d7",
+      "correctAnswer": "Il est à la fin du mot",
+      "englishHint": "What rule explains the presence of the acute accent (é) on the final 'e' of the word 'marché'?",
+      "explanation": "L'accent aigu est systématiquement utilisé sur un 'e' prononcé en fin de mot. C'est le cas pour « marché », « café » ou « liberté ».",
+      "id": "2a9f65273515b17f",
       "type": "standard"
     },
     {
-      "text": "Quelle phrase décrit une scène passée en utilisant l’imparfait ?",
+      "text": "Quel est le rôle principal des accents et de la ponctuation en français écrit ?",
       "options": [
-        "Le soleil brille, les oiseaux chantent.",
-        "Le soleil brillait, les oiseaux chantaient.",
-        "Le soleil brillera, les oiseaux chanteront.",
-        "Le soleil a brillé, les oiseaux ont chanté."
+        "Rendre les phrases plus longues et complexes.",
+        "Changer la prononciation, le rythme et la clarté des idées.",
+        "Uniquement décorer le texte pour le rendre plus esthétique.",
+        "Indiquer l'origine régionale de l'auteur."
       ],
-      "correctAnswer": "Le soleil brillait, les oiseaux chantaient.",
-      "englishHint": "Which sentence describes a past scene using the imperfect tense?",
-      "explanation": "L’imparfait est utilisé pour créer des descriptions de scènes passées en mettant l’accent sur la durée et le contexte.",
-      "id": "8cb7ca6c9add5b21",
+      "correctAnswer": "Changer la prononciation, le rythme et la clarté des idées.",
+      "englishHint": "What is the main role of accents and punctuation in written French?",
+      "explanation": "Les accents modifient la prononciation des voyelles (comme 'é' et 'è') et la ponctuation organise les phrases pour en clarifier le sens et le rythme, jouant un rôle essentiel dans la communication écrite.",
+      "id": "96a73bae6afc81f0",
       "type": "standard"
     },
     {
-      "text": "Complétez la phrase : « Quand j’étais enfant, je ______ souvent au parc. »",
+      "text": "Quelle est la caractéristique la plus courante de la consonne qui suit une lettre 'e' avec un accent aigu (é) à l'intérieur d'un mot ?",
       "options": [
-        "vais",
-        "suis allé",
-        "allais",
-        "irai"
+        "Elle est toujours double (comme 'ss' ou 'rr').",
+        "Elle est généralement unique (comme 'l', 'p', 't').",
+        "Elle est systématiquement muette (comme un 'h').",
+        "Elle est toujours une autre voyelle."
       ],
-      "correctAnswer": "allais",
-      "englishHint": "Complete the sentence: \"When I was a child, I _______ often to the park.\"",
-      "explanation": "L’imparfait « allais » exprime une action habituelle répétée dans le passé.",
-      "id": "10fcaced0ca6a358",
+      "correctAnswer": "Elle est généralement unique (comme 'l', 'p', 't').",
+      "englishHint": "What is the most common characteristic of the consonant that follows a letter 'e' with an acute accent (é) inside a word?",
+      "explanation": "Dans des mots comme 'téléphone' ou 'préférer', la lettre 'é' est très souvent suivie d'une seule consonne, ce qui aide à maintenir le son fermé [e].",
+      "id": "20eafed6b2a13ae8",
       "type": "standard"
     },
     {
-      "text": "Quelle terminaison utilise-t-on pour l’imparfait à la 3ème personne du singulier ?",
+      "text": "Complétez la phrase avec le mot correctement accentué : « Pour le dessert, ma grand-mère prépare une délicieuse ___ au sucre. »",
       "options": [
-        "-ais",
-        "-ait",
-        "-ions",
-        "-iez"
+        "crépe"
       ],
-      "correctAnswer": "-ait",
-      "englishHint": "What ending is used for the imperfect tense in the 3rd person singular?",
-      "explanation": "La terminaison de l’imparfait à la 3ème personne du singulier est « -ait ».",
-      "id": "105381208a211e9a",
+      "correctAnswer": "crépe",
+      "englishHint": "Complete the sentence with the correctly accented word: 'For dessert, my grandmother is making a delicious sugar ___.'",
+      "explanation": "Le mot 'crêpe' s'écrit avec un accent circonflexe (ê) qui indique un son ouvert [ɛ]. Historiquement, il remplace souvent un 's' disparu de l'ancien français ('crespe').",
+      "id": "0611e0f413763342",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase : « La maison était grande et ancienne », quel temps est utilisé et que décrit-il ?",
+      "text": "Quelle est la conséquence principale de l'oubli d'un accent sur un mot en français, comme dans la paire 'sale' / 'salé' ?",
       "options": [
-        "Passé composé, une action",
-        "Imparfait, une description",
-        "Présent, une situation actuelle",
-        "Passé simple, une action brève"
+        "Le mot devient impossible à prononcer.",
+        "La grammaire de la phrase devient toujours incorrecte.",
+        "Le sens et/ou la prononciation du mot peuvent changer complètement.",
+        "Aucune, le mot reste parfaitement compréhensible."
       ],
-      "correctAnswer": "Imparfait, une description",
-      "englishHint": "In the sentence: \"The house was large and old\", what tense is used and what does it describe?",
-      "explanation": "L’imparfait est utilisé ici pour décrire les caractéristiques d’un lieu dans le passé.",
-      "id": "0aba1422cb4e3a21",
+      "correctAnswer": "Le sens et/ou la prononciation du mot peuvent changer complètement.",
+      "englishHint": "What is the main consequence of forgetting an accent on a French word, as in the pair 'sale' / 'salé'?",
+      "explanation": "Omettre un accent est une erreur d'orthographe qui peut altérer radicalement le son d'un mot (par exemple 'eleve' vs 'élève') ou même son sens (par exemple 'sale' qui signifie 'dirty' vs 'salé' qui signifie 'salty').",
+      "id": "f4cf075b8dd5429e",
       "type": "standard"
     }
   ]

@@ -120,7 +120,7 @@ async function generateContentWithRetries(prompt, options = {}) {
 
       const responseText = await executeWithRetryAndRotation(async () => {
         const generationConfig = expectJson ? { response_mime_type: "application/json" } : {};
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash", generationConfig });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro", generationConfig });
         const result = await model.generateContent(prompt);
         return result.response.text();
       });
@@ -219,7 +219,7 @@ async function generateChatResponse(message, history, context = null) {
   } else {
     try {
       return await executeWithRetryAndRotation(async () => {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
         const chat = model.startChat({
           history: history.map(msg => ({
             role: msg.username === 'Gemini' ? 'model' : 'user',

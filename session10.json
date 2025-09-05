@@ -1,213 +1,210 @@
 {
   "questions": [
     {
-      "text": "Quel temps verbal est utilisé pour décrire des actions habituelles dans le passé?",
+      "text": "Dans quel mot l'accent aigu (é) est-il correctement utilisé à la fin ?",
       "options": [
-        "Le passé composé",
-        "Le futur simple",
-        "L'imparfait",
-        "Le plus-que-parfait"
+        "marché",
+        "père",
+        "forêt",
+        "très"
       ],
-      "correctAnswer": "L'imparfait",
-      "englishHint": "Which tense is used to describe habitual actions in the past?",
-      "explanation": "L'imparfait est employé pour exprimer des actions répétées dans le passé.",
-      "id": "5fe0e87c5346a15a",
+      "correctAnswer": "marché",
+      "englishHint": "In which word is the acute accent (é) correctly used at the end?",
+      "explanation": "L'accent aigu (é) se trouve souvent à la fin des mots, comme dans 'café' ou 'marché', pour indiquer un son fermé [e].",
+      "id": "0729333339d86c98",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase : « Chaque matin, je prenais mon petit-déjeuner avant d'aller au travail », quel temps verbal est utilisé et que décrit-il ?",
+      "text": "L'accent grave (è) est souvent utilisé devant une syllabe avec un 'e' muet (ex: 'père'). Dans quel autre cas le trouve-t-on fréquemment ?",
       "options": [
-        "Passé composé, une action ponctuelle",
-        "Imparfait, une description",
-        "Passé composé, une habitude",
-        "Imparfait, une habitude"
+        "Dans quelques mots courts comme 'très' ou 'dès'",
+        "Dans tous les mots finissant par 'e'",
+        "Au début de tous les mots",
+        "Uniquement dans les verbes"
       ],
-      "correctAnswer": "Imparfait, une habitude",
-      "englishHint": "In the sentence: 'Every morning, I had breakfast before going to work', what tense is used and what does it describe?",
-      "explanation": "L'imparfait décrit une action habituelle, répétée dans le passé.",
-      "id": "615cc3485ce98f67",
+      "correctAnswer": "Dans quelques mots courts comme 'très' ou 'dès'",
+      "englishHint": "The grave accent (è) is often used before a syllable with a silent 'e' (e.g., 'père'). In what other case is it frequently found?",
+      "explanation": "L'accent grave (è) est aussi utilisé dans des mots courts très fréquents comme 'très', 'dès', ou pour distinguer des homophones comme 'là' (adverbe de lieu) de 'la' (article).",
+      "id": "6cdde6a408162206",
       "type": "standard"
     },
     {
-      "text": "Laquelle de ces phrases utilise l'imparfait pour décrire une scène passée en insistant sur la durée et le contexte ?",
+      "text": "Dans quelle forme verbale l'accent circonflexe (ê) est-il correctement utilisé ?",
       "options": [
-        "Je suis allé au parc.",
-        "Il a plu toute la journée.",
-        "Le soleil brillait, les oiseaux chantaient.",
-        "J'ai vu un film."
+        "vous êtes",
+        "nous allons",
+        "je suis",
+        "ils ont"
       ],
-      "correctAnswer": "Le soleil brillait, les oiseaux chantaient.",
-      "englishHint": "Which sentence uses the imperfect to describe a past scene emphasizing duration and context?",
-      "explanation": "L'imparfait crée une description immersive en insistant sur la durée et le contexte d'une scène passée.",
-      "id": "9f8563ea436a01f0",
+      "correctAnswer": "vous êtes",
+      "englishHint": "In which verb form is the circumflex accent (ê) correctly used?",
+      "explanation": "L'accent circonflexe se trouve sur certaines formes verbales, notamment 'vous êtes' du verbe être. Il apparaît aussi souvent au passé simple et à l'imparfait du subjonctif.",
+      "id": "dfc1945a67eac9ec",
       "type": "standard"
     },
     {
-      "text": "Dans l'exemple suivant : « Il pleuvait. J'ai glissé. », quel temps verbal décrit le contexte et quel temps verbal décrit l'action principale ?",
+      "text": "Quelle est la principale différence typographique entre les guillemets français (« ») et les guillemets anglais (\" \") ?",
       "options": [
-        "Imparfait / Imparfait",
-        "Passé composé / Passé composé",
-        "Imparfait / Passé composé",
-        "Passé composé / Imparfait"
+        "Leur forme et la présence d'une espace à l'intérieur",
+        "Uniquement leur forme",
+        "Uniquement la présence d'une espace",
+        "Il n'y a aucune différence"
       ],
-      "correctAnswer": "Imparfait / Passé composé",
-      "englishHint": "In the following example: \"It was raining. I slipped.\", which tense describes the context and which tense describes the main action?",
-      "explanation": "L'imparfait décrit le contexte, le passé composé l'action principale.",
-      "id": "28f42efbac117652",
+      "correctAnswer": "Leur forme et la présence d'une espace à l'intérieur",
+      "englishHint": "What is the main typographical difference between French quotation marks (« ») and English ones (\" \")?",
+      "explanation": "Les guillemets français (« ») ont une forme de chevrons et nécessitent une espace insécable à l'intérieur, contrairement aux guillemets anglais (\" \") qui sont collés au texte.",
+      "id": "33fefbf759304934",
       "type": "standard"
     },
     {
-      "text": "Pour exprimer une habitude passée, quel temps verbal utilise-t-on ?",
+      "text": "Combien de types d'accents différents trouve-t-on dans la phrase : 'L'élève préfère étudier le soir.' ?",
       "options": [
-        "Le futur simple",
-        "Le passé composé",
-        "L'imparfait",
-        "Le conditionnel présent"
+        "Deux (aigu et grave)",
+        "Un seul (aigu)",
+        "Trois (aigu, grave et circonflexe)",
+        "Aucun"
       ],
-      "correctAnswer": "L'imparfait",
-      "englishHint": "To express a past habit, what tense is used?",
-      "explanation": "L'imparfait est le temps approprié pour exprimer les actions habituelles dans le passé.",
-      "id": "ea6967e798ba0def",
+      "correctAnswer": "Deux (aigu et grave)",
+      "englishHint": "How many different types of accents are found in the sentence: 'L'élève préfère étudier le soir.'?",
+      "explanation": "La phrase contient 'élève' (é, è), 'préfère' (é, è) et 'étudier' (é). On y trouve donc l'accent aigu (é) et l'accent grave (è), soit deux types d'accents.",
+      "id": "12317d16893a5eae",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase : « Il pleuvait des cordes. J'ai glissé et je suis tombé. », quel temps verbal décrit le contexte et quel temps l'action principale ?",
+      "text": "Lequel de ces mots s'écrit correctement avec un accent circonflexe (ê) ?",
       "options": [
-        "Passé composé / Passé composé",
-        "Imparfait / Passé composé",
-        "Passé composé / Imparfait",
-        "Imparfait / Imparfait"
+        "rêve",
+        "frere",
+        "prefere",
+        "meme"
       ],
-      "correctAnswer": "Imparfait / Passé composé",
-      "englishHint": "In the sentence: \"It was raining cats and dogs. I slipped and fell.\", which tense describes the context and which the main action?",
-      "explanation": "L'imparfait décrit le contexte, le passé composé l'action principale.",
-      "id": "7fcf9a41bd49c01a",
+      "correctAnswer": "rêve",
+      "englishHint": "Which of these words is correctly spelled with a circumflex accent (ê)?",
+      "explanation": "Le mot 'rêve' prend un accent circonflexe. Les autres mots, correctement accentués, seraient 'frère' (è), 'préfère' (é, è) et 'même' (ê).",
+      "id": "9a508cccd6726d40",
       "type": "standard"
     },
     {
-      "text": "Quel temps verbal est principalement utilisé pour décrire des scènes passées en insistant sur leur durée et le contexte ?",
+      "text": "L'accent circonflexe (ê, ô) remplace souvent un 's' disparu (que l'on retrouve en anglais). Quelle association est historiquement incorrecte ?",
       "options": [
-        "Le passé composé",
-        "Le futur simple",
-        "L’imparfait",
-        "Le plus-que-parfait"
+        "la fête / the fate",
+        "la forêt / the forest",
+        "l'hôpital / the hospital",
+        "la bête / the beast"
       ],
-      "correctAnswer": "L’imparfait",
-      "englishHint": "Which tense is mainly used to describe past scenes, emphasizing their duration and context?",
-      "explanation": "L’imparfait décrit les actions qui se déroulaient dans le passé, en mettant l'accent sur la durée et le contexte de ces actions.",
-      "id": "e5b735203bad826b",
+      "correctAnswer": "la fête / the fate",
+      "englishHint": "The circumflex accent (ê, ô) often replaces a disappeared 's' (found in English). Which association is historically incorrect?",
+      "explanation": "L'association 'fête / fate' est incorrecte. 'Fête' vient de l'ancien français 'feste', mais le mot anglais 'fate' n'a pas la même origine. Les autres paires (forêt/forest, hôpital/hospital, bête/beast) illustrent bien cette règle.",
+      "id": "f9df85b47f31aed7",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase : « Chaque matin, je prenais mon petit-déjeuner avant d’aller au travail », quel temps verbal est utilisé pour décrire l’habitude ?",
+      "text": "Dans la phrase 'Paris, la capitale de la France, est une ville extrêmement visitée.', quel mot contient un accent circonflexe ?",
       "options": [
-        "Le passé composé",
-        "Le futur simple",
-        "L’imparfait",
-        "Le plus-que-parfait"
+        "extrêmement",
+        "capitale",
+        "visitée",
+        "France"
       ],
-      "correctAnswer": "L’imparfait",
-      "englishHint": "In the sentence: “Every morning, I used to have breakfast before going to work”, which tense is used to describe the habit?",
-      "explanation": "L’imparfait est employé pour exprimer les actions habituelles et répétées dans le passé.",
-      "id": "239c3ea6f076d8cb",
+      "correctAnswer": "extrêmement",
+      "englishHint": "In the sentence 'Paris, la capitale de la France, est une ville extrêmement visitée.', which word contains a circumflex accent?",
+      "explanation": "L'adverbe 'extrêmement' s'écrit avec un accent circonflexe sur le deuxième 'e'.",
+      "id": "b6ba9ab51d2a3b4f",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase « Le soleil brillait, les oiseaux chantaient », quel temps verbal sert à décrire la scène ?",
+      "text": "Comment s'écrit correctement le mot français qui signifie 'summer' en anglais ?",
       "options": [
-        "Le passé composé",
-        "Le futur simple",
-        "L’imparfait",
-        "Le plus-que-parfait"
+        "l'été"
       ],
-      "correctAnswer": "L’imparfait",
-      "englishHint": "In the sentence “The sun was shining, the birds were singing”, which tense is used to describe the scene?",
-      "explanation": "L’imparfait est utilisé pour décrire une scène passée en insistant sur la durée et le contexte.",
-      "id": "8d7b1fab810cb82f",
+      "correctAnswer": "l'été",
+      "englishHint": "How do you correctly write the French word for 'summer'?",
+      "explanation": "Le mot français pour 'summer' est 'été'. Il prend deux accents aigus (é), un au début et un au milieu.",
+      "id": "768d60df086b7c38",
       "type": "standard"
     },
     {
-      "text": "Comment se forme l’imparfait du verbe « marcher » ?",
+      "text": "Laquelle de ces affirmations sur l'utilisation de la virgule (,) en français est correcte ?",
       "options": [
-        "En ajoutant -ais, -ais, -ait, -ions, -iez, -aient au radical du verbe au présent",
-        "En ajoutant -ai, -as, -a, -âmes, -âtes, -èrent au radical du verbe au présent",
-        "En ajoutant -é, -es, -e, -ons, -ez, -ent au radical du verbe au présent",
-        "En utilisant l’auxiliaire avoir suivi du participe passé"
+        "Elle indique une pause courte dans une phrase",
+        "Elle marque toujours la fin d'une idée",
+        "Elle doit toujours séparer le sujet du verbe",
+        "Elle est principalement une décoration"
       ],
-      "correctAnswer": "En ajoutant -ais, -ais, -ait, -ions, -iez, -aient au radical du verbe au présent",
-      "englishHint": "How do you form the imperfect tense of the verb 'to walk'?",
-      "explanation": "Pour former l’imparfait, on ajoute les terminaisons -ais, -ais, -ait, -ions, -iez, -aient au radical du verbe au présent de l’indicatif.",
-      "id": "fae4123b97bd7090",
+      "correctAnswer": "Elle indique une pause courte dans une phrase",
+      "englishHint": "Which of these statements about using a comma (,) in French is correct?",
+      "explanation": "La virgule sert à marquer une pause brève dans une phrase pour séparer des éléments ou clarifier la structure, mais elle ne termine jamais une idée complète comme le point.",
+      "id": "891d0c34b150a5f1",
       "type": "standard"
     },
     {
-      "text": "Complétez la phrase : « Quand j’étais enfant, je ______ souvent à vélo. »",
+      "text": "Quel accent indique un son 'e' ouvert [ɛ], comme dans le mot anglais 'bed' ?",
       "options": [
-        "allais",
-        "suis allé",
-        "vais",
-        "irai"
+        "L'accent grave (è)",
+        "L'accent aigu (é)",
+        "La cédille (ç)",
+        "L'apostrophe (')'"
       ],
-      "correctAnswer": "allais",
-      "englishHint": "Complete the sentence: “When I was a child, I ______ often by bike.”",
-      "explanation": "L’imparfait « allais » convient pour exprimer une habitude passée.",
-      "id": "5686b79e2bd52397",
+      "correctAnswer": "L'accent grave (è)",
+      "englishHint": "Which accent indicates an open 'e' sound [ɛ], as in the English word 'bed'?",
+      "explanation": "L'accent grave (è) et l'accent circonflexe (ê) indiquent un son 'e' ouvert [ɛ]. L'accent aigu (é) indique un son fermé [e].",
+      "id": "d807d5a222ecd8c7",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase : « Il neigeait. Je suis tombé. », quel temps verbal met l'accent sur l'action principale ?",
+      "text": "Où la virgule est-elle correctement placée dans cette phrase pour séparer les éléments d'une liste ?",
       "options": [
-        "L’imparfait",
-        "Le futur simple",
-        "Le passé composé",
-        "Le plus-que-parfait"
+        "J'ai acheté du pain, des fruits et du fromage.",
+        "J'ai acheté, du pain des fruits et du fromage.",
+        "J'ai acheté du pain des fruits, et du fromage.",
+        "J'ai acheté du pain des fruits et, du fromage."
       ],
-      "correctAnswer": "Le passé composé",
-      "englishHint": "In the sentence: “It was snowing. I fell.”, which tense emphasizes the main action?",
-      "explanation": "Le passé composé « Je suis tombé » décrit l’action principale, tandis que l’imparfait décrit le contexte.",
-      "id": "af5b33867d2cd236",
+      "correctAnswer": "J'ai acheté du pain, des fruits et du fromage.",
+      "englishHint": "Where is the comma correctly placed in this sentence to separate items in a list?",
+      "explanation": "En français, on utilise la virgule pour séparer les éléments d'une énumération, sauf le dernier qui est généralement introduit par 'et'.",
+      "id": "855afec3d89c0146",
       "type": "standard"
     },
     {
-      "text": "Quel temps verbal est le plus approprié pour exprimer un état permanent dans le passé ?",
+      "text": "Laquelle de ces phrases contient une erreur de ponctuation courante et interdite en français ?",
       "options": [
-        "Le futur simple",
-        "Le passé composé",
-        "L’imparfait",
-        "Le conditionnel présent"
+        "Le chat, dort sur le canapé.",
+        "Le chat, qui est fatigué, dort sur le canapé.",
+        "Le chat dort sur le canapé.",
+        "Hier, le chat a dormi sur le canapé."
       ],
-      "correctAnswer": "L’imparfait",
-      "englishHint": "Which tense is most suitable for expressing a permanent state in the past?",
-      "explanation": "L’imparfait est idéal pour exprimer un état permanent ou une caractéristique durable dans le passé.",
-      "id": "bc8bdb6d3337ea53",
+      "correctAnswer": "Le chat, dort sur le canapé.",
+      "englishHint": "Which of these sentences contains a common punctuation error that is forbidden in French?",
+      "explanation": "Il est interdit de séparer le sujet ('Le chat') du verbe ('dort') par une seule virgule. La virgule ne peut être utilisée que par paires pour encadrer une information complémentaire.",
+      "id": "60afe52450393136",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase « La rivière était large et profonde », quel usage de l'imparfait est illustré ?",
+      "text": "Quel signe de ponctuation utilise-t-on pour marquer la fin d'une phrase déclarative et une pause longue ?",
       "options": [
-        "Description d'une action",
-        "Expression d'une habitude",
-        "Description d'un état",
-        "Narration d'un événement"
+        "Le point (.)",
+        "La virgule (,)",
+        "Le point-virgule (;)",
+        "Les deux-points (:)"
       ],
-      "correctAnswer": "Description d'un état",
-      "englishHint": "In the sentence “The river was wide and deep”, which use of the imperfect is illustrated?",
-      "explanation": "L’imparfait décrit ici les caractéristiques de la rivière, c’est-à-dire son état.",
-      "id": "f723b8ff3adfd9c0",
+      "correctAnswer": "Le point (.)",
+      "englishHint": "What punctuation mark is used to mark the end of a declarative sentence and a long pause?",
+      "explanation": "Le point (.) est utilisé pour terminer une phrase qui déclare une information. Il indique la fin d'une idée complète et une pause importante dans le discours.",
+      "id": "1b8b72821789916d",
       "type": "standard"
     },
     {
-      "text": "Quelle est la terminaison de l’imparfait du verbe à la troisième personne du singulier ?",
+      "text": "Comment doit-on correctement ponctuer cette phrase pour rapporter des paroles directement ?",
       "options": [
-        "-ais",
-        "-ions",
-        "-ait",
-        "-aient"
+        "Il a dit : « Je suis prêt. »",
+        "Il a dit, \"Je suis prêt.\"",
+        "Il a dit « Je suis prêt ».",
+        "Il a dit : 'Je suis prêt.'"
       ],
-      "correctAnswer": "-ait",
-      "englishHint": "What is the ending of the imperfect tense for the third-person singular?",
-      "explanation": "La terminaison de l’imparfait à la troisième personne du singulier est « -ait ».",
-      "id": "f6e5ca3be9bc8af2",
+      "correctAnswer": "Il a dit : « Je suis prêt. »",
+      "englishHint": "How should this sentence be correctly punctuated to report direct speech?",
+      "explanation": "Le discours direct en français est généralement introduit par les deux-points (:) et encadré par des guillemets français (« ») avec une espace insécable à l'intérieur.",
+      "id": "29b22f952b45327e",
       "type": "standard"
     }
   ]

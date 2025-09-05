@@ -162,5 +162,21 @@
     "disconnected": "Connection interrupted",
     "reconnectFailed": "Unable to reconnect",
     "retry": "Retry"
+  },
+  "wallet": {
+    "title": "My Wallet",
+    "currentBalance": "Current Balance",
+    "depositTitle": "Make a Deposit",
+    "depositInstruction1": "1. Send your payment via Mobile Money to the number:",
+    "depositInstruction2": "2. After payment, complete and submit the form below.",
+    "submitDeposit": "Submit for Validation",
+    "historyTitle": "Transaction History",
+    "historyLoading": "Loading history...",
+    "noTransactions": "No transactions yet.",
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    }
   }
 }

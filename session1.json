@@ -1,212 +1,206 @@
 {
   "questions": [
     {
-      "text": "Quel temps verbal est principalement utilisé pour décrire des scènes passées en français?",
+      "text": "Quel type de son l'accent aigu (é) indique-t-il en français ?",
       "options": [
-        "Le passé composé",
-        "Le futur simple",
-        "L’imparfait",
-        "Le présent"
+        "Un son ouvert [ɛ]",
+        "Un son fermé [e]",
+        "Un son nasal",
+        "Un son muet"
       ],
-      "correctAnswer": "L’imparfait",
-      "englishHint": "What tense is mainly used to describe past scenes in French?",
-      "explanation": "L’imparfait est utilisé pour décrire des scènes, des situations et des états du passé, mettant l’accent sur la durée et le contexte.",
-      "id": "0eee265dfa71c91c",
+      "correctAnswer": "Un son fermé [e]",
+      "englishHint": "What type of sound does the acute accent (é) indicate in French?",
+      "explanation": "L'accent aigu (é) indique un son fermé [e], comme dans le mot 'été'. Il se prononce avec la bouche relativement fermée.",
+      "id": "49c61bf419cc377f",
       "type": "standard"
     },
     {
-      "text": "Comment forme-t-on l’imparfait?",
+      "text": "Quelle est la fonction principale de la virgule (,) dans une phrase ?",
       "options": [
-        "En ajoutant -ait à l’infinitif",
-        "En utilisant le radical du présent et des terminaisons spécifiques",
-        "En conjuguant le verbe à l’auxiliaire ‘être’",
-        "En ajoutant -é au radical du verbe"
+        "Marquer la fin d'une idée complète",
+        "Indiquer une pause courte à l'intérieur d'une phrase",
+        "Introduire les paroles de quelqu'un",
+        "Remplacer une lettre disparue"
       ],
-      "correctAnswer": "En utilisant le radical du présent et des terminaisons spécifiques",
-      "englishHint": "How do you form the imparfait?",
-      "explanation": "L’imparfait se forme à partir du radical du présent de l’indicatif et des terminaisons -ais, -ais, -ait, -ions, -iez, -aient.",
-      "id": "2183593fb1efafbc",
+      "correctAnswer": "Indiquer une pause courte à l'intérieur d'une phrase",
+      "englishHint": "What is the main function of the comma (,)?",
+      "explanation": "La virgule (,) sert à marquer une pause brève à l'intérieur d'une phrase, par exemple pour séparer les éléments d'une liste ou isoler une information.",
+      "id": "dfaa84ee2cffbd27",
       "type": "standard"
     },
     {
-      "text": "Quelle phrase utilise correctement l’imparfait pour décrire une habitude?",
+      "text": "Quelle est la bonne orthographe pour compléter la phrase : \"J'aimerais boire un ___ chaud\" ?",
       "options": [
-        "Je mangeais un gâteau.",
-        "Je mange un gâteau.",
-        "Je mangerai un gâteau.",
-        "J’ai mangé un gâteau."
+        "cafè"
       ],
-      "correctAnswer": "Je mangeais un gâteau.",
-      "englishHint": "Which of these sentences correctly uses the imparfait to describe a habit?",
-      "explanation": "L’imparfait ‘Je mangeais’ indique une action habituelle ou répétée dans le passé.",
-      "id": "f2444b34a37767a1",
+      "correctAnswer": "cafè",
+      "englishHint": "What is the correct spelling to complete the sentence: 'I'd like to drink a hot ___'?",
+      "explanation": "Le mot 'café' prend un accent aigu (é) sur le 'e' final pour indiquer un son fermé [e].",
+      "id": "fa7c2c159e3f72d8",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase : « Il faisait beau », quel temps est utilisé et que décrit-il ?",
+      "text": "Laquelle de ces phrases utilise incorrectement la virgule selon les règles de la grammaire française ?",
       "options": [
-        "Passé composé, une action ponctuelle",
-        "Imparfait, une habitude",
-        "Présent, une action en cours",
-        "Imparfait, une description"
+        "Mon voisin, qui est sympathique, m'a aidé.",
+        "Le chat, dort sur le canapé.",
+        "J'ai acheté du pain, du fromage et du vin.",
+        "S'il pleut, nous resterons à la maison."
       ],
-      "correctAnswer": "Imparfait, une description",
-      "englishHint": "In the sentence: «Il faisait beau», what tense is used and what does it describe?",
-      "explanation": "L’imparfait ‘faisait’ décrit l’état du temps, une description de la scène passée.",
-      "id": "798088cf34f1b63a",
+      "correctAnswer": "Le chat, dort sur le canapé.",
+      "englishHint": "Which of these sentences uses the comma incorrectly according to French grammar rules?",
+      "explanation": "En français, il est interdit de séparer le sujet ('Le chat') du verbe ('dort') par une seule virgule.",
+      "id": "7e202cdaaeae879d",
       "type": "standard"
     },
     {
-      "text": "Quelle est la différence principale entre l’imparfait et le passé composé?",
+      "text": "Historiquement, l'accent circonflexe (ê) dans un mot comme 'forêt' remplace souvent quelle lettre qui a disparu de l'ancien français ?",
       "options": [
-        "Aucun différence",
-        "L’imparfait décrit des actions achevées, le passé composé des actions en cours",
-        "L’imparfait décrit des habitudes et des descriptions, le passé composé des actions ponctuelles",
-        "L’imparfait est au futur, le passé composé au passé"
+        "la lettre 'a'",
+        "la lettre 'e'",
+        "la lettre 't'",
+        "la lettre 's'"
       ],
-      "correctAnswer": "L’imparfait décrit des habitudes et des descriptions, le passé composé des actions ponctuelles",
-      "englishHint": "What is the main difference between the imparfait and the passé composé?",
-      "explanation": "L’imparfait décrit des états, des habitudes, des descriptions, alors que le passé composé décrit des actions ponctuelles et achevées.",
-      "id": "8e6956b18d7e150a",
+      "correctAnswer": "la lettre 's'",
+      "englishHint": "Historically, the circumflex accent (ê) in a word like 'forêt' often replaces which letter that disappeared from Old French?",
+      "explanation": "L'accent circonflexe (ê) marque souvent la disparition d'une ancienne lettre, le plus souvent un 's'. C'est pourquoi 'forêt' correspond au mot anglais 'forest'.",
+      "id": "6d2cb91081f40a7d",
       "type": "standard"
     },
     {
-      "text": "Complétez la phrase : « Chaque soir, nous _______ au parc. »",
+      "text": "Dans quel cas l'accent grave (è) est-il le plus souvent utilisé ?",
       "options": [
-        "allons",
-        "allâmes",
-        "allions"
+        "À la fin d'un mot pour un son fermé",
+        "Au début d'un mot",
+        "Devant une syllabe contenant un 'e' muet",
+        "Pour remplacer une lettre historique"
       ],
-      "correctAnswer": "allions",
-      "englishHint": "Complete the sentence: «Chaque soir, nous _______ au parc.»",
-      "explanation": "L’imparfait ‘allions’ convient pour exprimer une action habituelle répétée dans le passé.",
-      "id": "b5d49c966dfd1bac",
+      "correctAnswer": "Devant une syllabe contenant un 'e' muet",
+      "englishHint": "In which case is the grave accent (è) most often used?",
+      "explanation": "L'accent grave (è) est principalement utilisé pour marquer un son ouvert [ɛ] devant une syllabe contenant un 'e' qui n'est pas prononcé (un 'e' muet), comme dans 'père' ou 'mère'.",
+      "id": "01712a6876f03cba",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase « Elle avait de longs cheveux blonds », quel temps est utilisé et que décrit-il ?",
+      "text": "Quels guillemets typographiques sont utilisés en français standard pour encadrer une citation ?",
       "options": [
-        "Passé composé, une action",
-        "Présent, une description actuelle",
-        "Imparfait, une description",
-        "Futur, une prédiction"
+        "\" \"",
+        "« »",
+        "< >"
       ],
-      "correctAnswer": "Imparfait, une description",
-      "englishHint": "In the sentence «Elle avait de longs cheveux blonds», what tense is used and what does it describe?",
-      "explanation": "L’imparfait ‘avait’ décrit un état permanent dans le passé, faisant partie d’une description physique.",
-      "id": "7615fee8902f3856",
+      "correctAnswer": "« »",
+      "englishHint": "Which typographical quotation marks are used in standard French to enclose a quote?",
+      "explanation": "Les guillemets typographiques français standards sont les chevrons « », toujours séparés du texte cité par une espace insécable.",
+      "id": "527571d8a7bf7dfd",
       "type": "standard"
     },
     {
-      "text": "Quelle terminaison est utilisée à la troisième personne du singulier de l’imparfait?",
+      "text": "Que marque le point (.) à la fin d'une phrase ?",
       "options": [
-        "-ions",
-        "-iez",
-        "-aient",
-        "-ait"
+        "Une pause pour respirer",
+        "La conclusion d'une pensée complète",
+        "Le début d'une énumération",
+        "Une information complémentaire"
       ],
-      "correctAnswer": "-ait",
-      "englishHint": "Which ending is used in the third person singular of the imparfait?",
-      "explanation": "La terminaison ‘-ait’ est spécifique à la troisième personne du singulier de l’imparfait.",
-      "id": "e7608f3978385d96",
+      "correctAnswer": "La conclusion d'une pensée complète",
+      "englishHint": "What does the period (.) mark at the end of a sentence?",
+      "explanation": "Le point (.) marque la fin d'une phrase déclarative. Il signale une pause longue et la fin d'une idée complète.",
+      "id": "be71ed1ad6c7a410",
       "type": "standard"
     },
     {
-      "text": "« Il était toujours joyeux. » Cette phrase illustre quel usage de l’imparfait?",
+      "text": "Choisissez la bonne orthographe pour compléter la phrase : \"C'est l'anniversaire de ma ___, elle est très contente.\"",
       "options": [
-        "Une action ponctuelle",
-        "Une description physique",
-        "Un état permanent dans le passé",
-        "Une habitude occasionnelle"
+        "mére"
       ],
-      "correctAnswer": "Un état permanent dans le passé",
-      "englishHint": "«Il était toujours joyeux.» This sentence illustrates which use of the imparfait?",
-      "explanation": "L’imparfait ‘était’ souligne un état permanent et habituel dans le passé.",
-      "id": "769e08d12b301b7d",
+      "correctAnswer": "mére",
+      "englishHint": "Choose the correct spelling to complete the sentence: 'It's my ___'s birthday, she is very happy.'",
+      "explanation": "Le mot 'mère' s'écrit avec un accent grave (è) car le 'e' accentué est suivi d'une syllabe avec un 'e' muet, ce qui produit un son ouvert [ɛ].",
+      "id": "156db3d143d8468d",
       "type": "standard"
     },
     {
-      "text": "« Nous allions souvent au cinéma. » Quel aspect du passé est exprimé?",
+      "text": "En français, pourquoi les accents et la ponctuation sont-ils fondamentaux à l'écrit ?",
       "options": [
-        "Une action unique",
-        "Une action habituelle",
-        "Une description",
-        "Une comparaison"
+        "Parce qu'ils sont purement décoratifs",
+        "Parce qu'ils changent la prononciation des mots et clarifient le sens des phrases",
+        "Parce qu'ils sont optionnels",
+        "Parce qu'ils ne concernent que la poésie"
       ],
-      "correctAnswer": "Une action habituelle",
-      "englishHint": "«Nous allions souvent au cinéma.» What aspect of the past is expressed?",
-      "explanation": "L’imparfait ‘allions’ souligne la répétition de l’action dans le passé, soit une habitude.",
-      "id": "4501ce93a47bf519",
+      "correctAnswer": "Parce qu'ils changent la prononciation des mots et clarifient le sens des phrases",
+      "englishHint": "In French, why are accents and punctuation essential in writing?",
+      "explanation": "Les accents modifient la prononciation (et parfois le sens) des mots, tandis que la ponctuation structure les phrases pour en clarifier le sens. Ils sont donc cruciaux pour une communication écrite précise.",
+      "id": "127ae8571c78695a",
       "type": "standard"
     },
     {
-      "text": "L’imparfait est-il utilisé pour décrire des actions achevées?",
+      "text": "Le mot français 'hôpital' contient un accent circonflexe (ô). Quel mot anglais partage la même origine et aide à se souvenir de l'orthographe ?",
       "options": [
-        "Oui, toujours",
-        "Non, jamais",
-        "Oui, seulement si elles sont courtes",
-        "Non, sauf si c’est une description"
+        "hope",
+        "hospital",
+        "hotel",
+        "host"
       ],
-      "correctAnswer": "Non, jamais",
-      "englishHint": "Is the imparfait used to describe completed actions?",
-      "explanation": "L’imparfait décrit des actions en cours, des états, des descriptions, mais pas des actions achevées (pour cela, on utilise le passé composé).",
-      "id": "338922302638757a",
+      "correctAnswer": "hospital",
+      "englishHint": "The French word 'hôpital' has a circumflex accent (ô). Which English word shares the same origin and helps to remember the spelling?",
+      "explanation": "L'accent circonflexe dans 'hôpital' remplace un ancien 's', qui a été conservé dans le mot anglais apparenté 'hospital'.",
+      "id": "33c9b79c30bf5008",
       "type": "standard"
     },
     {
-      "text": "Dans l’exemple : « Il pleuvait des cordes. J’ai glissé et je suis tombé. », quel temps décrit le contexte et quel temps l’action ?",
+      "text": "Dans la phrase \"J'ai acheté du pain, du fromage et du vin\", pourquoi la virgule est-elle utilisée ?",
       "options": [
-        "Passé composé / Imparfait",
-        "Imparfait / Passé composé",
-        "Présent / Passé composé",
-        "Imparfait / Présent"
+        "Pour séparer le sujet du verbe",
+        "Pour indiquer une citation",
+        "Pour marquer une pause longue",
+        "Pour séparer les éléments d'une énumération"
       ],
-      "correctAnswer": "Imparfait / Passé composé",
-      "englishHint": "In the example: «Il pleuvait des cordes. J’ai glissé et je suis tombé.», what tense describes the context and what tense describes the action?",
-      "explanation": "L’imparfait ‘pleuvait’ décrit le contexte, tandis que le passé composé ‘ai glissé’ et ‘suis tombé’ décrit l’action principale.",
-      "id": "8c816c4126f07d48",
+      "correctAnswer": "Pour séparer les éléments d'une énumération",
+      "englishHint": "In the sentence 'I bought bread, cheese and wine', why is the comma used?",
+      "explanation": "Dans cette phrase, la virgule est utilisée pour séparer les différents articles achetés ('pain', 'fromage'). C'est l'un des rôles principaux de la virgule : structurer une énumération.",
+      "id": "ffac9a8be9f8c0a7",
       "type": "standard"
     },
     {
-      "text": "Quelle phrase utilise correctement l’imparfait pour décrire un lieu?",
+      "text": "Quel type de son les accents grave (è) et circonflexe (ê) produisent-ils ?",
       "options": [
-        "La maison est grande.",
-        "La maison sera grande.",
-        "La maison était grande.",
-        "La maison a été grande."
+        "Un son ouvert [ɛ]",
+        "Un son fermé [e]",
+        "Un son qui monte",
+        "Un son nasal"
       ],
-      "correctAnswer": "La maison était grande.",
-      "englishHint": "Which sentence correctly uses the imparfait to describe a place?",
-      "explanation": "L’imparfait ‘était’ est approprié pour décrire un état dans le passé, ici, la taille de la maison.",
-      "id": "a0f958111c3268b0",
+      "correctAnswer": "Un son ouvert [ɛ]",
+      "englishHint": "What type of sound do the grave (è) and circumflex (ê) accents produce?",
+      "explanation": "Bien qu'ils aient des origines différentes, l'accent grave (è) et l'accent circonflexe (ê) indiquent tous deux le même son ouvert [ɛ], comme dans les mots 'père' ou 'tête'.",
+      "id": "880a598316e77d8e",
       "type": "standard"
     },
     {
-      "text": "Lequel de ces verbes est conjugué à l’imparfait à la première personne du singulier?",
+      "text": "Lequel de ces mots commence par un 'e' avec un accent aigu (é) ?",
       "options": [
-        "je suis",
-        "j’étais",
-        "je serai",
-        "je suis allé"
+        "mère",
+        "fête",
+        "étudiant",
+        "très"
       ],
-      "correctAnswer": "j’étais",
-      "englishHint": "Which of these verbs is conjugated in the imparfait in the first person singular?",
-      "explanation": "‘J’étais’ est la conjugaison à l’imparfait du verbe ‘être’ à la première personne du singulier.",
-      "id": "5279a36ff49fd0da",
+      "correctAnswer": "étudiant",
+      "englishHint": "Which of these words starts with an 'e' with an acute accent (é)?",
+      "explanation": "Le mot 'étudiant' commence par un 'é', qui indique un son fermé [e]. Les autres options utilisent un accent grave (è), circonflexe (ê) ou n'ont pas d'accent.",
+      "id": "7cd5f3914b76c00f",
       "type": "standard"
     },
     {
-      "text": "À quoi sert l'imparfait dans une narration?",
+      "text": "Selon les règles typographiques françaises, quel élément doit séparer les guillemets en chevrons (« ») du texte qu'ils citent ?",
       "options": [
-        "À décrire l'action principale",
-        "À créer l'ambiance et le contexte",
-        "À indiquer le temps précis de l'action",
-        "À exprimer le doute"
+        "Rien de particulier",
+        "Une virgule",
+        "Un point-virgule",
+        "Une espace insécable"
       ],
-      "correctAnswer": "À créer l'ambiance et le contexte",
-      "englishHint": "According to the text, what is the purpose of the imparfait in a narration?",
-      "explanation": "L’imparfait sert à créer l’ambiance et le contexte d’une narration, en décrivant le décor et la situation.",
-      "id": "e467e1af34156b17",
+      "correctAnswer": "Une espace insécable",
+      "englishHint": "According to French typography rules, what must separate the chevrons (« ») from the text they quote?",
+      "explanation": "La règle typographique en français est d'insérer une espace insécable entre les guillemets chevrons et le début et la fin de la citation. Exemple : « Citation ».",
+      "id": "1e6f18380ed3c5ad",
       "type": "standard"
     }
   ]

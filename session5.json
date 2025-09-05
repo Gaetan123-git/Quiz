@@ -1,213 +1,206 @@
 {
   "questions": [
     {
-      "text": "Quel temps verbal est utilisé pour décrire une scène passée en insistant sur la durée et le contexte?",
+      "text": "Quelle est la typographie correcte pour une citation en français, en respectant l'usage des guillemets et des espaces ?",
       "options": [
-        "Le passé composé",
-        "Le futur simple",
-        "L'imparfait",
-        "Le présent de l’indicatif"
+        "\"Bonjour !\"",
+        "«Bonjour !»",
+        "« Bonjour ! »"
       ],
-      "correctAnswer": "L'imparfait",
-      "englishHint": "What tense describes a past scene emphasizing duration and context?",
-      "explanation": "L'imparfait met l'accent sur la durée et le contexte d'une action passée.",
-      "id": "ddd3ce09bc7726b9",
+      "correctAnswer": "« Bonjour ! »",
+      "englishHint": "What is the correct typography for a quote in French, respecting the use of quotation marks and spaces?",
+      "explanation": "En français, on utilise les guillemets typographiques « » avec une espace insécable après le guillemet ouvrant et avant le guillemet fermant, ainsi qu'avant une ponctuation haute comme le point d'exclamation.",
+      "id": "3689cd764f8e71e0",
       "type": "standard"
     },
     {
-      "text": "Pour exprimer une habitude passée, quel temps utilise-t-on?",
+      "text": "Dans la phrase « L'élève préfère étudier », pourquoi le deuxième 'e' du mot « préfère » prend-il un accent grave (è) ?",
       "options": [
-        "Le passé composé",
-        "Le plus-que-parfait",
-        "L'imparfait",
-        "Le futur antérieur"
+        "Parce qu'il est en fin de mot.",
+        "Parce qu'il est suivi d'une syllabe contenant un 'e' muet.",
+        "Parce qu'il remplace une lettre disparue de l'ancien français.",
+        "Parce que le son doit être fermé comme dans 'café'."
       ],
-      "correctAnswer": "L'imparfait",
-      "englishHint": "Which tense is used to express a past habit?",
-      "explanation": "L'imparfait sert à décrire les actions habituelles ou répétées dans le passé.",
-      "id": "4f9e8c3fd29e2caa",
+      "correctAnswer": "Parce qu'il est suivi d'une syllabe contenant un 'e' muet.",
+      "englishHint": "In the sentence « L'élève préfère étudier », why does the second 'e' in the word « préfère » take a grave accent (è)?",
+      "explanation": "La règle principale de l'accent grave (è) est son utilisation devant une syllabe qui se termine par un 'e' muet (un 'e' non prononcé), ce qui 'ouvre' le son [ɛ].",
+      "id": "c76db432a5566f54",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase « Il était tard, et je devais partir », quel temps verbal décrit la situation?",
+      "text": "Parmi les mots suivants, lequel ne se termine PAS par le son fermé [e] de l'accent aigu (é) ?",
       "options": [
-        "Le passé composé",
-        "Le futur simple",
-        "Le présent",
-        "L'imparfait"
+        "un café",
+        "la liberté",
+        "un marché",
+        "ma mère"
       ],
-      "correctAnswer": "L'imparfait",
-      "englishHint": "In the sentence \"It was late, and I had to leave\", which tense describes the situation?",
-      "explanation": "L'imparfait est utilisé pour décrire le contexte ou la situation au moment de l'action principale, exprimée au passé composé.",
-      "id": "90c74c0f0cf7b3c8",
+      "correctAnswer": "ma mère",
+      "englishHint": "Which of the following words does NOT end with the closed [e] sound of the acute accent (é)?",
+      "explanation": "Le mot « mère » se termine par un son ouvert [ɛ] indiqué par l'accent grave (è), tandis que les autres se terminent par le son fermé [e] de l'accent aigu (é).",
+      "id": "97bbbb0274a98421",
       "type": "standard"
     },
     {
-      "text": "La phrase « La maison était grande et ancienne » illustre quelle fonction de l'imparfait?",
+      "text": "Complétez la phrase avec le mot correctement accentué : « Pour le dessert, je voudrais une ___ au sucre. »",
       "options": [
-        "Description d'une habitude",
-        "Récit d'une action",
-        "Description d'un lieu",
-        "Comparaison temporelle"
+        "crepe"
       ],
-      "correctAnswer": "Description d'un lieu",
-      "englishHint": "What function of the imperfect tense does \"The house was big and old\" illustrate?",
-      "explanation": "L'imparfait décrit les caractéristiques d'un lieu dans le passé.",
-      "id": "befa7f3b51cfa7de",
+      "correctAnswer": "crepe",
+      "englishHint": "Complete the sentence with the correctly accented word: \"For dessert, I would like a ___ with sugar.\"",
+      "explanation": "Le mot « crêpe » s'écrit avec un accent circonflexe sur le 'e'.",
+      "id": "58f89b70b7143c45",
       "type": "standard"
     },
     {
-      "text": "Dans « Le soleil brillait, les oiseaux chantaient », quel temps et quelle fonction?",
+      "text": "Quel signe de ponctuation faut-il utiliser pour introduire une liste, comme dans la phrase : « J'ai trois animaux ___ un chat, un chien et un oiseau » ?",
       "options": [
-        "Passé composé, action achevée",
-        "Présent, action en cours",
-        "Imparfait, description d'une scène",
-        "Futur simple, action future"
+        "Le point (.)",
+        "La virgule (,)",
+        "Les deux-points (:)",
+        "Le point-virgule (;)"
       ],
-      "correctAnswer": "Imparfait, description d'une scène",
-      "englishHint": "In \"The sun was shining, the birds were singing\", what tense and function?",
-      "explanation": "L'imparfait est utilisé pour décrire une scène passée, en insistant sur l'atmosphère et la durée.",
-      "id": "7037eee28edc9bd1",
+      "correctAnswer": "Les deux-points (:)",
+      "englishHint": "Which punctuation mark should be used to introduce a list, as in the sentence: \"I have three animals ___ a cat, a dog, and a bird\"?",
+      "explanation": "Les deux-points (:) sont utilisés pour introduire une énumération, une explication ou une citation.",
+      "id": "927ec260121a0ef1",
       "type": "standard"
     },
     {
-      "text": "L'imparfait décrit-il des actions ponctuelles et achevées?",
+      "text": "Le son [e], décrit comme similaire au « ay » du mot anglais « say », est indiqué par quel accent en français ?",
       "options": [
-        "Oui",
-        "Non",
-        "Parfois",
-        "Cela dépend du contexte"
+        "L'accent grave (è)",
+        "L'accent circonflexe (ê)",
+        "L'accent aigu (é)",
+        "La cédille (ç)"
       ],
-      "correctAnswer": "Non",
-      "englishHint": "Does the imperfect tense describe punctual, completed actions?",
-      "explanation": "L'imparfait décrit des états, des descriptions, des habitudes, mais pas des actions ponctuelles et achevées (c'est le rôle du passé composé).",
-      "id": "8ab861c546f22498",
+      "correctAnswer": "L'accent aigu (é)",
+      "englishHint": "The sound [e], described as similar to the \"ay\" in the English word \"say\", is indicated by which French accent?",
+      "explanation": "L'accent aigu (é) indique un « son fermé [e] », qui est phonétiquement proche du son \"ay\" dans le mot anglais \"say\".",
+      "id": "772baf27f1e77fea",
       "type": "standard"
     },
     {
-      "text": "Complétez : « Quand j'étais enfant, je _______ souvent au parc. »",
+      "text": "Quelle est l'origine la plus fréquente de l'accent circonflexe (ê) sur des mots français comme « forêt » ou « hôpital » ?",
       "options": [
-        "allais",
-        "vais",
-        "irai",
-        "suis allé"
+        "Géographique",
+        "Phonétique",
+        "Moderne",
+        "Historique"
       ],
-      "correctAnswer": "allais",
-      "englishHint": "Complete: \"When I was a child, I _______ often to the park.\"",
-      "explanation": "L'imparfait est nécessaire pour exprimer une action habituelle dans le passé.",
-      "id": "0348a4ed1e1283fb",
+      "correctAnswer": "Historique",
+      "englishHint": "What is the most frequent origin of the circumflex accent (ê) on French words like 'forêt' or 'hôpital'?",
+      "explanation": "L'accent circonflexe a souvent une origine historique. Il marque la disparition d'une lettre (souvent un 's') présente en ancien français ou en latin (ex: foresta -> forêt).",
+      "id": "9670b8c5cad671ae",
       "type": "standard"
     },
     {
-      "text": "Quelle phrase utilise l'imparfait pour un état permanent dans le passé?",
+      "text": "Dans la phrase : « J'ai besoin d'un passeport, d'un billet d'avion et d'un dictionnaire », combien de virgules sont utilisées pour séparer les éléments de la liste ?",
       "options": [
-        "Il était toujours joyeux.",
-        "Il est toujours joyeux.",
-        "Il sera toujours joyeux.",
-        "Il a été toujours joyeux."
+        "Une",
+        "Deux",
+        "Trois",
+        "Aucune"
       ],
-      "correctAnswer": "Il était toujours joyeux.",
-      "englishHint": "Which sentence uses the imperfect for a permanent past state?",
-      "explanation": "L'imparfait souligne ici la durée de l'état dans le passé.",
-      "id": "85b97aa2e305ea2b",
+      "correctAnswer": "Deux",
+      "englishHint": "In the sentence: \"I need a passport, a plane ticket, and a dictionary\", how many commas are used to separate the items in the list?",
+      "explanation": "Une virgule est placée après « passeport » et une autre après « billet d'avion » pour séparer les trois éléments de l'énumération. En français, on ne met généralement pas de virgule avant le 'et' final dans une liste simple.",
+      "id": "c6182c15f9ecf478",
       "type": "standard"
     },
     {
-      "text": "Dans « Il pleuvait. Je suis tombé. », quel temps pour le contexte, quel temps pour l'action?",
+      "text": "Parmi les mots suivants, lequel contient à la fois un accent aigu (é) et un accent grave (è) ?",
       "options": [
-        "Passé composé / Imparfait",
-        "Imparfait / Passé composé",
-        "Présent / Passé composé",
-        "Imparfait / Présent"
+        "événement",
+        "préférer",
+        "médecin",
+        "extrêmement"
       ],
-      "correctAnswer": "Imparfait / Passé composé",
-      "englishHint": "In \"It was raining. I fell.\", which tense for context, which for action?",
-      "explanation": "L'imparfait décrit la situation, le passé composé l'action principale.",
-      "id": "b169c4106a15c581",
+      "correctAnswer": "événement",
+      "englishHint": "Among the following words, which one contains both an acute accent (é) and a grave accent (è)?",
+      "explanation": "Le mot « événement » s'écrit avec un accent aigu sur le premier 'e' (é) et un accent grave sur le second 'e' (è) pour indiquer les prononciations correctes [e] et [ɛ].",
+      "id": "371b5ff1b61583a4",
       "type": "standard"
     },
     {
-      "text": "L'expression « Nous allions souvent au cinéma » décrit quoi?",
+      "text": "Quel est le nom de l'accent utilisé sur le \"e\" du mot « médecin » ?",
       "options": [
-        "Une action unique",
-        "Une habitude",
-        "Une description",
-        "Une comparaison"
+        "Accent grave",
+        "Accent circonflexe",
+        "Accent aigu",
+        "Accent tonique"
       ],
-      "correctAnswer": "Une habitude",
-      "englishHint": "What does \"We often went to the cinema\" describe?",
-      "explanation": "L'imparfait souligne ici la répétition de l'action, donc une habitude.",
-      "id": "e617ce437c26eeb9",
+      "correctAnswer": "Accent aigu",
+      "englishHint": "What is the name of the accent used on the \"e\" of the word \"médecin\"?",
+      "explanation": "Le mot « médecin » utilise un accent aigu (é) pour marquer le son fermé [e] devant la syllabe 'de-cin'.",
+      "id": "270c09fdb730a067",
       "type": "standard"
     },
     {
-      "text": "Quel temps verbal est utilisé pour décrire une scène passée, en mettant l'accent sur la durée et le contexte ?",
+      "text": "Quelle est la principale différence de fonction entre un point (.) et une virgule (,) ?",
       "options": [
-        "Le passé composé",
-        "L'imparfait",
-        "Le passé simple",
-        "Le futur antérieur"
+        "Le point est pour les questions, la virgule pour les affirmations.",
+        "Le point termine une idée complète, la virgule marque une courte pause à l'intérieur d'une idée.",
+        "Le point sépare des mots, la virgule sépare des phrases.",
+        "Le point est toujours suivi d'une majuscule, la virgule jamais."
       ],
-      "correctAnswer": "L'imparfait",
-      "englishHint": "What tense is used to describe a past scene, emphasizing duration and context?",
-      "explanation": "L'imparfait est utilisé pour décrire des situations, des états ou des actions qui se déroulaient dans le passé.",
-      "id": "c8b04b215f1fe0ab",
+      "correctAnswer": "Le point termine une idée complète, la virgule marque une courte pause à l'intérieur d'une idée.",
+      "englishHint": "What is the main functional difference between a period (.) and a comma (,)?",
+      "explanation": "Le point marque la fin d'une phrase et une pause longue. La virgule structure la phrase en indiquant des pauses plus courtes sans terminer l'idée principale.",
+      "id": "45c045b7903c907e",
       "type": "standard"
     },
     {
-      "text": "Laquelle de ces phrases illustre l'emploi de l'imparfait pour exprimer une habitude passée ?",
+      "text": "Dans lequel de ces groupes de mots, tous les mots contiennent-ils au moins un accent aigu (é) ?",
       "options": [
-        "Je suis allé au marché hier.",
-        "J'allais souvent au marché.",
-        "J'irai au marché demain.",
-        "Je vais au marché chaque semaine."
+        "père, mère, frère",
+        "café, été, décidé",
+        "forêt, fête, bête",
+        "très, déjà, voilà"
       ],
-      "correctAnswer": "J'allais souvent au marché.",
-      "englishHint": "Which of these sentences illustrates the use of the imperfect to express a past habit?",
-      "explanation": "L'imparfait sert à décrire des actions répétées ou habituelles dans le passé.",
-      "id": "987ca800ed574558",
+      "correctAnswer": "café, été, décidé",
+      "englishHint": "In which of these word groups do all the words contain at least one acute accent (é)?",
+      "explanation": "Les mots 'café', 'été' et 'décidé' utilisent tous l'accent aigu (é) pour le son fermé [e]. Les autres listes contiennent des accents graves, circonflexes ou d'autres types d'accents.",
+      "id": "968976d2b8984de9",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase : \"Il pleuvait. Je suis tombé.\", quel temps verbal met l'accent sur l'action principale ?",
+      "text": "Lequel de ces mots courants est correctement orthographié avec un accent grave (è) ?",
       "options": [
-        "L'imparfait (\"Il pleuvait\")",
-        "Le passé composé (\"Je suis tombé\")",
-        "Les deux temps sont équivalents",
-        "Aucun des deux"
+        "tres"
       ],
-      "correctAnswer": "Le passé composé (\"Je suis tombé\")",
-      "englishHint": "In the sentence: \"It was raining. I fell.\", which tense emphasizes the main action?",
-      "explanation": "Le passé composé souligne une action unique et achevée dans le passé, contrairement à l'imparfait qui situe l'action dans son contexte.",
-      "id": "254e052c667dbbe1",
+      "correctAnswer": "tres",
+      "englishHint": "Which of these common words is correctly spelled with a grave accent (è)?",
+      "explanation": "L'adverbe « très », qui signifie 'very', s'écrit toujours avec un accent grave sur le 'e'.",
+      "id": "a166ae72e1bc4f23",
       "type": "standard"
     },
     {
-      "text": "Quel usage de l'imparfait est illustré par la phrase : \"Chaque soir, je lisais un livre avant de dormir\" ?",
+      "text": "L'accent aigu (é) s'utilise souvent devant une consonne suivie d'une autre voyelle (formant une syllabe sans 'e' muet). Lequel de ces mots illustre cette règle ?",
       "options": [
-        "Description d'un lieu",
-        "Description d'une personne",
-        "Action habituelle",
-        "Comparaison avec le passé composé"
+        "première",
+        "crème",
+        "médecin",
+        "élève"
       ],
-      "correctAnswer": "Action habituelle",
-      "englishHint": "Which use of the imperfect is illustrated by the sentence: \"Every evening, I read a book before sleeping\"?",
-      "explanation": "L'imparfait est utilisé pour exprimer une action répétitive et habituelle dans le passé.",
-      "id": "40aacc1fa685184a",
+      "correctAnswer": "médecin",
+      "englishHint": "The acute accent (é) is often used before a consonant followed by another vowel (forming a syllable without a silent 'e'). Which of these words illustrates this rule?",
+      "explanation": "Dans « médecin », l'accent aigu sur le premier 'e' est placé devant la syllabe « de », qui ne contient pas de 'e' muet. Les autres mots utilisent un accent grave (è).",
+      "id": "0b2df2bffe90cc51",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase : \"Il était toujours joyeux ; il aimait rire.\", quel temps verbal souligne l'état permanent ?",
+      "text": "En ponctuation française, quelle construction est considérée comme une erreur fondamentale à éviter ?",
       "options": [
-        "Le passé simple",
-        "Le passé composé",
-        "L'imparfait",
-        "Le plus-que-parfait"
+        "Mettre une virgule avant 'mais'",
+        "Commencer une phrase par 'Et'",
+        "Séparer le sujet du verbe par une seule virgule",
+        "Utiliser un point d'exclamation dans un texte formel"
       ],
-      "correctAnswer": "L'imparfait",
-      "englishHint": "In the sentence: \"He was always joyful; he loved to laugh.\", which tense highlights the permanent state?",
-      "explanation": "L'imparfait décrit un état qui durait dans le passé.  Ici, il souligne la joie permanente de la personne.",
-      "id": "d258a365c690375f",
+      "correctAnswer": "Séparer le sujet du verbe par une seule virgule",
+      "englishHint": "In French punctuation, which construction is considered a fundamental error to avoid?",
+      "explanation": "Il est interdit de séparer le groupe sujet du verbe par une seule virgule. Une paire de virgules peut cependant être utilisée pour encadrer une information complémentaire.",
+      "id": "be64c2d42681243d",
       "type": "standard"
     }
   ]

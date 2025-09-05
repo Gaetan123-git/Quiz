@@ -29,20 +29,63 @@ let currentCourseDate = null;
 let sessionStatusRetryMs = 1000;
 let sessionStatusOnlineHandlerAdded = false;
 
-// Installer un intercepteur global de fetch pour gérer les 409 (ancien appareil)
+// Installer un intercepteur global de fetch pour gérer les 409 (ancien appareil) et les timeouts
 (() => {
     let installed = false;
     function installForceLogoutInterceptor() {
-        if (installed) return; installed = true;
+        if (installed) return;
+        installed = true;
+        
         const originalFetch = window.fetch.bind(window);
-        window.fetch = async (...args) => {
-            const res = await originalFetch(...args);
-            if (res && res.status === 409) {
-                try { showToast(i18n.t('session.forceLogoutTitle'), i18n.t('session.forceLogoutMessage')); } catch (_) {}
-                try { await originalFetch('/logout', { method: 'POST' }); } catch (_) {}
-                try { window.location.href = '/login'; } catch (_) {}
+        // Expose the original fetch globally so NetworkMonitor can use it to avoid interception loops
+        try { window.originalFetch = originalFetch; } catch (_) {}
+
+        // On remplace la fonction fetch globale par notre version améliorée
+        window.fetch = async (resource, options = {}) => {
+            const controller = new AbortController();
+            // On crée un minuteur qui annulera la requête après 15 secondes
+            const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 secondes de délai
+            let finalOptions;
+
+            try {
+                // On fusionne le signal de l'AbortController avec les options existantes
+                finalOptions = {
+                    ...options,
+                    signal: controller.signal
+                };
+
+                // On lance la requête avec le délai de sécurité
+                const res = await originalFetch(resource, finalOptions);
+
+                // Gestion de la déconnexion forcée (multi-appareils)
+                if (res && res.status === 409) {
+                    try { showToast(i18n.t('session.forceLogoutTitle'), i18n.t('session.forceLogoutMessage')); } catch (_) {}
+                    try { await originalFetch('/logout', { method: 'POST' }); } catch (_) {}
+                    try { window.location.href = '/login'; } catch (_) {}
+                }
+                
+                return res;
+
+            } catch (error) {
+                // Si l'erreur est une 'AbortError', c'est que notre délai a été atteint
+                if (error.name === 'AbortError') {
+                    console.warn(`[FETCH INTERCEPTOR] La requête vers ${resource} a expiré.`);
+                    showToast('Erreur Réseau', 'La requête a expiré. Votre connexion est peut-être lente.', 'error');
+                }
+                // En cas d'échec réseau typique (AbortError, TypeError), on stocke la requête pour un renvoi ultérieur
+                try {
+                    if (window.networkMonitor && (error.name === 'AbortError' || error.name === 'TypeError')) {
+                        window.networkMonitor.storeFailedRequest(typeof resource === 'string' ? resource : (resource && resource.url ? resource.url : String(resource)), finalOptions);
+                    }
+                } catch (_) {}
+                
+                // On propage l'erreur pour que les autres parties du code puissent la gérer
+                throw error;
+
+            } finally {
+                // Quoi qu'il arrive, on nettoie le minuteur pour éviter les fuites de mémoire
+                clearTimeout(timeoutId);
             }
-            return res;
         };
     }
     // installer immédiatement
@@ -354,10 +397,11 @@ function updateView() {
     const courseHistoryPage = document.getElementById('course-history-page'); // <-- Votre ajout est correct
     const livresPage = document.getElementById('livres-page'); 
     const errorsPage = document.getElementById('errors-page'); // Ajout de la page d'erreurs
+    const walletPage = document.getElementById('wallet-page'); // Référence à la nouvelle page
     const floatingChatButton = document.getElementById('floating-chat-button');
     
     // On cache toutes les sections
-    [auth, songSelection, game, chatPage, historyPage, settingsPage, coursePage, courseHistoryPage, livresPage, errorsPage].forEach(el => {
+    [auth, songSelection, game, chatPage, historyPage, settingsPage, coursePage, courseHistoryPage, livresPage, errorsPage, walletPage].forEach(el => {
         if (el) el.style.display = 'none';
     });
     if (floatingChatButton) {
@@ -411,6 +455,8 @@ function updateView() {
         showUserErrorsPage();
     } else if (path === '/history') {
         checkSessionAndShowHistory();
+    } else if (path === '/wallet') {
+        checkSessionAndShowWallet();
     } else if (path === '/settings') {
         checkSessionAndShowSettings();
     } else if (path === '/' || path === '/login') {
@@ -634,15 +680,14 @@ async function checkSessionAndShowHistory() {
             showToast('Session expirée', 'Veuillez vous reconnecter.', 'error');
         }
     } catch (error) {
-        console.error('[CLIENT] Erreur lors de la récupération des données d\'historique :', error);
-        showToast('Erreur', 'Impossible de charger votre historique.', 'error');
-        navigateTo('/menu'); // En cas d'erreur, on renvoie au menu
     }
 }
+
 // New function to check session and show settings page
 async function checkSessionAndShowSettings() {
     const response = await fetch('/check-session');
     const result = await response.json();
+    
     if (result.loggedIn) {
         // APPEL DE NOTRE NOUVELLE FONCTION CENTRALISÉE
         updateHeaderWithUserData(result);
@@ -1125,32 +1170,40 @@ function setupUserNotificationStream() {
     // Ouvre la connexion au nouveau flux SSE
     userNotificationEventSource = new EventSource('/api/user-notifications');
   
-    // Crée un écouteur spécifique pour l'événement 'account-reset' que nous avons défini côté serveur
+    // Écouteur pour la réinitialisation de compte
     userNotificationEventSource.addEventListener('account-reset', (event) => {
       console.log('[CLIENT] Notification de réinitialisation reçue !', event.data);
-      
-      // Affiche une notification claire à l'utilisateur
-      showToast(
-        'Action de l\'Administrateur',
-        'Votre compte a été réinitialisé. La page va maintenant s\'actualiser.',
-        'error', // 'error' pour une couleur rouge qui attire l'attention
-        3800     // Durée de 3.8 secondes (un peu moins que le délai de redirection)
-      );
+      showToast('Action de l\'Administrateur', 'Votre compte a été réinitialisé. La page va maintenant s\'actualiser.', 'error', 3800);
+      setTimeout(() => { window.location.href = '/menu'; }, 4000);
+    });
   
-      // Arrête toutes les autres connexions temps réel pour éviter les erreurs
-      if (leaderboardEventSource) leaderboardEventSource.close();
-      if (chatEventSource) chatEventSource.close();
-      if (sessionStatusEventSource) sessionStatusEventSource.close();
-  
-      // ====================================================================
-      // ===                 CORRECTION DU BUG D'AFFICHAGE                ===
-      // ====================================================================
-      // Attend 4 secondes pour que l'utilisateur puisse lire le message, PUIS recharge la page VERS le menu.
-      // `window.location.href` est une redirection "dure" qui assure que la page
-      // est entièrement rechargée avec les nouvelles données serveur, évitant ainsi le bug d'affichage.
-      setTimeout(() => {
-        window.location.href = '/menu';
-      }, 4000);
+    // NOUVEL ÉCOUTEUR pour la mise à jour du solde en temps réel
+    userNotificationEventSource.addEventListener('balance-update', (event) => {
+        try {
+            const data = JSON.parse(event.data);
+            console.log('[CLIENT] Mise à jour du solde reçue !', data);
+
+            // Affiche une notification de succès
+            showToast(
+                'Dépôt Approuvé !',
+                `Votre dépôt de ${data.amount.toLocaleString('fr-FR')} Ar a été validé.`,
+                'success'
+            );
+
+            // Met à jour l'affichage du solde sur la page portefeuille si elle est ouverte
+            const balanceDisplay = document.getElementById('wallet-balance-display');
+            if (balanceDisplay) {
+                balanceDisplay.textContent = `${data.newBalance.toLocaleString('fr-FR')} Ar`;
+            }
+
+            // Rafraîchit l'historique pour changer le statut de "En attente" à "Approuvé"
+            if (window.location.pathname === '/wallet') {
+                loadWalletHistory();
+            }
+
+        } catch (e) {
+            console.error('Erreur lors du traitement de la mise à jour du solde:', e);
+        }
     });
   
     // Gère les erreurs de connexion
@@ -1209,97 +1262,66 @@ function updateTypingIndicator(typingUsers) {
 }
 // New: Settings functions
 function loadSettings() {
-    const savedTheme = localStorage.getItem('theme');
-    const savedFontSize = localStorage.getItem('fontSize');
-    const savedFontFamily = localStorage.getItem('fontFamily');
-    const savedUIDesign = localStorage.getItem('uiDesign');
+    // On utilise l'opérateur "OU" (||) pour une logique plus directe et fiable.
+    // Si localStorage.getItem('theme') renvoie null (pour un nouveau joueur), la variable prendra la valeur par défaut 'amoled'.
+    // Sinon, elle prendra la valeur déjà sauvegardée.
+    const savedTheme = localStorage.getItem('theme') || 'amoled';
+    const savedFontSize = localStorage.getItem('fontSize') || 'medium';
+    const savedFontFamily = localStorage.getItem('fontFamily') || 'rosemary';
+    const savedUIDesign = localStorage.getItem('uiDesign') || 'gamer';
 
-    // Pour le thème
-    if (savedTheme) {
-        applyTheme(savedTheme, false);
-    } else {
-        // Applique le nouveau thème par défaut ('amoled') et le sauvegarde
-        applyTheme(currentTheme, true);
-    }
-
-    // Pour la taille de la police
-    if (savedFontSize) {
-        applyFontSize(savedFontSize, false);
-    } else {
-        // Applique la taille par défaut ('medium') et la sauvegarde
-        applyFontSize(currentFontSize, true);
-    }
-
-    // Pour la police de caractères
-    if (savedFontFamily) {
-        applyFontFamily(savedFontFamily, false);
-    } else {
-        // Applique la nouvelle police par défaut ('rosemary') et la sauvegarde
-        applyFontFamily(currentFontFamily, true);
-    }
-
-    // Pour le design de l'interface
-    if (savedUIDesign) {
-        applyUIDesign(savedUIDesign, false);
-    } else {
-        // Applique le nouveau design par défaut ('gamer') et le sauvegarde
-        applyUIDesign(currentUIDesign, true);
-    }
+    // On applique ensuite les paramètres, qu'ils soient nouveaux ou sauvegardés.
+    applyTheme(savedTheme);
+    applyFontSize(savedFontSize);
+    applyFontFamily(savedFontFamily);
+    applyUIDesign(savedUIDesign);
 }
 
-function applyTheme(themeName, save = true) {
+function applyTheme(themeName) {
     const body = document.body;
-    // Remove existing theme classes (any class starting with 'theme-')
+    // Supprime toutes les classes de thème existantes pour éviter les conflits
     Array.from(body.classList).forEach(cls => {
         if (cls.startsWith('theme-')) body.classList.remove(cls);
     });
-    // Add the new theme class
+    // Ajoute la nouvelle classe de thème
     body.classList.add(`theme-${themeName}`);
     currentTheme = themeName;
-    if (save) {
-        localStorage.setItem('theme', themeName);
-    }
-    // Update radio button state
+    // Sauvegarde systématiquement le paramètre pour les futures visites
+    localStorage.setItem('theme', themeName);
+    
+    // Met à jour le bouton radio correspondant dans les paramètres
     const themeRadio = document.getElementById(`theme-${themeName}`);
     if (themeRadio) {
         themeRadio.checked = true;
     }
 }
 
-function applyFontSize(sizeName, save = true) {
+function applyFontSize(sizeName) {
     const body = document.body;
-    // Remove existing font size classes
     body.classList.remove('font-small', 'font-medium', 'font-large');
-    // Add the new font size class
     body.classList.add(`font-${sizeName}`);
     currentFontSize = sizeName;
-    if (save) {
-        localStorage.setItem('fontSize', sizeName);
-    }
-    // Update radio button state
+    localStorage.setItem('fontSize', sizeName);
+    
     const fontSizeRadio = document.getElementById(`font-${sizeName}`);
     if (fontSizeRadio) {
         fontSizeRadio.checked = true;
     }
 }
 
-function applyFontFamily(familyName, save = true) {
+function applyFontFamily(familyName) {
     const body = document.body;
-    // Remove existing font family classes
     body.classList.remove('font-poppins', 'font-arial', 'font-times', 'font-georgia', 'font-roboto', 'font-open-sans', 'font-cool-jazz', 'font-choco-cooky', 'font-rosemary', 'font-samsung-sharp', 'font-samsung-one', 'font-condensed');
-    // Add the new font family class
     body.classList.add(`font-${familyName}`);
     currentFontFamily = familyName;
-    if (save) {
-        localStorage.setItem('fontFamily', familyName);
-    }
-    // Update radio button state
+    localStorage.setItem('fontFamily', familyName);
+    
     const fontFamilyRadio = document.getElementById(`font-${familyName}`);
     if (fontFamilyRadio) {
         fontFamilyRadio.checked = true;
     }
     
-    // Restore username if it was overwritten
+    // (Le reste de la fonction est inchangé)
     const greetingUsernameEl = document.getElementById('greeting-username');
     if (greetingUsernameEl) {
         const originalUsername = greetingUsernameEl.getAttribute('data-original-username');
@@ -1308,29 +1330,19 @@ function applyFontFamily(familyName, save = true) {
             greetingUsernameEl.setAttribute('data-i18n-skip', 'true');
         }
     }
-    
-    // Debug log
-    console.log(`[DEBUG] Font family changed to: ${familyName}, body classes:`, Array.from(body.classList));
 }
 
-function applyUIDesign(designName, save = true) {
+function applyUIDesign(designName) {
     const body = document.body;
-    // Remove existing UI design classes
     body.classList.remove('design-default', 'design-gamer', 'design-dev', 'design-duolingo', 'design-app');
-    // Add the new UI design class
     body.classList.add(`design-${designName}`);
     currentUIDesign = designName;
-    if (save) {
-        localStorage.setItem('uiDesign', designName);
-    }
-    // Update radio button state
+    localStorage.setItem('uiDesign', designName);
+    
     const uiDesignRadio = document.getElementById(`design-${designName}`);
     if (uiDesignRadio) {
         uiDesignRadio.checked = true;
     }
-    
-    // Debug log
-    console.log(`[DEBUG] UI design changed to: ${designName}, body classes:`, Array.from(body.classList));
 }
 
 function showSettingsPage() {
@@ -1338,10 +1350,10 @@ function showSettingsPage() {
     if (settingsPage) {
         settingsPage.style.display = 'flex';
         // Ensure controls reflect current settings when page is shown
-        applyTheme(currentTheme, false);
-        applyFontSize(currentFontSize, false);
-        applyFontFamily(currentFontFamily, false);
-        applyUIDesign(currentUIDesign, false);
+        applyTheme(currentTheme);
+        applyFontSize(currentFontSize);
+        applyFontFamily(currentFontFamily);
+        applyUIDesign(currentUIDesign);
 
         // Add event listeners for theme change
         document.querySelectorAll('input[name="theme"]').forEach(radio => {
@@ -1467,6 +1479,36 @@ async function initializeApp() {
     await i18n.init();
     
     networkMonitor = new NetworkMonitor();
+    // Exposer globalement le NetworkMonitor pour que l'intercepteur fetch puisse y accéder
+    try { window.networkMonitor = networkMonitor; } catch (_) {}
+
+    // Écoute des événements du NetworkMonitor pour le retour visuel
+    networkMonitor.on('offline', () => {
+        showToast(
+            i18n.t('network.offlineTitle'),
+            i18n.t('network.offlineMessage'),
+            'error',
+            10000 // Durée plus longue pour que l'utilisateur ait le temps de lire
+        );
+    });
+
+    networkMonitor.on('online', () => {
+        showToast(
+            i18n.t('network.onlineTitle'),
+            i18n.t('network.onlineMessage'),
+            'success',
+            5000
+        );
+    });
+
+    networkMonitor.on('retrying-requests', (count) => {
+        showToast(
+            i18n.t('network.retryingTitle'),
+            i18n.t('network.retryingMessage', { count }),
+            'info',
+            7000
+        );
+    });
     console.log('[CLIENT] NetworkMonitor initialisé');
     
     detectDevice();
@@ -1516,6 +1558,7 @@ async function initializeApp() {
     const courseHistoryLink = document.getElementById('course-history-link');
     const livresLink = document.getElementById('livres-link'); 
     const historyLink = document.getElementById('history-link');
+    const walletLink = document.getElementById('wallet-link');
     const settingsLink = document.getElementById('settings-link');
     const logoutLink = document.getElementById('logout-link');
 
@@ -1524,6 +1567,7 @@ async function initializeApp() {
     if (courseHistoryLink) courseHistoryLink.addEventListener('click', (e) => { e.preventDefault(); navigateTo('/course-history'); });
     if (livresLink) livresLink.addEventListener('click', (e) => { e.preventDefault(); navigateTo('/livres'); });
     if (historyLink) historyLink.addEventListener('click', (e) => { e.preventDefault(); navigateTo('/history'); });
+    if (walletLink) walletLink.addEventListener('click', (e) => { e.preventDefault(); navigateTo('/wallet'); });
     if (settingsLink) settingsLink.addEventListener('click', (e) => { e.preventDefault(); navigateTo('/settings'); });
     if (logoutLink) logoutLink.addEventListener('click', (e) => { e.preventDefault(); logout(); });
     
@@ -2348,18 +2392,20 @@ async function showSongSelection() {
                 ` : '';
 
                 return `
-                    <li class="${lockedClass}" title="${lockReason}">
-                        <a href="${isLocked ? '#' : subItem.page}" class="session-link" data-session-number="${sessionNumber}">
+                <li class="${lockedClass}" title="${lockReason}">
+                    <a href="${isLocked ? '#' : subItem.page}" class="session-link" data-session-number="${sessionNumber}">
+                        <div class="session-details">
                             <span class="session-name">${subItem.name} ${lockIcon}</span>
                             ${countdownHTML}
-                            <div class="player-count ${activeClass}">
-                                <span class="dot"></span>
-                                <span>${playerCount} joueur${playerCount > 1 ? 's' : ''}</span>
-                            </div>
-                        </a>
-                        ${chatButtonHTML}
-                    </li>
-                `;
+                        </div>
+                        <div class="player-count ${activeClass}">
+                            <span class="dot"></span>
+                            <span>${playerCount} joueur${playerCount > 1 ? 's' : ''}</span>
+                        </div>
+                    </a>
+                    ${chatButtonHTML}
+                </li>
+            `;
             }).join('');
             
             if (document.getElementById('session-4-countdown')) { startCountdown(competitionStartTime); }
@@ -2371,12 +2417,15 @@ async function showSongSelection() {
                         const sessionNumber = parseInt(link.dataset.sessionNumber);
                         const href = link.getAttribute('href');
                         
-                        if (sessionNumber >= 4 && currentCourseDate) {
+                        // CORRECTION : La condition a été simplifiée pour s'appliquer à TOUTES les sessions.
+                        // On vérifie simplement si un cours existe pour la journée.
+                        if (currentCourseDate) {
                             const courseViewed = sessionStorage.getItem(`course_viewed_${currentCourseDate}`);
                             if (!courseViewed) {
                                 showConfirmationModal(
                                     'Rappel : Cours du jour',
-                                    'Nous vous recommandons de consulter le cours du jour avant de commencer cette session de compétition. Souhaitez-vous le voir maintenant ?',
+                                    // CORRECTION : Le message a été rendu plus générique.
+                                    'Nous vous recommandons de consulter le cours du jour avant de commencer cette session de quiz. Souhaitez-vous le voir maintenant ?',
                                     'Voir le cours',
                                     'Continuer vers le quiz',
                                     () => navigateTo('/course'),
@@ -2417,6 +2466,7 @@ async function logout() {
     }
   }
 // REMPLACER L'ANCIENNE FONCTION updateLeaderboard PAR CELLE-CI
+// REMPLACER L'ANCIENNE FONCTION updateLeaderboard PAR CELLE-CI
 function updateLeaderboard(leaderboard) {
     const leaderboardList = document.getElementById('leaderboard-list');
     if (!leaderboardList) return;
@@ -2436,6 +2486,10 @@ function updateLeaderboard(leaderboard) {
       const isCurrentUser = currentUsername && entry.username && entry.username.toLowerCase() === currentUsername.toLowerCase();
       const userClass = isCurrentUser ? 'current-user' : '';
 
+      // === LA MODIFICATION EST ICI ===
+      // On crée un petit point vert animé si l'utilisateur est actif, sinon une chaîne vide.
+      const activeIndicatorHTML = entry.isActive ? '<span class="active-indicator" title="Actif dans cette session"></span>' : '';
+
       const initial = entry.username ? entry.username.charAt(0).toUpperCase() : '?';
       const avatarHtml = entry.avatarUrl
         ? `<img class="lb-avatar w-6 h-6 rounded-full object-cover" src="${entry.avatarUrl}" alt="avatar" />`
@@ -2445,7 +2499,7 @@ function updateLeaderboard(leaderboard) {
         <li class="leaderboard-entry ${userClass}">
           <span class="rank">${medal}</span>
           <span class="avatar">${avatarHtml}</span>
-          <span class="username">${entry.username}</span>
+          <span class="username">${entry.username}${activeIndicatorHTML}</span>
           <span class="score">${entry.score.toFixed(0)} pts</span>
         </li>
       `;
@@ -3052,6 +3106,42 @@ function displayUserBooks(books) {
 }
 
 /**
+ * Vérifie la session de l'utilisateur puis charge et affiche la page wallet.
+ */
+async function checkSessionAndShowWallet() {
+    try {
+        const response = await fetch('/check-session');
+        const result = await response.json();
+        if (!result.loggedIn) {
+            window.location.href = '/login';
+            return;
+        }
+        
+        // Cache toutes les pages avant d'afficher la page wallet
+        const auth = document.getElementById('auth');
+        const songSelection = document.getElementById('song-selection');
+        const game = document.getElementById('game');
+        const chatPage = document.getElementById('chat-page');
+        const historyPage = document.getElementById('history-page');
+        const settingsPage = document.getElementById('settings-page');
+        const coursePage = document.getElementById('course-page');
+        const courseHistoryPage = document.getElementById('course-history-page');
+        const livresPage = document.getElementById('livres-page');
+        const errorsPage = document.getElementById('errors-page');
+        const walletPage = document.getElementById('wallet-page');
+        
+        [auth, songSelection, game, chatPage, historyPage, settingsPage, coursePage, courseHistoryPage, livresPage, errorsPage, walletPage].forEach(el => {
+            if (el) el.style.display = 'none';
+        });
+        
+        showWalletPage(result);
+    } catch (error) {
+        console.error('[WALLET] Erreur lors de la vérification de session:', error);
+        window.location.href = '/login';
+    }
+}
+
+/**
  * Vérifie la session de l'utilisateur puis charge et affiche la page des livres.
  */
 async function checkSessionAndShowLivres() {
@@ -3340,6 +3430,147 @@ async function showGameOverScreen() {
         if (gameContent) {
             gameContent.innerHTML = `<div class="game-over-container"><h2>Erreur</h2><p>${error.message}</p></div>`;
         }
+    }
+}
+
+// Function to show wallet page
+function showWalletPage(userData) {
+    // APPEL DE NOTRE NOUVELLE FONCTION CENTRALISÉE
+    updateHeaderWithUserData(userData);
+    
+    const walletPage = document.getElementById('wallet-page');
+    if (walletPage) walletPage.style.display = 'flex';
+    
+    // Afficher le solde actuel
+    const balanceDisplay = document.getElementById('wallet-balance-display');
+    if (balanceDisplay) {
+        balanceDisplay.textContent = `${userData.balance || 0} Ar`;
+    }
+    
+    // Gérer le formulaire de dépôt
+    const depositForm = document.getElementById('deposit-request-form');
+    if (depositForm && !depositForm._listenerAttached) {
+        depositForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const amountInput = document.getElementById('deposit-amount');
+            const refInput = document.getElementById('deposit-ref');
+            
+            const amount = parseFloat(amountInput.value);
+            const transactionRef = refInput.value.trim();
+            
+            if (!amount || amount <= 0) {
+                showToast('Erreur', 'Veuillez entrer un montant valide.', 'error');
+                return;
+            }
+            
+            if (!transactionRef) {
+                showToast('Erreur', 'Veuillez entrer la référence de transaction.', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/deposit/request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: amount,
+                        transactionRef: transactionRef
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showToast('Succès', result.message, 'success');
+                    amountInput.value = '';
+                    refInput.value = '';
+                    // Recharger l'historique
+                    loadWalletHistory();
+                } else {
+                    showToast('Erreur', result.error, 'error');
+                }
+            } catch (error) {
+                console.error('[WALLET] Erreur lors de la soumission:', error);
+                showToast('Erreur', 'Impossible de soumettre votre demande.', 'error');
+            }
+        });
+        depositForm._listenerAttached = true;
+    }
+    
+    // Gérer le bouton retour
+    const returnBtn = document.getElementById('wallet-return-menu-button');
+    if (returnBtn && !returnBtn._listenerAttached) {
+        returnBtn.addEventListener('click', () => navigateTo('/menu'));
+        returnBtn._listenerAttached = true;
+    }
+    
+    // Charger l'historique des transactions
+    loadWalletHistory();
+}
+
+// Function to load wallet transaction history
+async function loadWalletHistory() {
+    const historyContainer = document.getElementById('wallet-history-list');
+    if (!historyContainer) return;
+    
+    historyContainer.innerHTML = '<p>Chargement de l\'historique...</p>';
+    
+    try {
+        const response = await fetch('/api/deposit/history');
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error);
+        }
+        
+        const history = await response.json();
+        
+        if (history.length === 0) {
+            historyContainer.innerHTML = '<p class="text-center">Aucune transaction trouvée.</p>';
+            return;
+        }
+        
+        historyContainer.innerHTML = history.map(transaction => {
+            const date = new Date(transaction.requested_at);
+            const formattedDate = date.toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            let statusClass = 'status-pending';
+            let statusText = 'En attente';
+            
+            if (transaction.status === 'approved') {
+                statusClass = 'status-approved';
+                statusText = 'Approuvé';
+            } else if (transaction.status === 'rejected') {
+                statusClass = 'status-rejected';
+                statusText = 'Rejeté';
+            }
+            
+            return `
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-amount">${transaction.amount} Ar</div>
+                        <div class="transaction-ref">Réf: ${transaction.transaction_ref}</div>
+                    </div>
+                    <div>
+                        <div class="transaction-date">${formattedDate}</div>
+                        <div class="transaction-status ${statusClass}">${statusText}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+    } catch (error) {
+        console.error('[WALLET] Erreur lors du chargement de l\'historique:', error);
+        historyContainer.innerHTML = `<p class="text-center text-red-500">Erreur: ${error.message}</p>`;
     }
 }
 

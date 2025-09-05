@@ -167,7 +167,7 @@ const createUsersTable = `
   CREATE TABLE IF NOT EXISTS users (
     username TEXT PRIMARY KEY,
     password TEXT NOT NULL,
-    paymentPhone TEXT, -- AJOUT DE LA NOUVELLE COLONNE
+    paymentPhone TEXT,
     scores TEXT,
     currentScore INTEGER DEFAULT 0,
     lastScoreUpdate TEXT,
@@ -180,6 +180,7 @@ const createUsersTable = `
     consecutiveCorrectAnswers INTEGER DEFAULT 0,
     coins INTEGER DEFAULT 100,
     competitionCoins INTEGER DEFAULT 0,
+    balance REAL DEFAULT 0, -- AJOUT DE LA COLONNE SOLDE
     completedSessions TEXT,
     rewardedQuestionIds TEXT,
     sessionScores TEXT,
@@ -200,11 +201,38 @@ const createErrorCorrectionsTable = `
   );
 `;
 
-// Exécute la commande de création de la table.
+// NOUVELLE TABLE POUR GÉRER LES DÉPÔTS
+const createDepositsTable = `
+  CREATE TABLE IF NOT EXISTS deposits (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    amount REAL NOT NULL,
+    transaction_ref TEXT NOT NULL,
+    status TEXT DEFAULT 'pending', -- Statuts : pending, approved, rejected
+    requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    processed_at TIMESTAMP,
+    FOREIGN KEY (username) REFERENCES users(username)
+  );
+`;
+
+// Exécute les commandes de création de table.
 db.exec(createUsersTable);
 db.exec(createErrorCorrectionsTable);
+db.exec(createDepositsTable);
 
-console.log("[DB] Vérification des tables 'users' et 'error_corrections' terminée.");
+// Migration pour ajouter la colonne balance si elle n'existe pas
+try {
+    db.exec("ALTER TABLE users ADD COLUMN balance REAL DEFAULT 0");
+    console.log("[DB] Colonne 'balance' ajoutée à la table users.");
+} catch (error) {
+    if (error.code === 'SQLITE_ERROR' && error.message.includes('duplicate column name')) {
+        console.log("[DB] Colonne 'balance' existe déjà dans la table users.");
+    } else {
+        console.error("[DB] Erreur lors de l'ajout de la colonne balance:", error);
+    }
+}
+
+console.log("[DB] Vérification des tables 'users', 'error_corrections' et 'deposits' terminée.");
 const app = express();
 console.log(`[TEST] Heure actuelle serveur (locale) : ${new Date().toString()}`);
 console.log(`[TEST] Heure à Paris via moment-timezone : ${moment().tz('Europe/Paris').format('YYYY-MM-DD HH:mm:ss Z')}`);
@@ -479,9 +507,9 @@ function saveUser(user) {
     INSERT OR REPLACE INTO users (
         username, password, paymentPhone, scores, currentScore, lastScoreUpdate, activeSession,
         xp, level, achievements, streakCount, lastPlayDate, consecutiveCorrectAnswers,
-        coins, competitionCoins, completedSessions, rewardedQuestionIds, sessionScores,
+        coins, competitionCoins, balance, completedSessions, rewardedQuestionIds, sessionScores,
         avatarType, avatarUrl, avatarKey
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   try {
@@ -490,7 +518,7 @@ function saveUser(user) {
     stmt.run(
         user.username,
         user.password,
-        user.paymentPhone || null, // On ajoute le numéro de téléphone
+        user.paymentPhone || null,
         JSON.stringify(user.scores || []),
         user.currentScore || 0,
         user.lastScoreUpdate,
@@ -503,6 +531,7 @@ function saveUser(user) {
         user.consecutiveCorrectAnswers || 0,
         user.coins === undefined ? 100 : user.coins,
         user.competitionCoins || 0,
+        user.balance || 0, // AJOUTER LE CHAMP BALANCE ICI
         JSON.stringify(user.completedSessions || []),
         JSON.stringify(user.rewardedQuestionIds || []),
         JSON.stringify(user.sessionScores || {}),
@@ -1014,6 +1043,7 @@ app.get('/check-session', (req, res) => {
         streakCount: user.streakCount,
         coins: user.coins,
         competitionCoins: user.competitionCoins,
+        balance: user.balance || 0,
         completedSessions: user.completedSessions, // On renvoie la liste telle quelle.
         avatarType: user.avatarType || null,
         avatarUrl: user.avatarUrl || null,
@@ -1145,9 +1175,6 @@ app.post('/reset-session-attempt', (req, res) => {
     res.status(404).json({ error: 'Utilisateur non trouvé.' });
   }
 });
-
-// REMPLACEZ l'intégralité du middleware app.use(['/quiz', '/chat'], ...) par cette version corrigée.
-// REMPLACEZ l'intégralité du middleware app.use(['/quiz', '/chat'], ...) par cette version corrigée.
 app.use(['/quiz', '/chat'], (req, res, next) => {
   // Ce code s'exécute à chaque fois que l'utilisateur navigue vers le quiz ou le chat.
   if (req.session.user) {
@@ -1269,8 +1296,7 @@ app.get('/session-status-stream', (req, res) => {
   };
   req.on('close', cleanup);
 });
-
-app.get('/questions', (req, res) => {
+app.get('/questions', async (req, res) => { // <-- AJOUT DU MOT-CLÉ 'async' ICI
   if (competitionRules.competitionEnded) {
     const timeSinceEnd = Date.now() - new Date(competitionRules.competitionEndTime).getTime();
     const tenMinutes = 10 * 60 * 1000;
@@ -1300,22 +1326,35 @@ app.get('/questions', (req, res) => {
   // On applique les règles de déverrouillage uniquement pour les utilisateurs normaux.
   if (user.username !== 'devtest') {
       
-    // Règle A : Pour les sessions d'entraînement (2 et 3), la précédente doit être complétée.
-    if (sessionNumber === 2 || sessionNumber === 3) {
-      const requiredSession = `session${sessionNumber - 1}`;
-      if (!user.completedSessions || !user.completedSessions.includes(requiredSession)) {
-          console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Prérequis non rempli : ${requiredSession}`);
-          return res.status(403).json({ error: `Accès non autorisé. Vous devez d'abord terminer la ${requiredSession}.` });
+    // Règle 1 : Verrouillage temporel pour la compétition (sessions 4 et plus)
+    if (sessionNumber >= 4) {
+      try {
+        const competitionData = await readJsonCached('competition.json');
+        const startTime = new Date(competitionData.startTime);
+        
+        // Si l'heure actuelle est AVANT l'heure de début de la compétition
+        if (Date.now() < startTime.getTime()) {
+          // On formate l'heure pour l'afficher à l'utilisateur
+          const formattedTime = startTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', timeZone: 'Indian/Antananarivo' });
+          console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Compétition pas encore commencée.`);
+          // On retourne une erreur claire au client
+          return res.status(403).json({ error: `La compétition commence à ${formattedTime}. Accès non autorisé.` });
+        }
+      } catch (e) {
+        console.error('[SERVER] Impossible de lire competition.json, accès bloqué par sécurité:', e);
+        return res.status(500).json({ error: 'Erreur de configuration de la compétition.' });
       }
     }
+
+    // Règle 2 : Verrouillage séquentiel (la session N-1 doit être terminée)
+    // Elle s'applique aux sessions 2, 3, 5, 6, 7, etc. (la 4 est débloquée uniquement par le temps).
+    const isSequentialSession = (sessionNumber > 1 && sessionNumber < 4) || sessionNumber > 4;
     
-    // Règle B : Pour les sessions de compétition APRES la 4 (donc 5 à 10), la précédente doit être complétée.
-    // La session 4 est volontairement exclue de cette vérification de prérequis.
-    else if (sessionNumber > 4) {
+    if (isSequentialSession) {
       const requiredSession = `session${sessionNumber - 1}`;
       if (!user.completedSessions || !user.completedSessions.includes(requiredSession)) {
-          console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Prérequis non rempli : ${requiredSession}`);
-          return res.status(403).json({ error: `Accès non autorisé. Vous devez d'abord terminer la ${requiredSession}.` });
+        console.log(`[SERVER] Accès refusé pour ${user.username} à la ${session}. Prérequis non rempli : ${requiredSession}`);
+        return res.status(403).json({ error: `Accès non autorisé. Vous devez d'abord terminer la ${requiredSession}.` });
       }
     }
   }
@@ -1337,7 +1376,6 @@ app.get('/questions', (req, res) => {
     return res.json(null);
   }
 });
-
 app.post('/submit', (req, res) => {
   if (!isRequestFromActiveLogin(req)) {
     return res.status(409).json({ error: 'Session invalide: un autre appareil est actif. Rechargez et reconnectez-vous.' });
@@ -1642,25 +1680,26 @@ const leaderboardClients = new Map(); // session -> Set(res)
 function computeLeaderboardForSession(session) {
   const leaderboard = users
     .map(user => {
+      // Pour chaque utilisateur, on calcule son score et on vérifie s'il est actif DANS CETTE SESSION PRÉCISE.
       const totalSessionScore = user.scores
         .filter(s => s.session === session)
         .reduce((total, score) => total + score.score, 0);
+      
+      const isActiveInThisSession = activeUsers.has(user.username) && user.activeSession === session;
+
       return {
         username: user.username,
         score: totalSessionScore,
+        isActive: isActiveInThisSession, // On ajoute la nouvelle information ici
         avatarType: user.avatarType || null,
         avatarUrl: user.avatarUrl || null,
         avatarKey: user.avatarKey || null
       };
     })
-    .filter(entry => {
-      const user = users.find(u => u.username === entry.username);
-      if (!user) return false;
-      const isActiveInThisSession = activeUsers.has(user.username) && user.activeSession === session;
-      const hasScoreHistoryInThisSession = user.scores.some(s => s.session === session);
-      return isActiveInThisSession || hasScoreHistoryInThisSession;
-    })
+    // Ensuite, on ne garde que les joueurs qui sont soit actifs, soit qui ont un score dans cette session.
+    .filter(entry => entry.isActive || entry.score > 0 || entry.username === "devtest") // On s'assure de toujours inclure devtest si besoin
     .sort((a, b) => b.score - a.score);
+  
   return leaderboard;
 }
 
@@ -1678,13 +1717,29 @@ app.get('/leaderboard-stream', (req, res) => {
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
   const session = req.query.session || 'session1';
-  const currentUser = req.session.user; // On récupère l'utilisateur de la session en cours
+  const currentUser = req.session.user;
+
+  // ==========================================================
+  // ===           LA CORRECTION DÉFINITIVE EST ICI         ===
+  // ==========================================================
+  // On met à jour le statut de l'utilisateur dès qu'il se connecte au flux,
+  // ce qui garantit que son état est correct AVANT le premier calcul du classement.
+  if (currentUser) {
+    const user = users.find(u => u.username === currentUser.username);
+    if (user && user.activeSession !== session) {
+      console.log(`[Leaderboard Stream] Mise à jour forcée de la session pour ${user.username} vers ${session}.`);
+      user.activeSession = session;
+      activeUsers.set(user.username, Date.now()); // On s'assure qu'il est bien marqué comme actif
+      saveUser(user);
+      broadcastSessionStatus(); // On notifie tout le monde
+    }
+  }
+  // === FIN DE LA CORRECTION DÉFINITIVE ===
 
   if (!leaderboardClients.has(session)) leaderboardClients.set(session, new Set());
   leaderboardClients.get(session).add(res);
 
-  // --- CORRECTION DU DÉLAI D'AFFICHAGE ---
-  // On crée une version "optimiste" du classement pour le tout premier envoi.
+  // L'affichage optimiste reste utile pour la réactivité immédiate côté client.
   let initialLeaderboard = computeLeaderboardForSession(session);
 
   // On vérifie si l'utilisateur qui a fait la requête est déjà dans la liste.
@@ -1695,29 +1750,25 @@ app.get('/leaderboard-stream', (req, res) => {
     if (!userInList) {
       console.log(`[Leaderboard] Affichage optimiste : Ajout de ${currentUser.username} au classement initial de la session ${session}.`);
       
-      // On le trouve dans la base de données principale...
       const userObject = users.find(u => u.username === currentUser.username);
       if (userObject) {
-          // On calcule son score actuel pour cette session
           const scoreForSession = (userObject.scores || [])
               .filter(s => s.session === session)
               .reduce((total, s) => total + s.score, 0);
           
-          // ...et on l'ajoute manuellement à la liste
           initialLeaderboard.push({
               username: userObject.username,
               score: scoreForSession,
+              isActive: true, // On le considère actif par défaut dans l'affichage optimiste
               avatarType: userObject.avatarType || null,
               avatarUrl: userObject.avatarUrl || null,
               avatarKey: userObject.avatarKey || null
           });
           
-          // On retrie la liste pour qu'il soit à la bonne place
           initialLeaderboard.sort((a, b) => b.score - a.score);
       }
     }
   }
-  // --- FIN DE LA CORRECTION ---
 
   // Envoi initial immédiat avec la liste potentiellement corrigée
   const initialData = JSON.stringify({ leaderboard: initialLeaderboard });
@@ -2168,7 +2219,49 @@ app.get('/api/user-errors', (req, res) => {
   }
 });
 
-// --- Routes d'administration ---
+// === NOUVELLES ROUTES POUR LE PORTEFEUILLE (DÉPÔTS) ===
+
+// Route pour qu'un utilisateur soumette une demande de dépôt
+app.post('/api/deposit/request', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Non connecté.' });
+    }
+
+    const { amount, transactionRef } = req.body;
+    const username = req.session.user.username;
+
+    const parsedAmount = parseFloat(amount);
+    if (!parsedAmount || parsedAmount <= 0 || !transactionRef || transactionRef.trim() === '') {
+        return res.status(400).json({ error: 'Le montant et la référence de transaction sont invalides.' });
+    }
+
+    try {
+        const stmt = db.prepare('INSERT INTO deposits (username, amount, transaction_ref) VALUES (?, ?, ?)');
+        stmt.run(username, parsedAmount, transactionRef.trim());
+        res.json({ success: true, message: 'Votre demande de dépôt a été envoyée et est en attente de validation.' });
+    } catch (error) {
+        console.error('[DEPOSIT] Erreur lors de la création de la demande:', error);
+        res.status(500).json({ error: 'Erreur du serveur lors de la soumission de votre demande.' });
+    }
+});
+
+// Route pour que l'utilisateur voie son historique de dépôts
+app.get('/api/deposit/history', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Non connecté.' });
+    }
+    const username = req.session.user.username;
+    try {
+        const stmt = db.prepare("SELECT id, amount, transaction_ref, status, requested_at FROM deposits WHERE username = ? ORDER BY requested_at DESC");
+        const history = stmt.all(username);
+        res.json(history);
+    } catch (error) {
+        console.error('[DEPOSIT] Erreur lors de la récupération de l\'historique:', error);
+        res.status(500).json({ error: 'Impossible de charger l\'historique des transactions.' });
+    }
+});
+
+// --- Middleware d'administration ---
 const protectAdmin = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -2178,6 +2271,138 @@ const protectAdmin = (req, res, next) => {
     if (token === ADMIN_TOKEN) return next();
     return res.status(403).json({ error: 'Accès interdit' });
 };
+
+// Routes d'administration pour les dépôts
+app.get('/admin/deposits/pending', protectAdmin, (req, res) => {
+    try {
+        const stmt = db.prepare(`
+            SELECT d.id, d.username, d.amount, d.transaction_ref, d.requested_at, u.paymentPhone 
+            FROM deposits d 
+            LEFT JOIN users u ON d.username = u.username 
+            WHERE d.status = 'pending' 
+            ORDER BY d.requested_at ASC
+        `);
+        const pendingDeposits = stmt.all();
+        res.json(pendingDeposits);
+    } catch (error) {
+        console.error('[ADMIN] Erreur lors de la récupération des dépôts en attente:', error);
+        res.status(500).json({ error: 'Impossible de charger les dépôts en attente.' });
+    }
+});
+
+app.post('/admin/deposits/:id/approve', protectAdmin, (req, res) => {
+    const depositId = parseInt(req.params.id);
+    
+    if (!depositId || isNaN(depositId)) {
+        return res.status(400).json({ error: 'ID de dépôt invalide.' });
+    }
+    
+    try {
+        let updateResult;
+
+        // Commencer une transaction pour garantir l'intégrité des données
+        const transaction = db.transaction(() => {
+            const deposit = db.prepare("SELECT * FROM deposits WHERE id = ? AND status = 'pending'").get(depositId);
+            if (!deposit) {
+                throw new Error('Demande non trouvée ou déjà traitée.');
+            }
+
+            const user = db.prepare("SELECT balance FROM users WHERE username = ?").get(deposit.username);
+            if (!user) {
+                throw new Error(`Utilisateur '${deposit.username}' non trouvé pour le dépôt.`);
+            }
+
+            const newBalance = (user.balance || 0) + deposit.amount;
+
+            // Mettre à jour la base de données
+            db.prepare("UPDATE users SET balance = ? WHERE username = ?").run(newBalance, deposit.username);
+            db.prepare("UPDATE deposits SET status = 'approved', processed_at = CURRENT_TIMESTAMP WHERE id = ?").run(depositId);
+            
+            // On stocke le résultat pour l'utiliser après la transaction
+            updateResult = { 
+                username: deposit.username, 
+                amount: deposit.amount, 
+                newBalance: newBalance 
+            };
+        });
+        
+        // Exécuter la transaction
+        transaction();
+
+        // ==========================================================
+        // ==                 CORRECTION APPLIQUÉE ICI             ==
+        // ==========================================================
+        // 1. Mettre à jour le tableau 'users' en mémoire pour que les
+        //    prochaines requêtes de l'utilisateur aient la bonne information.
+        if (updateResult) {
+            const userInMemory = users.find(u => u.username === updateResult.username);
+            if (userInMemory) {
+                userInMemory.balance = updateResult.newBalance;
+                console.log(`[ADMIN] Solde en mémoire mis à jour pour ${updateResult.username}: ${updateResult.newBalance} Ar`);
+            }
+
+            // 2. Notifier l'utilisateur en temps réel via SSE
+            if (userNotificationClients.has(updateResult.username)) {
+                const clientRes = userNotificationClients.get(updateResult.username);
+                try {
+                    clientRes.write('event: balance-update\n');
+                    clientRes.write(`data: ${JSON.stringify({ newBalance: updateResult.newBalance, amount: updateResult.amount })}\n\n`);
+                    console.log(`[NOTIF] Notification de solde envoyée à ${updateResult.username}.`);
+                } catch (e) {
+                    console.warn(`[NOTIF] Impossible d'envoyer la notification de solde à ${updateResult.username}.`);
+                }
+            }
+        }
+        
+        res.json({ 
+            success: true, 
+            message: `Dépôt de ${updateResult.amount} Ar approuvé pour ${updateResult.username}.`
+        });
+        
+    } catch (error) {
+        console.error('[ADMIN] Erreur lors de l\'approbation du dépôt:', error);
+        res.status(400).json({ error: error.message });
+    }
+});
+
+app.post('/admin/deposits/:id/reject', protectAdmin, (req, res) => {
+    const depositId = parseInt(req.params.id);
+    const { reason } = req.body;
+    
+    if (!depositId || isNaN(depositId)) {
+        return res.status(400).json({ error: 'ID de dépôt invalide.' });
+    }
+    
+    try {
+        // Vérifier que le dépôt existe et est en attente
+        const getDepositStmt = db.prepare('SELECT username, amount, status FROM deposits WHERE id = ?');
+        const deposit = getDepositStmt.get(depositId);
+        
+        if (!deposit) {
+            return res.status(404).json({ error: 'Dépôt non trouvé.' });
+        }
+        
+        if (deposit.status !== 'pending') {
+            return res.status(400).json({ error: 'Ce dépôt a déjà été traité.' });
+        }
+        
+        // Marquer le dépôt comme rejeté
+        const updateStmt = db.prepare('UPDATE deposits SET status = ?, processed_at = ?, rejection_reason = ? WHERE id = ?');
+        updateStmt.run('rejected', new Date().toISOString(), reason || 'Aucune raison spécifiée', depositId);
+        
+        console.log(`[ADMIN] Dépôt rejeté: ${deposit.amount} Ar pour ${deposit.username}. Raison: ${reason || 'Aucune raison'}`);
+        res.json({ 
+            success: true, 
+            message: `Dépôt de ${deposit.amount} Ar rejeté pour ${deposit.username}.` 
+        });
+        
+    } catch (error) {
+        console.error('[ADMIN] Erreur lors du rejet du dépôt:', error);
+        res.status(500).json({ error: 'Erreur lors du rejet du dépôt.' });
+    }
+});
+
+// --- Routes d'administration ---
 
 // NOUVEAU : Route pour que l'admin puisse éditer et sauvegarder le cours actuel
 app.post('/admin/course', protectAdmin, async (req, res) => {
@@ -2974,6 +3199,9 @@ app.get('/history', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 app.get('/settings', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+app.get('/wallet', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 

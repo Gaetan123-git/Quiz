@@ -162,5 +162,21 @@
     "disconnected": "Connexion interrompue",
     "reconnectFailed": "Impossible de se reconnecter",
     "retry": "Réessayer"
+  },
+  "wallet": {
+    "title": "Mon Portefeuille",
+    "currentBalance": "Solde Actuel",
+    "depositTitle": "Faire un dépôt",
+    "depositInstruction1": "1. Envoyez votre paiement par Mobile Money au numéro :",
+    "depositInstruction2": "2. Après le paiement, remplissez et validez le formulaire ci-dessous.",
+    "submitDeposit": "Soumettre pour validation",
+    "historyTitle": "Historique des Transactions",
+    "historyLoading": "Chargement de l'historique...",
+    "noTransactions": "Aucune transaction pour le moment.",
+    "status": {
+      "pending": "En attente",
+      "approved": "Approuvé",
+      "rejected": "Rejeté"
+    }
   }
 }

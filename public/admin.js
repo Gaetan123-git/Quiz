@@ -124,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const courseEditContentTextarea = document.getElementById('course-edit-content');
     const saveCourseBtn = document.getElementById('save-course-btn');
     const courseSaveStatus = document.getElementById('course-save-status');
+    const editCourseContentBtn = document.getElementById('edit-course-content-btn');
     // NOUVEAU : Sélecteurs pour l'import/export en masse
     const downloadAllSessionsBtn = document.getElementById('download-all-sessions-btn');
     const importQuestionsFile = document.getElementById('import-questions-file');
@@ -142,6 +143,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (editPromptCourseBtn) {
         editPromptCourseBtn.addEventListener('click', () => toggleTextarea(promptCourseTextarea, editPromptCourseBtn));
+    }
+
+    // ---- TOGGLE AFFICHAGE COURS ----
+    if (editCourseContentBtn) {
+        editCourseContentBtn.addEventListener('click', () => toggleTextarea(courseEditContentTextarea, editCourseContentBtn));
     }
 
     // ---- AUTHENTIFICATION ----
@@ -1349,10 +1355,166 @@ function hideStatusMessage() {
                 uploadAllSessionsBtn.disabled = false;
                 importQuestionsFile.value = ''; // Réinitialise le champ de fichier
                 massEditStatus.classList.remove('animate-pulse');
-                 setTimeout(() => { massEditStatus.textContent = ''; }, 8000);
+                setTimeout(() => { massEditStatus.textContent = ''; }, 8000);
             }
         });
     }
+
+// ---- GESTION DES DÉPÔTS ----
+const refreshDepositsBtn = document.getElementById('refresh-deposits-btn');
+const depositsList = document.getElementById('deposits-list');
+const depositsCount = document.getElementById('deposits-count');
+const depositsStatus = document.getElementById('deposits-status');
+
+async function loadPendingDeposits() {
+    try {
+        depositsStatus.textContent = '';
+        depositsList.innerHTML = '<p class="text-gray-400">Chargement...</p>';
+
+        const response = await fetch('/admin/deposits/pending', {
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem(API_TOKEN_KEY)}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Impossible de charger les dépôts');
+        }
+
+        const deposits = await response.json();
+
+        depositsCount.textContent = `${deposits.length} dépôt(s) en attente`;
+
+        if (deposits.length === 0) {
+            depositsList.innerHTML = '<p class="text-gray-400">Aucun dépôt en attente.</p>';
+            return;
+        }
+
+        depositsList.innerHTML = deposits.map(deposit => {
+            const date = new Date(deposit.requested_at);
+            const formattedDate = date.toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            return `
+                <div class="bg-gray-700 p-4 rounded-lg border border-gray-600">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-semibold text-white">${deposit.username}</h4>
+                            <p class="text-sm text-gray-300">Téléphone: ${deposit.paymentPhone || 'Non renseigné'}</p>
+                            <p class="text-sm text-gray-400">Demandé le ${formattedDate}</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-bold text-yellow-400">${deposit.amount} Ar</div>
+                            <div class="text-sm text-gray-400">Réf: ${deposit.transaction_ref}</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="approveDeposit(${deposit.id})" 
+                                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+                            Approuver
+                        </button>
+                        <button onclick="rejectDeposit(${deposit.id})" 
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+                            Rejeter
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+    } catch (error) {
+        console.error('Erreur lors du chargement des dépôts:', error);
+        depositsStatus.textContent = `Erreur: ${error.message}`;
+        depositsStatus.className = 'text-red-500 text-sm mt-4 h-5';
+        depositsList.innerHTML = '<p class="text-red-400">Erreur lors du chargement.</p>';
+    }
+}
+
+window.approveDeposit = async function(depositId) {
+    if (!confirm('Êtes-vous sûr de vouloir approuver ce dépôt ?')) {
+        return;
+    }
+
+    try {
+        depositsStatus.textContent = 'Approbation en cours...';
+        depositsStatus.className = 'text-yellow-500 text-sm mt-4 h-5';
+
+        const response = await fetch(`/admin/deposits/${depositId}/approve`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem(API_TOKEN_KEY)}`
+            }
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            depositsStatus.textContent = result.message;
+            depositsStatus.className = 'text-green-500 text-sm mt-4 h-5';
+            // Recharger la liste
+            setTimeout(() => loadPendingDeposits(), 1000);
+        } else {
+            throw new Error(result.error);
+        }
+
+    } catch (error) {
+        console.error('Erreur lors de l\'approbation:', error);
+        depositsStatus.textContent = `Erreur: ${error.message}`;
+        depositsStatus.className = 'text-red-500 text-sm mt-4 h-5';
+    }
+
+    setTimeout(() => { depositsStatus.textContent = ''; }, 5000);
+};
+
+window.rejectDeposit = async function(depositId) {
+    const reason = prompt('Raison du rejet (optionnel):');
+    if (reason === null) return; // Annulé
+
+    if (!confirm('Êtes-vous sûr de vouloir rejeter ce dépôt ?')) {
+        return;
+    }
+
+    try {
+        depositsStatus.textContent = 'Rejet en cours...';
+        depositsStatus.className = 'text-yellow-500 text-sm mt-4 h-5';
+
+        const response = await fetch(`/admin/deposits/${depositId}/reject`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${sessionStorage.getItem(API_TOKEN_KEY)}`
+            },
+            body: JSON.stringify({ reason: reason || 'Aucune raison spécifiée' })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            depositsStatus.textContent = result.message;
+            depositsStatus.className = 'text-green-500 text-sm mt-4 h-5';
+            // Recharger la liste
+            setTimeout(() => loadPendingDeposits(), 1000);
+        } else {
+            throw new Error(result.error);
+        }
+
+    } catch (error) {
+        console.error('Erreur lors du rejet:', error);
+        depositsStatus.textContent = `Erreur: ${error.message}`;
+        depositsStatus.className = 'text-red-500 text-sm mt-4 h-5';
+    }
+
+    setTimeout(() => { depositsStatus.textContent = ''; }, 5000);
+};
+
+if (refreshDepositsBtn) {
+    refreshDepositsBtn.addEventListener('click', loadPendingDeposits);
+}
 
     // Lancement initial
     if (sessionStorage.getItem(API_TOKEN_KEY)) {
@@ -1366,5 +1528,6 @@ function hideStatusMessage() {
         loadAdminBooks();
         loadAndDisplayThemes();
         loadPrompts();
+        loadPendingDeposits(); // Charger les dépôts
     }
 });

@@ -156,13 +156,12 @@
   "network": {
     "online": "Online",
     "offline": "Offline",
-    "connectionLost": "Connection lost",
-    "tryingReconnect": "Trying to reconnect...",
-    "reconnected": "Connection restored!",
-    "reconnectedMobile": "Connection restored, keep it up!",
-    "disconnected": "Connection interrupted",
-    "reconnectFailed": "Unable to reconnect",
-    "retry": "Retry"
+    "titleOffline": "Connection Lost",
+    "messageOffline": "You appear to be offline. Your actions will be synced upon reconnection.",
+    "titleOnline": "Connection Restored!",
+    "messageOnline": "You are back online. Happy playing!",
+    "titleRetrying": "Syncing...",
+    "messageRetrying": "Attempting to resend {{count}} pending action(s)."
   },
   "wallet": {
     "title": "My Wallet",

@@ -1,24 +1,27 @@
 {
-  "maxWinners": 4,
+  "maxWinners": 2,
   "competitionEnded": false,
   "competitionEndTime": null,
-  "price": 1000,
+  "price": 500,
   "prizes": [
     {
       "rank": 1,
-      "amount": 0
+      "amount": 40000
     },
     {
       "rank": 2,
-      "amount": 0
+      "amount": 20000
+    }
+  ],
+  "prizeMode": "manual",
+  "percentages": [
+    {
+      "rank": 1,
+      "percentage": 0
     },
     {
-      "rank": 3,
-      "amount": 0
-    },
-    {
-      "rank": 4,
-      "amount": 0
+      "rank": 2,
+      "percentage": 0
     }
   ]
 }

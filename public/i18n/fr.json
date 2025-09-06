@@ -156,13 +156,12 @@
   "network": {
     "online": "En ligne",
     "offline": "Hors ligne",
-    "connectionLost": "Connexion perdue",
-    "tryingReconnect": "Tentative de reconnexion...",
-    "reconnected": "Connexion rétablie !",
-    "reconnectedMobile": "Connexion rétablie, bonne continuation !",
-    "disconnected": "Connexion interrompue",
-    "reconnectFailed": "Impossible de se reconnecter",
-    "retry": "Réessayer"
+    "titleOffline": "Connexion Perdue",
+    "messageOffline": "Vous semblez être hors ligne. Vos actions seront synchronisées au retour de la connexion.",
+    "titleOnline": "Connexion Rétablie !",
+    "messageOnline": "Vous êtes de nouveau en ligne. Bonne continuation !",
+    "titleRetrying": "Synchronisation...",
+    "messageRetrying": "Tentative de renvoi de {{count}} action(s) en attente."
   },
   "wallet": {
     "title": "Mon Portefeuille",
@@ -179,6 +178,11 @@
       "approved": "Approuvé",
       "rejected": "Rejeté"
     },
-    "returnToMenu": "Retour au menu"
+    "returnToMenu": "Retour au menu",
+    "withdrawalTitle": "Faire un retrait",
+    "withdrawalDescription": "Demandez le retrait de vos gains. Le paiement sera effectué par Mobile Money sous 24h ouvrées.",
+    "submitWithdrawal": "Soumettre la demande de retrait",
+    "winningsBalance": "Solde des Gains (Retirable)",
+    "depositBalance": "Solde de Dépôt (Pour jouer)"
   }
 }

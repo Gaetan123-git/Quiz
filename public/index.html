@@ -506,36 +506,89 @@
             </div>
         </div>
 
-        <!-- NOUVELLE PAGE PORTEFEUILLE -->
+        <!-- NOUVELLE PAGE PORTEFEUILLE (V2) -->
         <div id="wallet-page" class="view-section" style="display: none;">
             <div class="page-card">
                 <h1 class="page-title" data-i18n="wallet.title">Mon Portefeuille</h1>
                 
-                <!-- Section Solde Actuel -->
-                <div class="wallet-balance-card">
-                    <span data-i18n="wallet.currentBalance">Solde Actuel</span>
-                    <strong id="wallet-balance-display">0 Ar</strong>
-                </div>
-
-                <!-- Section Dépôt -->
-                <div class="settings-group">
-                    <h2 class="card-title" data-i18n="wallet.depositTitle">Faire un dépôt</h2>
-                    <div class="deposit-instructions">
-                        <p>
-                            <span data-i18n="wallet.depositInstruction1">1. Envoyez votre paiement par Mobile Money au numéro :</span> 
-                            <strong><span id="payment-phone-number">...</span> (Nom: Francial)</strong>
-                        </p>
-                        <p data-i18n="wallet.depositInstruction2">2. Après le paiement, remplissez et validez le formulaire ci-dessous.</p>
+                <!-- NOUVEAU : Affichage des soldes en cartes côte à côte (ORDRE CORRIGÉ) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Solde de Dépôt (Pour jouer) -->
+                    <div class="wallet-balance-card bg-gradient-blue">
+                        <span data-i18n="wallet.depositBalance">Solde de Dépôt (Pour jouer)</span>
+                        <strong id="deposit-balance-display">0 Ar</strong>
                     </div>
-                    <form id="deposit-request-form" class="wallet-form">
-                        <input id="deposit-amount" type="number" placeholder="Montant envoyé (Ar)" required>
-                        <input id="deposit-ref" type="text" placeholder="Référence de la transaction (ID)" required>
-                        <button type="submit" class="button-primary" data-i18n="wallet.submitDeposit">Soumettre pour validation</button>
-                    </form>
+                    <!-- Solde des Gains (Retirable) -->
+                    <div class="wallet-balance-card bg-gradient-green">
+                        <span data-i18n="wallet.winningsBalance">Solde des Gains (Retirable)</span>
+                        <strong id="winnings-balance-display">0 Ar</strong>
+                    </div>
                 </div>
 
-                <!-- Section Historique -->
-                <div class="settings-group">
+                <!-- NOUVEAU : Grille pour les actions de dépôt et de retrait -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Section Dépôt -->
+                    <div class="settings-group">
+                        <h2 class="card-title flex items-center gap-2" data-i18n="wallet.depositTitle">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-6"/><path d="m15 13-3 3-3-3"/><path d="M20.55 10.29A9 9 0 1 0 3.45 10.29"/><path d="m12 2 3 5h-6l3-5z"/></svg>
+                            Faire un dépôt
+                        </h2>
+                        <div class="deposit-instructions">
+                            <p>
+                                <span data-i18n="wallet.depositInstruction1">1. Envoyez votre paiement par Mobile Money au numéro :</span> 
+                                <strong><span id="payment-phone-number">...</span> (Nom: Francial)</strong>
+                            </p>
+                            <p data-i18n="wallet.depositInstruction2">2. Après le paiement, remplissez et validez le formulaire ci-dessous.</p>
+                        </div>
+                        <form id="deposit-request-form" class="wallet-form">
+                            <input id="deposit-amount" type="number" placeholder="Montant envoyé (Ar)" required>
+                            <input id="deposit-ref" type="text" placeholder="Référence de la transaction (ID)" required>
+                            <button type="submit" class="button-primary" data-i18n="wallet.submitDeposit">Soumettre pour validation</button>
+                        </form>
+                    </div>
+
+                    <!-- Section Retrait -->
+                    <!-- Section Retrait -->
+                    <div class="settings-group">
+                        <h2 class="card-title flex items-center gap-2" data-i18n="wallet.withdrawalTitle">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6"/><path d="m15 11-3-3-3 3"/><path d="M3.45 13.71A9 9 0 1 0 20.55 13.71"/><path d="m12 22 3-5h-6l3 5z"/></svg>
+                            Faire un retrait
+                        </h2>
+
+                        <!-- ========================================================== -->
+                        <!-- ===        NOUVELLE SECTION D'AFFICHAGE DU NUMÉRO        === -->
+                        <!-- ========================================================== -->
+                        <div id="phone-display-container" class="mb-4">
+                            <p class="settings-description">
+                                Le retrait sera envoyé au numéro de paiement suivant :
+                            </p>
+                            <div class="flex items-center gap-4 p-3 bg-gray-700 rounded-lg">
+                                <strong id="withdrawal-phone-display" class="text-lg text-cyan-400">Chargement...</strong>
+                                <button id="edit-phone-btn" class="ml-auto text-sm underline hover:text-white">Modifier</button>
+                            </div>
+                        </div>
+
+                        <!-- ========================================================== -->
+                        <!-- === NOUVEAU FORMULAIRE DE MODIFICATION (caché) === -->
+                        <!-- ========================================================== -->
+                        <div id="edit-phone-container" class="hidden mb-4 p-4 border border-dashed border-gray-600 rounded-lg">
+                             <p class="settings-description text-sm">Entrez votre nouveau numéro de téléphone Mobile Money.</p>
+                             <div class="flex items-center gap-3 mt-2">
+                                <input id="new-phone-input" type="tel" placeholder="Nouveau numéro" class="w-full p-2 rounded bg-gray-900 border border-gray-600">
+                                <button id="save-phone-btn" class="button-primary whitespace-nowrap">Sauvegarder</button>
+                                <button id="cancel-edit-phone-btn" class="button-secondary">Annuler</button>
+                             </div>
+                        </div>
+
+                        <form id="withdrawal-request-form" class="wallet-form">
+                            <input id="withdrawal-amount" type="number" placeholder="Montant à retirer (Ar)" required>
+                            <button type="submit" class="button-primary" data-i18n="wallet.submitWithdrawal">Soumettre la demande</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Section Historique (prend toute la largeur) -->
+                <div class="settings-group mt-8">
                     <h2 class="card-title" data-i18n="wallet.historyTitle">Historique des Transactions</h2>
                     <div id="wallet-history-list" class="scrollable-list">
                         <p data-i18n="wallet.historyLoading">Chargement de l'historique...</p>

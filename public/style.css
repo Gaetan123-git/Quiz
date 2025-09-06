@@ -2799,115 +2799,125 @@ main.main-container, .container {
 }
 
 /* ========================================================== */
-/* ==                STYLES PORTEFEUILLE                   == */
+/* == STYLES AMÉLIORÉS POUR LE PORTEFEUILLE (V2) == */
 /* ========================================================== */
-
-/* Carte d'affichage du solde */
+/* Carte d'affichage du solde - Style de base */
 .wallet-balance-card {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-  color: white;
-  padding: 1.5rem;
-  border-radius: var(--border-radius);
-  text-align: center;
-  margin-bottom: 2rem;
-  box-shadow: var(--card-shadow);
+color: white;
+padding: 1.5rem;
+border-radius: var(--border-radius, 12px);
+text-align: center;
+box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+border: 1px solid rgba(255, 255, 255, 0.1);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
+.wallet-balance-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+/* Dégradé vert pour les gains */
+.wallet-balance-card.bg-gradient-green {
+background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+/* Dégradé bleu pour le solde de dépôt */
+.wallet-balance-card.bg-gradient-blue {
+background: linear-gradient(135deg, var(--color-primary), #34495e);
+}
 .wallet-balance-card span {
-  display: block;
-  font-size: 0.9rem;
-  opacity: 0.9;
-  margin-bottom: 0.5rem;
+display: block;
+font-size: 1rem;
+font-weight: 600;
+opacity: 0.9;
+margin-bottom: 0.5rem;
 }
-
 .wallet-balance-card strong {
-  font-size: 2rem;
-  font-weight: 700;
+font-size: 2.25rem;
+font-weight: 700;
+line-height: 1;
 }
-
 /* Instructions de dépôt */
 .deposit-instructions {
-  background-color: rgba(255, 201, 60, 0.1);
-  border-left: 4px solid var(--color-accent);
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  border-radius: 0 var(--button-radius) var(--button-radius) 0;
+background-color: rgba(255, 201, 60, 0.1);
+border-left: 4px solid var(--color-accent);
+padding: 1rem;
+margin-bottom: 1.5rem;
+border-radius: 0 var(--button-radius) var(--button-radius) 0;
 }
-
-.deposit-instructions p {
-  margin: 0.5rem 0;
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-.deposit-instructions strong {
-  color: var(--color-primary);
-}
-
+.deposit-instructions p { margin: 0.5rem 0; font-size: 0.9rem; line-height: 1.4; }
+.deposit-instructions strong { color: var(--color-primary); }
 /* Formulaire de portefeuille */
 .wallet-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+display: flex;
+flex-direction: column;
+gap: 1rem;
 }
-
 .wallet-form input {
-  padding: 0.75rem;
-  border: 2px solid var(--color-light-border);
-  border-radius: var(--button-radius);
-  font-size: 1rem;
-  background-color: var(--color-light-surface);
-  color: var(--color-light-text);
-  transition: border-color var(--transition-speed);
+padding: 0.75rem;
+border-radius: var(--button-radius);
+font-size: 1rem;
+background-color: var(--bg-color);
+border: 1px solid var(--border-color);
+color: var(--text-color);
+transition: border-color var(--transition-speed);
 }
-
-.wallet-form input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-}
-
-/* Liste d'historique scrollable */
-.scrollable-list {
-  max-height: 300px;
-  overflow-y: auto;
-  border: 1px solid var(--color-light-border);
-  border-radius: var(--border-radius);
-  padding: 1rem;
-  background-color: var(--color-light-surface);
-}
-
+.wallet-form input:focus { outline: none; border-color: var(--color-primary); }
+/* Historique des transactions amélioré */
 .transaction-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--color-light-border);
+display: grid;
+grid-template-columns: 40px 1fr auto;
+align-items: center;
+gap: 1rem;
+padding: 0.75rem 0;
+border-bottom: 1px solid var(--border-color);
+transition: background-color 0.2s ease;
+}
+.transaction-item:last-child { border-bottom: none; }
+.transaction-item:hover { background-color: rgba(255,255,255,0.05); }
+.transaction-icon {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.transaction-icon.deposit { background-color: rgba(46, 204, 113, 0.1); color: #2ecc71; }
+.transaction-icon.withdrawal { background-color: rgba(231, 76, 60, 0.1); color: #e74c3c; }
+.transaction-icon.competition_fee { background-color: rgba(243, 156, 18, 0.1); color: #f39c12; }
+.transaction-details .title { font-weight: 600; color: var(--text-color); }
+.transaction-details .ref { font-size: 0.8rem; color: var(--muted-color); }
+.transaction-meta { text-align: right; }
+.transaction-meta .amount { font-weight: 700; font-size: 1.1em; }
+.transaction-meta .amount.positive { color: var(--color-success); }
+.transaction-meta .amount.negative { color: var(--color-error); }
+.transaction-meta .date { font-size: 0.8rem; color: var(--muted-color); }
+/* ========================================================== */
+/* == NOUVEAU : Styles pour les badges de statut dans l'historique == */
+/* ========================================================== */
+.transaction-status-badge {
+padding: 4px 10px;
+border-radius: 9999px; /* pour un effet "pilule" */
+font-size: 0.75rem;
+font-weight: 700;
+text-transform: uppercase;
+margin-top: 4px;
+display: inline-block;
+}
+.status-pending { background-color: rgba(241, 196, 15, 0.2); color: #f1c40f; }
+.status-approved { background-color: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+.status-rejected { background-color: rgba(231, 76, 60, 0.2); color: #e74c3c; }
+
+.rejection-reason {
+    font-size: 0.75rem;
+    color: var(--color-error);
+    background-color: rgba(231, 76, 60, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    font-style: italic;
 }
 
-.transaction-item:last-child {
-  border-bottom: none;
-}
-
-.transaction-info {
-  flex: 1;
-}
-
-.transaction-amount {
-  font-weight: 600;
-  color: var(--color-primary);
-}
-
-.transaction-ref {
-  font-size: 0.8rem;
-  color: var(--color-light-muted);
-  margin-top: 0.25rem;
-}
-
-.transaction-date {
-  font-size: 0.8rem;
-  color: var(--color-light-muted);
-}
-
+/* Statuts des transactions */
 .transaction-status {
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
@@ -2915,37 +2925,9 @@ main.main-container, .container {
   font-weight: 600;
   text-transform: uppercase;
 }
-
-.status-pending {
-  background-color: rgba(255, 201, 60, 0.2);
-  color: #b8860b;
-}
-
-.status-approved {
-  background-color: rgba(50, 255, 126, 0.2);
-  color: #16a34a;
-}
-
-.status-rejected {
-  background-color: rgba(255, 107, 129, 0.2);
-  color: #dc2626;
-}
-
-/* Adaptations pour le thème sombre */
-[data-theme="dark"] .wallet-form input {
-  background-color: var(--color-dark-surface);
-  border-color: var(--color-dark-border);
-  color: var(--color-dark-text);
-}
-
-[data-theme="dark"] .scrollable-list {
-  background-color: var(--color-dark-surface);
-  border-color: var(--color-dark-border);
-}
-
-[data-theme="dark"] .transaction-item {
-  border-bottom-color: var(--color-dark-border);
-}
+.status-pending { background-color: rgba(241, 196, 15, 0.2); color: #f1c40f; }
+.status-approved { background-color: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+.status-rejected { background-color: rgba(231, 76, 60, 0.2); color: #e74c3c; }
 
 [data-theme="dark"] .transaction-ref,
 [data-theme="dark"] .transaction-date {

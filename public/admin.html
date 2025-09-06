@@ -76,6 +76,10 @@
                      <div id="prize-inputs-container" class="mt-4 space-y-2 hidden">
                          <!-- Les champs de saisie pour les prix seront injectés ici par JavaScript -->
                      </div>
+                     <!-- NOUVEAU : Affichage du total des pourcentages -->
+                     <div id="percentage-total-container" class="mt-2 hidden">
+                        <h4 id="percentage-total-display" class="text-sm font-bold">Total des pourcentages : 0%</h4>
+                     </div>
                      <p id="winners-update-status" class="text-sm mt-3 h-5"></p>
                 </div>
                 <!-- AJOUTEZ CE BLOC JUSTE APRÈS LE DIV QUI CONTIENT "winners-update-status" -->
@@ -137,6 +141,24 @@
             </div>
             
             <p id="deposits-status" class="text-sm mt-4 h-5"></p>
+        </div>
+
+        <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+            <h2 class="text-xl font-semibold text-red-400 mb-4">Gestion des Retraits</h2>
+            <p class="text-sm text-gray-400 mb-4">Gérez les demandes de retrait des utilisateurs. Approuvez une fois le virement manuel effectué.</p>
+            
+            <div class="mb-4">
+                <button id="refresh-withdrawals-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                    🔄 Actualiser la liste
+                </button>
+                <span id="withdrawals-count" class="ml-4 text-sm text-gray-400"></span>
+            </div>
+            
+            <div id="withdrawals-list" class="space-y-3">
+                <p class="text-gray-400">Chargement des retraits en attente...</p>
+            </div>
+            
+            <p id="withdrawals-status" class="text-sm mt-4 h-5"></p>
         </div>
 
         <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
@@ -317,6 +339,39 @@
                     Purger l'historique des questions
                 </button>
                 <p id="history-reset-status" class="text-sm mt-3 h-5"></p>
+            </div>
+
+            <!-- ========================================================== -->
+            <!-- ===           NOUVELLE SECTION AJOUTÉE ICI             === -->
+            <!-- ========================================================== -->
+            <div class="mt-6 border-t border-red-900 pt-4">
+                <h3 class="text-lg font-semibold text-orange-400 mb-2">Sauvegarde et Restauration des Utilisateurs</h3>
+                <p class="text-xs text-gray-400 mb-4">
+                    Utilisez ces outils pour exporter (sauvegarder) ou importer (restaurer) l'intégralité des données de tous les utilisateurs. C'est une étape cruciale avant toute mise à jour majeure.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Section Exportation -->
+                    <div>
+                        <h4 class="text-md font-semibold mb-2">1. Exporter les données</h4>
+                        <p class="text-xs text-gray-400 mb-3">Téléchargez un fichier JSON unique contenant tous les utilisateurs et leur progression.</p>
+                        <button id="download-users-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full">
+                            Télécharger la sauvegarde
+                        </button>
+                    </div>
+
+                    <!-- Section Importation -->
+                    <div>
+                        <h4 class="text-md font-semibold mb-2">2. Importer une sauvegarde</h4>
+                        <p class="text-xs text-gray-400 mb-3">Choisissez un fichier de sauvegarde JSON pour restaurer les données. Attention, cela écrasera les données existantes pour les utilisateurs concernés.</p>
+                        <div class="flex items-center gap-3">
+                            <input type="file" id="import-users-file" accept=".json" class="flex-grow p-2 text-sm text-gray-300 bg-gray-700 rounded-lg border border-gray-600 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-600 file:text-gray-200 hover:file:bg-gray-500">
+                            <button id="upload-users-btn" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-3 rounded-lg">
+                                Importer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <p id="users-mass-edit-status" class="text-sm mt-4 h-5"></p>
             </div>
         </div>
 

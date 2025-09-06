@@ -261,30 +261,24 @@ async function validateAndRefineQuestions(questions, theme, courseContent) {
   console.log(`[Gemini] Lancement de la phase de validation et de correction pour ${questions.length} questions...`);
   
   const validationPrompt = `
-    Tu es un expert en pédagogie et un excellent professeur de français. Ta mission est de valider et de réécrire un lot de questions de quiz générées par une autre IA pour qu'elles soient parfaites pour un apprenant.
-
-    ### CONTEXTE
-    - Thème original du quiz : "${theme}"
-    - Contenu du cours qui sert de RÉFÉRENCE THÉMATIQUE :
-    --- DEBUT DU COURS ---
-    ${courseContent}
-    --- FIN DU COURS ---
-
-    ### LOT DE QUESTIONS À VÉRIFIER ET CORRIGER
+    Tu es un contrôleur qualité extrêmement rigoureux pour un quiz de langue française. Ton unique mission est de filtrer et de perfectionner une liste de questions générées par une IA.
+    
+    Voici la liste de questions brutes à analyser :
     ${JSON.stringify(questions, null, 2)}
-
-    ### TES INSTRUCTIONS STRICTES (ORDRE DE PRIORITÉ)
-    1.  **AUTONOMIE DE LA QUESTION (LE PLUS IMPORTANT)** : Chaque question doit être compréhensible et répondable par elle-même, SANS avoir besoin de se souvenir du cours. **REJÈTE** les questions qui font référence à "l'exemple 1", "le texte ci-dessus", etc.
-    2.  **PERTINENCE THÉMATIQUE** : Chaque question doit tester un concept lié au thème général du cours. Si une question est hors-sujet, rejette-la.
-    3.  **REFORMULATION OBLIGATOIRE** : Si une question est pertinente mais mal formulée (ex: "Dans l'exemple 3..."), REFORMULE-LA pour la rendre autonome (ex: "Quel temps décrit une action soudaine dans le passé ?").
-    4.  **QUALITÉ PÉDAGOGIQUE** : Corrige toute erreur grammaticale. La \`correctAnswer\` doit correspondre EXACTEMENT à une des \`options\`.
-    5.  **VÉRIFICATION DES OPTIONS (TRÈS IMPORTANT)** : Le tableau \`options\` doit contenir exactement 4 chaînes de caractères DISTINCTES. S'il y a des doublons (comme deux fois "j'étais"), tu DOIS remplacer l'option en double par un nouveau distracteur pertinent.
-    6.  **LANGUE DES EXPLICATIONS** : L'explication (\`explanation\`) DOIT TOUJOURS être rédigée **en français**.
-    7.  **FORMATAGE FINAL** : Renvoie UNIQUEMENT un tableau JSON valide contenant les questions que tu as validées et/ou reformulées.
-
-    L'objectif final est d'avoir un quiz qui teste la maîtrise du thème, pas la mémorisation du cours.
+    
+    Tu dois examiner chaque question une par une et ne conserver **QUE** celles qui respectent **ABSOLUMENT TOUS** les critères suivants. Si une question échoue à un seul critère, tu la supprimes de la liste finale.
+    
+    ### CHECKLIST DE VALIDATION IMPITOYABLE :
+    1.  **Est-ce une vraie question ?** Le champ \`text\` doit poser une question qui a du sens. Une question comme "Lequel de ces mots est correct ?" est valide.
+    2.  **Y a-t-il exactement 4 options ?** Le tableau \`options\` doit contenir **strictement 4** chaînes de caractères. Ni plus, ni moins.
+    3.  **Les options sont-elles uniques ?** Il ne doit y avoir aucun doublon dans le tableau \`options\`. "Téléphone" et "téléphone" sont des doublons.
+    4.  **La bonne réponse est-elle valide ?** La valeur de \`correctAnswer\` doit être présente et correspondre **exactement** à l'une des 4 options.
+    5.  **L'explication est-elle pertinente ?** Le champ \`explanation\` doit être une explication claire et en français.
+    6.  **La question est-elle autonome ?** La question ne doit pas faire référence à "l'exemple ci-dessus" ou au "texte du cours". Elle doit être compréhensible seule. Si elle ne l'est pas, tu peux la reformuler pour la rendre autonome, mais seulement si elle est de haute qualité.
+    
+    Après ton analyse, renvoie UNIQUEMENT un tableau JSON valide contenant les questions qui ont passé tous les contrôles. Ne renvoie rien d'autre.
   `;
-
+  
   try {
     const refinedQuestions = await generateContentWithRetries(validationPrompt, { expectJson: true });
     

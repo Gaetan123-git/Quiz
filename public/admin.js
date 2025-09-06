@@ -54,7 +54,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const prizeInputsContainer = document.getElementById('prize-inputs-container');
     const labelModeAutomatic = document.getElementById('label-mode-automatic');
     const labelModeManual = document.getElementById('label-mode-manual');
+    // NOUVEAU : Sélecteur pour l'affichage du total des pourcentages
+    const percentageTotalContainer = document.getElementById('percentage-total-container');
+    const percentageTotalDisplay = document.getElementById('percentage-total-display');
     const prizePoolStatus = document.getElementById('prize-pool-status');
+
+    // NOUVEAU : Sélecteurs pour l'import/export des utilisateurs
+    const downloadUsersBtn = document.getElementById('download-users-btn');
+    const importUsersFile = document.getElementById('import-users-file');
+    const uploadUsersBtn = document.getElementById('upload-users-btn');
+    const usersMassEditStatus = document.getElementById('users-mass-edit-status');
 
     // ---- COMPÉTITION: Valeur par défaut à 20h et mise à jour quotidienne ----
     function formatForDatetimeLocal(date) {
@@ -288,7 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
             maxWinnersInput.value = rules.maxWinners;
             competitionPriceInput.value = rules.price !== undefined ? rules.price : 1000;
 
-            // NOUVEAU : Gestion de l'affichage en fonction du mode
             const currentMode = rules.prizeMode || 'automatic';
             if (currentMode === 'manual') {
                 prizeModeManualRadio.checked = true;
@@ -296,16 +304,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 prizeModeAutomaticRadio.checked = true;
             }
             
+            renderPrizeInputs(rules.maxWinners, rules.prizes || [], rules.percentages || []);
             togglePrizeInputsVisibility(currentMode);
-            renderPrizeInputs(rules.maxWinners, rules.prizes || []);
-            updateRadioLabels();
-
-            // Ajout des écouteurs d'événements s'ils n'existent pas déjà
+            
             if (!maxWinnersInput.hasListener) {
                 maxWinnersInput.addEventListener('input', () => {
                     const numWinners = parseInt(maxWinnersInput.value, 10) || 0;
-                    const prizes = Array.from(document.querySelectorAll('.prize-input')).map(input => ({ rank: parseInt(input.dataset.rank), amount: parseInt(input.value) || '' }));
-                    renderPrizeInputs(numWinners, prizes);
+                    renderPrizeInputs(numWinners, [], []); // On réinitialise les valeurs lors du changement
                 });
                 prizeModeAutomaticRadio.addEventListener('change', () => togglePrizeInputsVisibility('automatic'));
                 prizeModeManualRadio.addEventListener('change', () => togglePrizeInputsVisibility('manual'));
@@ -318,13 +323,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // NOUVELLE FONCTION pour gérer la visibilité des champs de prix
     function togglePrizeInputsVisibility(mode) {
+        prizeInputsContainer.classList.remove('hidden'); // Le conteneur principal est toujours visible
+        
+        const manualWrappers = document.querySelectorAll('.manual-input-wrapper');
+        const percentageWrappers = document.querySelectorAll('.percentage-input-wrapper');
+
         if (mode === 'manual') {
-            prizeInputsContainer.classList.remove('hidden');
+            manualWrappers.forEach(el => el.classList.remove('hidden'));
+            percentageWrappers.forEach(el => el.classList.add('hidden'));
+            percentageTotalContainer.classList.add('hidden'); // On cache le total des %
         } else {
-            prizeInputsContainer.classList.add('hidden');
+            manualWrappers.forEach(el => el.classList.add('hidden'));
+            percentageWrappers.forEach(el => el.classList.remove('hidden'));
+            percentageTotalContainer.classList.remove('hidden'); // On affiche le total des %
         }
+        
+        // On attache l'écouteur pour le recalcul du total à chaque modification
+        document.querySelectorAll('.percentage-input').forEach(input => {
+            input.removeEventListener('input', updatePercentageTotal); // Eviter les doublons
+            input.addEventListener('input', updatePercentageTotal);
+        });
+        
         updateRadioLabels();
     }
 
@@ -339,23 +359,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function renderPrizeInputs(numberOfWinners, prizes = []) {
+    function renderPrizeInputs(numberOfWinners, prizes = [], percentages = []) {
         if (!prizeInputsContainer) return;
 
+        const mode = prizeModeManualRadio.checked ? 'manual' : 'automatic';
         prizeInputsContainer.innerHTML = '';
+        
         for (let i = 1; i <= numberOfWinners; i++) {
             const existingPrize = prizes.find(p => p.rank === i);
-            const value = existingPrize ? existingPrize.amount : '';
+            const prizeValue = existingPrize ? existingPrize.amount : '';
+
+            const existingPercentage = percentages.find(p => p.rank === i);
+            const percentageValue = existingPercentage ? existingPercentage.percentage : '';
 
             const inputGroup = document.createElement('div');
             inputGroup.className = 'flex items-center gap-2';
             inputGroup.innerHTML = `
-                <label for="prize-rank-${i}" class="block text-sm font-medium w-32">Prix ${i}${i === 1 ? 'er' : 'ème'} (Ar):</label>
-                <input type="number" id="prize-rank-${i}" data-rank="${i}" value="${value}"
-                       class="prize-input w-48 p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                       placeholder="Montant pour le rang ${i}">
+                <label for="prize-rank-${i}" class="block text-sm font-medium w-32">Prix ${i}${i === 1 ? 'er' : 'ème'}:</label>
+                
+                <!-- Champ pour le montant manuel (caché si mode auto) -->
+                <div class="manual-input-wrapper ${mode === 'automatic' ? 'hidden' : ''}">
+                    <input type="number" data-rank="${i}" value="${prizeValue}"
+                           class="prize-input w-48 p-2 rounded bg-gray-700 border border-gray-600"
+                           placeholder="Montant en Ar">
+                </div>
+
+                <!-- Champ pour le pourcentage (caché si mode manuel) -->
+                <div class="percentage-input-wrapper ${mode === 'manual' ? 'hidden' : ''}">
+                    <input type="number" data-rank="${i}" value="${percentageValue}"
+                           class="percentage-input w-48 p-2 rounded bg-gray-700 border border-gray-600"
+                           placeholder="% de la cagnotte">
+                </div>
             `;
             prizeInputsContainer.appendChild(inputGroup);
+        }
+        updatePercentageTotal(); // Mettre à jour le total affiché
+    }
+
+    // NOUVELLE FONCTION pour calculer et afficher le total des pourcentages
+    function updatePercentageTotal() {
+        if (!percentageTotalDisplay) return;
+
+        const percentageInputs = document.querySelectorAll('.percentage-input');
+        const total = Array.from(percentageInputs).reduce((sum, input) => {
+            return sum + (parseInt(input.value, 10) || 0);
+        }, 0);
+
+        percentageTotalDisplay.textContent = `Total des pourcentages : ${total}%`;
+        if (total === 100) {
+            percentageTotalDisplay.className = 'text-sm font-bold text-green-400';
+        } else {
+            percentageTotalDisplay.className = 'text-sm font-bold text-red-400';
         }
     }
 
@@ -1359,6 +1413,21 @@ function hideStatusMessage() {
             amount: parseInt(input.value, 10) || 0
         }));
 
+        const percentageInputs = document.querySelectorAll('.percentage-input');
+        const percentages = Array.from(percentageInputs).map(input => ({
+            rank: parseInt(input.dataset.rank, 10),
+            percentage: parseInt(input.value, 10) || 0
+        }));
+
+        // Validation côté client
+        if (prizeMode === 'automatic') {
+            const totalPercentage = percentages.reduce((sum, p) => sum + p.percentage, 0);
+            if (totalPercentage !== 100) {
+                alert(`Le total des pourcentages doit être exactement 100%. Total actuel : ${totalPercentage}%.`);
+                return;
+            }
+        }
+
         winnersUpdateStatus.textContent = 'Mise à jour...';
         winnersUpdateStatus.className = 'text-yellow-400 text-sm mt-3';
 
@@ -1368,8 +1437,9 @@ function hideStatusMessage() {
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify({ 
                     maxWinners: parseInt(maxWinners, 10),
-                    prizes: prizes,
-                    prizeMode: prizeMode // On envoie le mode choisi
+                    prizes,
+                    percentages,
+                    prizeMode
                 })
             });
             const result = await response.json();
@@ -1523,6 +1593,12 @@ const refreshDepositsBtn = document.getElementById('refresh-deposits-btn');
 const depositsList = document.getElementById('deposits-list');
 const depositsCount = document.getElementById('deposits-count');
 const depositsStatus = document.getElementById('deposits-status');
+
+// NOUVEAU : Sélecteurs pour les retraits
+const refreshWithdrawalsBtn = document.getElementById('refresh-withdrawals-btn');
+const withdrawalsList = document.getElementById('withdrawals-list');
+const withdrawalsCount = document.getElementById('withdrawals-count');
+const withdrawalsStatus = document.getElementById('withdrawals-status');
 
 async function loadPendingDeposits() {
     try {
@@ -1751,6 +1827,213 @@ if (refreshPrizePoolBtn) {
         loadAndDisplayThemes();
         loadPrompts();
         loadPendingDeposits(); // Charger les dépôts
+        loadPendingWithdrawals(); // Charger les retraits
         loadPrizePoolInfo(); // Charger la cagnotte
     }
+
+    // ==========================================================
+    // ==     NOUVEAU : LOGIQUE D'IMPORT/EXPORT UTILISATEURS   ==
+    // ==========================================================
+
+    if (downloadUsersBtn) {
+        downloadUsersBtn.addEventListener('click', async () => {
+            const token = sessionStorage.getItem(API_TOKEN_KEY);
+            usersMassEditStatus.textContent = 'Préparation du fichier de sauvegarde...';
+            usersMassEditStatus.className = 'text-yellow-400 text-sm mt-4 h-5 animate-pulse';
+
+            try {
+                const response = await fetch('/admin/users/download-all', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!response.ok) throw new Error('Échec du téléchargement de la sauvegarde.');
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `frenchquest_users_backup_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                
+                window.URL.revokeObjectURL(url);
+                a.remove();
+
+                usersMassEditStatus.textContent = 'Fichier de sauvegarde téléchargé !';
+                usersMassEditStatus.className = 'text-green-400 text-sm mt-4 h-5';
+
+            } catch (error) {
+                usersMassEditStatus.textContent = `Erreur : ${error.message}`;
+                usersMassEditStatus.className = 'text-red-500 text-sm mt-4 h-5';
+            } finally {
+                setTimeout(() => { usersMassEditStatus.textContent = ''; usersMassEditStatus.classList.remove('animate-pulse'); }, 8000);
+            }
+        });
+    }
+
+    if (uploadUsersBtn) {
+        uploadUsersBtn.addEventListener('click', async () => {
+            const token = sessionStorage.getItem(API_TOKEN_KEY);
+            const file = importUsersFile.files[0];
+
+            if (!file) {
+                usersMassEditStatus.textContent = 'Veuillez sélectionner un fichier de sauvegarde.';
+                usersMassEditStatus.className = 'text-red-500 text-sm mt-4 h-5';
+                return;
+            }
+
+            if (!confirm("Êtes-vous ABSOLUMENT SÛR de vouloir importer ce fichier ?\n\nCette action va écraser les données des utilisateurs existants avec celles du fichier et ajouter les nouveaux. Cette opération est IRRÉVERSIBLE.")) {
+                return;
+            }
+
+            usersMassEditStatus.textContent = 'Importation de la sauvegarde en cours...';
+            usersMassEditStatus.className = 'text-yellow-400 text-sm mt-4 h-5 animate-pulse';
+            uploadUsersBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('userFile', file);
+
+            try {
+                const response = await fetch('/admin/users/upload-all', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error);
+
+                usersMassEditStatus.textContent = result.message;
+                usersMassEditStatus.className = 'text-green-400 text-sm mt-4 h-5';
+                
+                // On rafraîchit la liste des utilisateurs dans la "Zone Dangereuse"
+                loadUsersForReset();
+
+            } catch (error) {
+                usersMassEditStatus.textContent = `Erreur : ${error.message}`;
+                usersMassEditStatus.className = 'text-red-500 text-sm mt-4 h-5';
+            } finally {
+                uploadUsersBtn.disabled = false;
+                importUsersFile.value = '';
+                usersMassEditStatus.classList.remove('animate-pulse');
+                setTimeout(() => { usersMassEditStatus.textContent = ''; }, 10000);
+            }
+        });
+    }
+
+// ==========================================================
+// ==          NOUVEAU : GESTION DES RETRAITS (ADMIN)      ==
+// ==========================================================
+async function loadPendingWithdrawals() {
+    try {
+        withdrawalsStatus.textContent = '';
+        withdrawalsList.innerHTML = '<p class="text-gray-400">Chargement...</p>';
+
+        const response = await fetch('/admin/withdrawals/pending', {
+            headers: { 'Authorization': `Bearer ${sessionStorage.getItem(API_TOKEN_KEY)}` }
+        });
+        if (!response.ok) throw new Error('Impossible de charger les retraits');
+        const withdrawals = await response.json();
+
+        withdrawalsCount.textContent = `${withdrawals.length} retrait(s) en attente`;
+
+        if (withdrawals.length === 0) {
+            withdrawalsList.innerHTML = '<p class="text-gray-400">Aucun retrait en attente.</p>';
+            return;
+        }
+
+        withdrawalsList.innerHTML = withdrawals.map(w => {
+            const date = new Date(w.requested_at);
+            const formattedDate = date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            return `
+                <div class="bg-gray-700 p-4 rounded-lg border border-gray-600">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-semibold text-white">${w.username}</h4>
+                            <p class="text-sm text-gray-300">Numéro de paiement : <strong>${w.paymentPhone || 'Non renseigné'}</strong></p>
+                            <p class="text-sm text-gray-400">Demandé le ${formattedDate}</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-bold text-red-400">${w.amount} Ar</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="approveWithdrawal(${w.id})" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+                            Approuver (Paiement Effectué)
+                        </button>
+                        <button onclick="rejectWithdrawal(${w.id})" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+                            Rejeter
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    } catch (error) {
+        withdrawalsStatus.textContent = `Erreur: ${error.message}`;
+    }
+}
+
+window.approveWithdrawal = async function(id) {
+    // 1. Demander la référence de transaction à l'admin
+    const transactionRef = prompt("Veuillez entrer la référence de la transaction (ID) que vous venez d'effectuer :");
+
+    // 2. Si l'admin annule ou ne met rien, on arrête tout.
+    if (!transactionRef || transactionRef.trim() === '') {
+        alert('L\'approbation a été annulée car aucune référence de transaction n\'a été fournie.');
+        return;
+    }
+
+    if (!confirm('Confirmez-vous avoir envoyé les fonds et que la référence est correcte ? Cette action est irréversible.')) return;
+    
+    try {
+        const response = await fetch(`/admin/withdrawals/${id}/approve`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${sessionStorage.getItem(API_TOKEN_KEY)}`
+            },
+            // 3. On envoie la référence saisie au serveur
+            body: JSON.stringify({ transactionRef: transactionRef.trim() })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error);
+
+        withdrawalsStatus.textContent = result.message;
+        loadPendingWithdrawals(); // Recharger la liste
+
+    } catch (error) {
+        withdrawalsStatus.textContent = `Erreur: ${error.message}`;
+    }
+};
+
+window.rejectWithdrawal = async function(id) {
+    const reason = prompt('Raison du rejet (cette raison sera visible par l\'utilisateur) :');
+    if (reason === null) return; // Annulé
+    try {
+        const response = await fetch(`/admin/withdrawals/${id}/reject`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${sessionStorage.getItem(API_TOKEN_KEY)}` },
+            body: JSON.stringify({ reason: reason || 'Aucune raison spécifiée' })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error);
+        withdrawalsStatus.textContent = result.message;
+        loadPendingWithdrawals();
+    } catch (error) {
+        withdrawalsStatus.textContent = `Erreur: ${error.message}`;
+    }
+};
+
+if (refreshWithdrawalsBtn) {
+    refreshWithdrawalsBtn.addEventListener('click', loadPendingWithdrawals);
+}
+
+// Dans la section "Lancement initial"
+if (sessionStorage.getItem(API_TOKEN_KEY)) {
+    // ... autres appels de fonctions ...
+    loadPendingDeposits();
+    loadPendingWithdrawals(); // <-- AJOUTER CET APPEL
+    loadPrizePoolInfo();
+}
+
 });

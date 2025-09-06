@@ -49,9 +49,10 @@ class NetworkMonitor {
         const statusIndicator = document.createElement('div');
         statusIndicator.id = 'network-status-indicator';
         statusIndicator.className = `network-status-indicator ${this.isOnline ? 'online' : 'offline'}`;
+        // On utilise directement les clés i18n pour le texte initial
         statusIndicator.innerHTML = `
             <div class="network-status-dot"></div>
-            <span class="network-status-text">${this.isOnline ? 'En ligne' : 'Hors ligne'}</span>
+            <span class="network-status-text" data-i18n="${this.isOnline ? 'network.online' : 'network.offline'}">${window.i18n.t(this.isOnline ? 'network.online' : 'network.offline')}</span>
         `;
         
         const header = document.querySelector('#main-header .player-stats');
@@ -60,12 +61,13 @@ class NetworkMonitor {
         const banner = document.createElement('div');
         banner.id = 'network-banner';
         banner.className = 'network-banner hidden';
+        // On utilise les clés i18n pour la bannière
         banner.innerHTML = `
             <div class="network-banner-content">
                 <div class="network-banner-icon">⚠️</div>
                 <div class="network-banner-message">
-                    <strong class="network-banner-title">Connexion perdue</strong>
-                    <span class="network-banner-subtitle">Tentative de reconnexion...</span>
+                    <strong class="network-banner-title" data-i18n="network.titleOffline">${window.i18n.t('network.titleOffline')}</strong>
+                    <span class="network-banner-subtitle" data-i18n="network.messageOffline">${window.i18n.t('network.messageOffline')}</span>
                 </div>
             </div>
         `;
@@ -134,7 +136,9 @@ class NetworkMonitor {
         indicator.className = `network-status-indicator ${online ? 'online' : 'offline'}`;
         const text = indicator.querySelector('.network-status-text');
         if (text && window.i18n) {
-             text.textContent = window.i18n.t(online ? 'network.online' : 'network.offline');
+             const key = online ? 'network.online' : 'network.offline';
+             text.setAttribute('data-i18n', key);
+             text.textContent = window.i18n.t(key);
         }
     }
 

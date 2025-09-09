@@ -145,22 +145,48 @@ class I18n {
     updateDOM() {
         const elements = document.querySelectorAll('[data-i18n]');
         elements.forEach(element => {
-            // Skip dynamic elements that should not be overwritten by i18n
-            const skip = element.getAttribute('data-i18n-skip');
-            if (skip && skip !== 'false') {
-                return;
-            }
-            const key = element.getAttribute('data-i18n');
-            const translation = this.t(key);
-            
-            // Déterminer si c'est pour un attribut ou le contenu
-            const attr = element.getAttribute('data-i18n-attr');
-            if (attr) {
-                element.setAttribute(attr, translation);
-            } else {
-                element.textContent = translation;
-            }
+            this.translateElement(element);
         });
+    }
+
+    /**
+     * Traduit un seul élément HTML en se basant sur son attribut data-i18n.
+     * @param {HTMLElement} element - L'élément du DOM à traduire.
+     */
+    translateElement(element) {
+        const key = element.getAttribute('data-i18n');
+        const skip = element.getAttribute('data-i18n-skip') === 'true';
+
+        // Si l'attribut "skip" est présent, on ne touche pas à l'élément.
+        // C'est utile pour les noms d'utilisateurs ou autres données dynamiques.
+        if (skip) {
+            return;
+        }
+
+        if (key) {
+            // On récupère la traduction correspondante à la clé.
+            const translation = this.t(key);
+
+            if (translation) {
+                // Déterminer si c'est pour un attribut ou le contenu
+                const attr = element.getAttribute('data-i18n-attr');
+                if (attr) {
+                    element.setAttribute(attr, translation);
+                } else {
+                    // ==========================================================
+                    // ==                 LA CORRECTION EST ICI                ==
+                    // ==========================================================
+                    // On utilise .innerHTML au lieu de .textContent.
+                    // .innerHTML permet au navigateur d'interpréter les balises HTML (comme <strong>)
+                    // qui se trouvent dans nos fichiers de traduction (fr.json, en.json).
+                    // C'est la solution pour que le texte s'affiche bien en gras.
+                    element.innerHTML = translation;
+                }
+            } else {
+                // Si aucune traduction n'est trouvée, on affiche un avertissement dans la console.
+                console.warn(`[i18n] Clé de traduction introuvable: ${key}`);
+            }
+        }
     }
 
     /**

@@ -1,27 +1,15 @@
 {
-  "maxWinners": 2,
+  "maxWinners": 3,
   "competitionEnded": false,
   "competitionEndTime": null,
-  "price": 500,
-  "prizes": [
-    {
-      "rank": 1,
-      "amount": 40000
-    },
-    {
-      "rank": 2,
-      "amount": 20000
-    }
-  ],
-  "prizeMode": "manual",
+  "price": 1000,
+  "prizeMode": "automatic",
+  "prizes": [],
   "percentages": [
-    {
-      "rank": 1,
-      "percentage": 0
-    },
-    {
-      "rank": 2,
-      "percentage": 0
-    }
-  ]
+    { "rank": 1, "percentage": 50 },
+    { "rank": 2, "percentage": 30 },
+    { "rank": 3, "percentage": 20 }
+  ],
+  "referralDepositBonusPercentage": 10,
+  "referralWinBonusPercentage": 5
 }

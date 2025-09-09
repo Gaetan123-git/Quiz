@@ -261,22 +261,23 @@ async function validateAndRefineQuestions(questions, theme, courseContent) {
   console.log(`[Gemini] Lancement de la phase de validation et de correction pour ${questions.length} questions...`);
   
   const validationPrompt = `
-    Tu es un contrôleur qualité extrêmement rigoureux pour un quiz de langue française. Ton unique mission est de filtrer et de perfectionner une liste de questions générées par une IA.
+    Tu es un contrôleur qualité expert et impitoyable pour un quiz de langue française. Ta mission est de valider, corriger et filtrer une liste de questions générées par une autre IA. Sois extrêmement rigoureux.
     
     Voici la liste de questions brutes à analyser :
     ${JSON.stringify(questions, null, 2)}
     
-    Tu dois examiner chaque question une par une et ne conserver **QUE** celles qui respectent **ABSOLUMENT TOUS** les critères suivants. Si une question échoue à un seul critère, tu la supprimes de la liste finale.
+    Examine chaque question une par une et ne conserve **QUE** celles qui respectent **ABSOLUMENT TOUS** les critères suivants. Si une question échoue, même partiellement, à un seul critère, tu la supprimes de la liste finale.
     
     ### CHECKLIST DE VALIDATION IMPITOYABLE :
-    1.  **Est-ce une vraie question ?** Le champ \`text\` doit poser une question qui a du sens. Une question comme "Lequel de ces mots est correct ?" est valide.
-    2.  **Y a-t-il exactement 4 options ?** Le tableau \`options\` doit contenir **strictement 4** chaînes de caractères. Ni plus, ni moins.
-    3.  **Les options sont-elles uniques ?** Il ne doit y avoir aucun doublon dans le tableau \`options\`. "Téléphone" et "téléphone" sont des doublons.
-    4.  **La bonne réponse est-elle valide ?** La valeur de \`correctAnswer\` doit être présente et correspondre **exactement** à l'une des 4 options.
-    5.  **L'explication est-elle pertinente ?** Le champ \`explanation\` doit être une explication claire et en français.
-    6.  **La question est-elle autonome ?** La question ne doit pas faire référence à "l'exemple ci-dessus" ou au "texte du cours". Elle doit être compréhensible seule. Si elle ne l'est pas, tu peux la reformuler pour la rendre autonome, mais seulement si elle est de haute qualité.
+    1.  **Structure Parfaite** : La question doit être un objet JSON valide avec les clés \`text\`, \`options\`, \`correctAnswer\`, \`explanation\`, et \`englishHint\`.
+    2.  **Question Claire** : Le champ \`text\` doit être une question complète et sans ambiguïté.
+    3.  **Options Strictes** : Le tableau \`options\` doit contenir **strictement 4** chaînes de caractères. Ni plus, ni moins.
+    4.  **Options Uniques** : Il ne doit y avoir **aucun doublon** dans le tableau \`options\`. "Paris" et "paris" sont des options différentes et valides.
+    5.  **Cohérence de la Réponse** : La valeur de \`correctAnswer\` doit être présente et correspondre **exactement** (sensible à la casse) à l'une des 4 options.
+    6.  **COHÉRENCE LOGIQUE (LE PLUS IMPORTANT !)** : Tu dois **vérifier la logique** de la question. Est-ce que la \`correctAnswer\` est **réellement la bonne réponse** à la question posée, en se basant sur les règles de la langue française ? Est-ce que l'\`explanation\` justifie correctement pourquoi cette réponse est la bonne ? S'il y a une contradiction (par exemple, l'explication dit qu'il faut une majuscule mais la bonne réponse n'en a pas), la question est **invalide** et doit être **supprimée**.
+    7.  **Autonomie de la Question** : La question doit être compréhensible seule, sans faire référence à un "texte ci-dessus".
     
-    Après ton analyse, renvoie UNIQUEMENT un tableau JSON valide contenant les questions qui ont passé tous les contrôles. Ne renvoie rien d'autre.
+    Après ton analyse, renvoie UNIQUEMENT un tableau JSON valide contenant les questions qui ont passé tous les contrôles. Ne renvoie rien d'autre, pas de commentaires, juste le JSON.
   `;
   
   try {

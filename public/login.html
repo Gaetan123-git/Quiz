@@ -21,12 +21,12 @@
         <div class="mb-4 relative">
           <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-game-primary text-xl">👤</span>
           <input type="text" id="login-username" placeholder="Nom d'utilisateur" required
-                 class="w-full p-3 pl-10 rounded-lg bg-input text-foreground border-2 border-border focus:border-primary transition-colors">
+                 class="w-full p-3 pl-10 rounded-lg bg-slate-200 text-slate-900 placeholder-slate-500 border-2 border-border focus:border-primary transition-colors">
         </div>
         <div class="mb-4 relative">
           <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-game-primary text-xl">🔒</span>
           <input type="password" id="login-password" placeholder="Mot de passe" required
-                 class="w-full p-3 pl-10 pr-10 rounded-lg bg-input text-foreground border-2 border-border focus:border-primary transition-colors">
+                 class="w-full p-3 pl-10 pr-10 rounded-lg bg-slate-200 text-slate-900 placeholder-slate-500 border-2 border-border focus:border-primary transition-colors">
           <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-game-muted cursor-pointer" onclick="togglePasswordVisibility('login-password')">👁️</span>
         </div>
         <button id="login-button" type="button" onclick="login()"
@@ -36,9 +36,10 @@
       </form>
       <p class="mt-4 text-center text-game-muted text-sm">Pas de compte ? <a href="/inscription" class="text-accent hover:underline">Créez-en un !</a></p>
     </div>
-    <!-- Conteneur pour les Toasts -->
-    <div id="toast-container"></div>
   </div>
+  
+  <!-- Le conteneur de notifications est maintenant ici, au niveau supérieur. -->
+  <div id="toast-container"></div>
   <script>
     function togglePasswordVisibility(id) {
       const input = document.getElementById(id);
@@ -49,6 +50,7 @@
       }
     }
   </script>
+  <script src="toast.js"></script>
   <script src="login.js"></script>
 </body>
 </html>

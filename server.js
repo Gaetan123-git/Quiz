@@ -55,7 +55,15 @@ loadQuestionHistory();
 const COMPETITION_RULES_FILE = path.join(__dirname, 'competition_rules.json');
 const WINNERS_FILE = path.join(__dirname, 'winners.json');
 
-let competitionRules = { maxWinners: 3, competitionEnded: false, competitionEndTime: null };
+let competitionRules = { 
+    maxWinners: 3, 
+    competitionEnded: false, 
+    competitionEndTime: null,
+    price: 1000, // Prix d'entrée par défaut
+    prizeMode: 'automatic', // Mode de prix par défaut
+    referralDepositBonusPercentage: 10, // Bonus de parrainage sur dépôt par défaut
+    referralWinBonusPercentage: 5 // Bonus de parrainage sur gain par défaut
+};
 let winners = [];
 
 async function loadCompetitionRules() {
@@ -108,6 +116,42 @@ async function saveWinners() {
 // Charger les données au démarrage
 loadCompetitionRules();
 loadWinners();
+
+// --- NOUVEAU : Gestion de la configuration CRON ---
+const CRON_CONFIG_FILE = path.join(__dirname, 'cron_config.json');
+let cronConfig = { schedule: '30 23 * * *' }; // Valeur par défaut robuste
+let themeRotationTask = null; // Variable pour garder une référence à la tâche CRON
+
+async function loadCronConfig() {
+  try {
+    const data = await fsp.readFile(CRON_CONFIG_FILE, 'utf8');
+    const loadedConfig = JSON.parse(data);
+    if (cron.validate(loadedConfig.schedule)) {
+      cronConfig = loadedConfig;
+      console.log(`[SERVER] Configuration CRON chargée : ${cronConfig.schedule}`);
+    } else {
+      console.warn(`[SERVER] La configuration CRON dans ${CRON_CONFIG_FILE} est invalide. Utilisation de la valeur par défaut.`);
+    }
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.log('[SERVER] Fichier cron_config.json non trouvé. Création avec les valeurs par défaut.');
+      await saveCronConfig();
+    } else {
+      console.error('Erreur lors du chargement de cron_config.json:', error);
+    }
+  }
+}
+
+async function saveCronConfig() {
+  try {
+    await fsp.writeFile(CRON_CONFIG_FILE, JSON.stringify(cronConfig, null, 2), 'utf8');
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde de cron_config.json:', error);
+  }
+}
+
+// Charger la configuration CRON au démarrage
+loadCronConfig();
 
 // --- Simple JSON file cache (async) ---
 const jsonCache = new Map(); // key: absolute or relative file path, value: { mtimeMs, data }
@@ -163,6 +207,7 @@ console.log('[DB] Connecté à la base de données SQLite.');
 // Ce bloc de code s'assure que les tables nécessaires existent au démarrage.
 
 // Commande SQL pour créer la table 'users' si elle n'existe pas déjà.
+// ON AJOUTE les colonnes referralCode et referredBy
 const createUsersTable = `
   CREATE TABLE IF NOT EXISTS users (
     username TEXT PRIMARY KEY,
@@ -180,13 +225,16 @@ const createUsersTable = `
     consecutiveCorrectAnswers INTEGER DEFAULT 0,
     coins INTEGER DEFAULT 100,
     competitionCoins INTEGER DEFAULT 0,
-    balance REAL DEFAULT 0, -- AJOUT DE LA COLONNE SOLDE
+    balance REAL DEFAULT 0,
+    winningsBalance REAL DEFAULT 0,
     completedSessions TEXT,
     rewardedQuestionIds TEXT,
     sessionScores TEXT,
     avatarType TEXT,
     avatarUrl TEXT,
-    avatarKey TEXT
+    avatarKey TEXT,
+    referralCode TEXT,
+    referredBy TEXT
   );
 `;
 
@@ -236,8 +284,23 @@ const createWithdrawalsTable = `
     requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     processed_at TIMESTAMP,
     rejection_reason TEXT,
-    transaction_ref TEXT, -- LA COLONNE MANQUANTE EST AJOUTÉE ICI
+    transaction_ref TEXT,
     FOREIGN KEY (username) REFERENCES users(username)
+  );
+`;
+
+// NOUVEAU : TABLE POUR TRACER LES BONUS DE PARRAINAGE
+const createReferralBonusesTable = `
+  CREATE TABLE IF NOT EXISTS referral_bonuses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sponsorUsername TEXT NOT NULL,
+    referralUsername TEXT NOT NULL,
+    bonusAmount REAL NOT NULL,
+    sourceTransactionType TEXT NOT NULL, -- 'deposit' ou 'win'
+    sourceTransactionInfo TEXT, -- ex: "Dépôt de X Ar" ou "Gain 1ère place"
+    awardedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sponsorUsername) REFERENCES users(username),
+    FOREIGN KEY (referralUsername) REFERENCES users(username)
   );
 `;
 
@@ -247,6 +310,19 @@ db.exec(createErrorCorrectionsTable);
 db.exec(createDepositsTable);
 db.exec(createCompetitionParticipantsTable);
 db.exec(createWithdrawalsTable);
+db.exec(createReferralBonusesTable); // NOUVEAU
+
+// NOUVELLE TABLE POUR LES TRANSFERTS INTERNES
+const createInternalTransfersTable = `
+  CREATE TABLE IF NOT EXISTS internal_transfers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    amount REAL NOT NULL,
+    transferred_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (username) REFERENCES users(username)
+  );
+`;
+db.exec(createInternalTransfersTable); // NOUVEAU
 
 // Migration pour ajouter la colonne balance si elle n'existe pas
 try {
@@ -260,19 +336,32 @@ try {
     }
 }
 
-// NOUVELLE MIGRATION : Ajout de la colonne pour les gains
+// MIGRATION pour ajouter winningsBalance
 try {
     db.exec("ALTER TABLE users ADD COLUMN winningsBalance REAL DEFAULT 0");
     console.log("[DB] Colonne 'winningsBalance' ajoutée à la table users.");
 } catch (error) {
     if (error.code === 'SQLITE_ERROR' && error.message.includes('duplicate column name')) {
-        console.log("[DB] Colonne 'winningsBalance' existe déjà dans la table users.");
+        console.log("[DB] Colonne 'winningsBalance' existe déjà.");
     } else {
         console.error("[DB] Erreur lors de l'ajout de la colonne winningsBalance:", error);
     }
 }
 
-console.log("[DB] Vérification des tables 'users', 'error_corrections', 'deposits' et 'competition_participants' terminée.");
+// NOUVELLES MIGRATIONS pour le système de parrainage
+try {
+    db.exec("ALTER TABLE users ADD COLUMN referralCode TEXT");
+    db.exec("ALTER TABLE users ADD COLUMN referredBy TEXT");
+    console.log("[DB] Colonnes 'referralCode' et 'referredBy' ajoutées à la table users.");
+} catch (error) {
+    if (error.code === 'SQLITE_ERROR' && error.message.includes('duplicate column name')) {
+        console.log("[DB] Les colonnes de parrainage existent déjà.");
+    } else {
+        console.error("[DB] Erreur lors de l'ajout des colonnes de parrainage:", error);
+    }
+}
+
+console.log("[DB] Vérification des tables terminée.");
 const app = express();
 console.log(`[TEST] Heure actuelle serveur (locale) : ${new Date().toString()}`);
 console.log(`[TEST] Heure à Paris via moment-timezone : ${moment().tz('Europe/Paris').format('YYYY-MM-DD HH:mm:ss Z')}`);
@@ -386,6 +475,39 @@ function loadUsersFromDB() {
 
 // On exécute cette fonction une fois au démarrage du serveur.
 loadUsersFromDB();
+
+// ==========================================================
+// ===         NOUVEAU : MIGRATION DES CODES DE PARRAINAGE        ===
+// ==========================================================
+// Ce bloc s'exécute une seule fois au démarrage pour s'assurer que
+// tous les utilisateurs existants ont bien un code de parrainage.
+
+function assignMissingReferralCodes() {
+  console.log('[MIGRATION] Vérification des codes de parrainage manquants...');
+  let updatedCount = 0;
+
+  // Parcourir chaque utilisateur chargé en mémoire
+  users.forEach(user => {
+    // Si l'utilisateur n'a PAS de code de parrainage
+    if (!user.referralCode) {
+      // On lui en génère un sur le même format que les nouveaux inscrits
+      user.referralCode = `${user.username.substring(0, 4)}${crypto.randomBytes(2).toString('hex')}`.toUpperCase();
+      // On sauvegarde l'utilisateur mis à jour dans la base de données
+      saveUser(user);
+      updatedCount++;
+    }
+  });
+
+  if (updatedCount > 0) {
+    console.log(`[MIGRATION] ${updatedCount} utilisateur(s) ont reçu un nouveau code de parrainage.`);
+  } else {
+    console.log('[MIGRATION] Tous les utilisateurs ont déjà un code de parrainage. Aucune action requise.');
+  }
+}
+
+// Lancer la migration après le chargement initial des utilisateurs
+assignMissingReferralCodes();
+
 // ==========================================================
 // ===                 NOUVEAU BLOC À AJOUTER             ===
 // ==========================================================
@@ -473,7 +595,10 @@ function dedupeOptionsKeepFirst(options = []) {
   const seen = new Set();
   const out = [];
   for (const opt of options) {
-    const key = normalizeValue(opt);
+    // CORRECTION : On utilise l'option brute (juste nettoyée des espaces)
+    // au lieu de la version normalisée en minuscules.
+    // Cela préserve les différences de casse, ce qui est crucial pour les quiz de grammaire/orthographe.
+    const key = typeof opt === 'string' ? opt.trim() : opt;
     if (!seen.has(key) && key) {
       seen.add(key);
       out.push(opt);
@@ -560,11 +685,12 @@ function isQuestionStructurallyValid(q) {
     return false;
   }
   
-  // 4. Les options sont-elles toutes uniques (insensible à la casse) ?
-  const uniqueOptions = new Set(q.options.map(opt => opt.toLowerCase().trim()));
+  // 4. CORRECTION : Les options sont-elles toutes uniques (maintenant sensible à la casse) ?
+  // On retire le .toLowerCase() pour que "Paris" et "paris" soient considérés comme deux options différentes.
+  const uniqueOptions = new Set(q.options.map(opt => opt.trim()));
   if (uniqueOptions.size !== 4) {
-      console.warn(`[Validation Struct.] Question rejetée pour "${q.text}" : les options contiennent des doublons.`);
-      return false;
+    console.warn(`[Validation Struct.] Question rejetée pour "${q.text}" : les options contiennent des doublons (vérification sensible à la casse).`);
+    return false;
   }
 
   // 5. La bonne réponse est-elle définie et présente dans les options ?
@@ -588,13 +714,14 @@ function saveUser(user) {
     return;
   }
 
+  // CORRECTION : On ajoute referralCode et referredBy à la liste des colonnes
   const stmt = db.prepare(`
     INSERT OR REPLACE INTO users (
         username, password, paymentPhone, scores, currentScore, lastScoreUpdate, activeSession,
         xp, level, achievements, streakCount, lastPlayDate, consecutiveCorrectAnswers,
         coins, competitionCoins, balance, winningsBalance, completedSessions, rewardedQuestionIds, sessionScores,
-        avatarType, avatarUrl, avatarKey
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        avatarType, avatarUrl, avatarKey, referralCode, referredBy
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   try {
@@ -615,15 +742,17 @@ function saveUser(user) {
         user.coins === undefined ? 100 : user.coins,
         user.competitionCoins || 0,
         user.balance || 0,
-        user.winningsBalance || 0, // Ajout du nouveau champ
+        user.winningsBalance || 0,
         JSON.stringify(user.completedSessions || []),
         JSON.stringify(user.rewardedQuestionIds || []),
         JSON.stringify(user.sessionScores || {}),
         user.avatarType || null,
         user.avatarUrl || null,
-        user.avatarKey || null
+        user.avatarKey || null,
+        // CORRECTION : On ajoute les valeurs correspondantes ici
+        user.referralCode || null,
+        user.referredBy || null
     );
-     // console.log(`[DB] Utilisateur ${user.username} sauvegardé avec succès.`);
   } catch (error) {
      console.error(`[DB] Erreur lors de la sauvegarde de l'utilisateur ${user.username}:`, error);
   }
@@ -658,137 +787,145 @@ async function saveQuestions(sessionName) {
     }
 }
 /**
- * Planifie l'exécution de la rotation du thème.
+ * Contient la logique métier de la rotation des thèmes.
  */
-async function scheduleDailyThemeRotation() {
-  console.log('[CRON] Préparation de la tâche de rotation des thèmes.');
-
-  const scheduleTime = '30 23 * * *';
+async function runThemeRotationLogic() {
   const scheduleTimezone = 'Indian/Antananarivo';
+  console.log(`[CRON] Tâche déclenchée à ${moment().tz(scheduleTimezone).format('YYYY-MM-DD HH:mm:ss Z')} ! Rotation du thème...`);
 
-  console.log(`[CRON] La tâche est planifiée pour s'exécuter à : ${scheduleTime} (Fuseau horaire: ${scheduleTimezone})`);
+  const newIndex = (themeData.currentIndex + 1) % themeData.themes.length;
+  const newTheme = themeData.themes[newIndex];
+  console.log(`[CRON] Nouveau thème : "${newTheme}"`);
 
-  cron.schedule(scheduleTime, async () => {
-    console.log(`[CRON] Tâche déclenchée à ${moment().tz(scheduleTimezone).format('YYYY-MM-DD HH:mm:ss Z')} ! Rotation du thème...`);
-
-    const newIndex = (themeData.currentIndex + 1) % themeData.themes.length;
-    const newTheme = themeData.themes[newIndex];
-    console.log(`[CRON] Nouveau thème : "${newTheme}"`);
-
+  try {
     try {
+      const currentCourseData = await fsp.readFile('course.json', 'utf8');
+      const currentCourse = JSON.parse(currentCourseData);
+      let courseHistoryData = [];
       try {
-        const currentCourseData = await fsp.readFile('course.json', 'utf8');
-        const currentCourse = JSON.parse(currentCourseData);
-        let courseHistoryData = [];
-        try {
-          const historyData = await fsp.readFile('course_history.json', 'utf8');
-          courseHistoryData = JSON.parse(historyData);
-        } catch (histError) {
-          if (histError.code !== 'ENOENT') throw histError;
-        }
-        courseHistoryData.unshift(currentCourse);
-        if (courseHistoryData.length > 30) {
-            courseHistoryData = courseHistoryData.slice(0, 30);
-        }
-        await fsp.writeFile('course_history.json', JSON.stringify(courseHistoryData, null, 2), 'utf8');
-        updateJsonCache('course_history.json', courseHistoryData);
-        console.log('[CRON] Ancien cours archivé avec succès.');
-      } catch (error) {
-        if (error.code !== 'ENOENT') {
-          console.error('[CRON] Erreur lors de l\'archivage de l\'ancien cours:', error);
-        }
+        const historyData = await fsp.readFile('course_history.json', 'utf8');
+        courseHistoryData = JSON.parse(historyData);
+      } catch (histError) {
+        if (histError.code !== 'ENOENT') throw histError;
       }
-      
-      users.forEach(user => {
-        if (user.username !== 'devtest') {
-          user.scores = []; user.currentScore = 0; user.activeSession = null;
-          user.xp = 0; user.level = 1; user.achievements = []; user.consecutiveCorrectAnswers = 0;
-          user.completedSessions = []; user.rewardedQuestionIds = [];
-        }
-      });
-      for (const user of users) { saveUser(user); }
-      console.log('[CRON] Progression de tous les utilisateurs réinitialisée.');
-
-      // NOUVEAU : Purge de l'historique des paiements de la compétition
-      // Cette commande supprime toutes les entrées de la table, forçant
-      // les utilisateurs à payer à nouveau pour participer à la nouvelle compétition.
-      console.log('[CRON] Purge de la table des participants de la compétition...');
-      db.exec('DELETE FROM competition_participants');
-      console.log('[CRON] Table des participants purgée. Les joueurs devront payer à nouveau.');
-
-      console.log('[CRON] Purge de l\'historique des questions pour le nouveau thème...');
-      questionHistory = [];
-      await saveQuestionHistory();
-      console.log('[CRON] Historique des questions purgé avec succès.');
-      
-      const courseContent = await generateCourse(newTheme);
-      const courseData = { theme: newTheme, content: courseContent, generatedAt: new Date().toISOString() };
-      await fsp.writeFile('course.json', JSON.stringify(courseData, null, 2), 'utf8');
-      updateJsonCache('course.json', courseData);
-      console.log('[CRON] Nouveau cours sauvegardé.');
-      
-      const allGeneratedInThisRun = [];
-      const fingerprints = new Set(); // NOUVEAU : Set d'empreintes pour le CRON
-
-      for (const sessionFile of sessionFiles) {
-        const sessionName = sessionFile.replace('.json', '');
-        const sessionNumber = parseInt(sessionName.replace('session', ''));
-        
-        let level = 'intermédiaire';
-        if (sessionNumber <= 3) level = 'facile';
-        if (sessionNumber >= 8) level = 'difficile';
-        
-        const targetCount = 15;
-        let finalQuestionsForSession = [];
-        let attempts = 0;
-        const MAX_ATTEMPTS = 5;
-
-        while (finalQuestionsForSession.length < targetCount && attempts < MAX_ATTEMPTS) {
-          attempts++;
-          const countToGenerate = (targetCount - finalQuestionsForSession.length) + 5;
-          const rawQuestions = await generateNewQuestions(newTheme, level, 'Français', countToGenerate, courseContent, allGeneratedInThisRun);
-          const correctedQuestions = await validateAndRefineQuestions(rawQuestions, newTheme, courseContent);
-
-          for (const q of correctedQuestions) {
-              const qText = q.text ? q.text.trim() : null;
-              const fingerprint = normalizeQuestionText(qText);
-              
-              if (qText && !fingerprints.has(fingerprint) && finalQuestionsForSession.length < targetCount) {
-                  finalQuestionsForSession.push(q);
-                  fingerprints.add(fingerprint);
-                  allGeneratedInThisRun.push(qText);
-              }
-          }
-        }
-
-        const questionsWithIds = finalQuestionsForSession.map(raw => {
-          const q = fixGeneratedQuestion({ ...raw });
-          return { ...q, id: crypto.randomBytes(8).toString('hex'), type: "standard" };
-        });
-
-        sessionQuestions[sessionName] = questionsWithIds;
-        await saveQuestions(sessionName);
+      courseHistoryData.unshift(currentCourse);
+      if (courseHistoryData.length > 30) {
+        courseHistoryData = courseHistoryData.slice(0, 30);
       }
-      
-      // Une fois toutes les sessions générées, on met à jour l'historique global sur disque.
-      questionHistory = allGeneratedInThisRun;
-      await saveQuestionHistory();
-      console.log('[CRON] Toutes les questions ont été régénérées et l\'historique global a été sauvegardé.');
-
-      themeData.currentIndex = newIndex;
-      await saveThemes();
-      console.log('[CRON] Rotation du thème terminée avec succès !');
-
+      await fsp.writeFile('course_history.json', JSON.stringify(courseHistoryData, null, 2), 'utf8');
+      updateJsonCache('course_history.json', courseHistoryData);
+      console.log('[CRON] Ancien cours archivé avec succès.');
     } catch (error) {
-      console.error('[CRON] ERREUR CRITIQUE pendant la rotation du thème :', error);
+      if (error.code !== 'ENOENT') {
+        console.error('[CRON] Erreur lors de l\'archivage de l\'ancien cours:', error);
+      }
     }
-  }, {
+
+    users.forEach(user => {
+      if (user.username !== 'devtest') {
+        user.scores = []; user.currentScore = 0; user.activeSession = null;
+        user.xp = 0; user.level = 1; user.achievements = []; user.consecutiveCorrectAnswers = 0;
+        user.completedSessions = []; user.rewardedQuestionIds = [];
+      }
+    });
+    for (const user of users) { saveUser(user); }
+    console.log('[CRON] Progression de tous les utilisateurs réinitialisée.');
+
+    console.log('[CRON] Purge de la table des participants de la compétition...');
+    db.exec('DELETE FROM competition_participants');
+    console.log('[CRON] Table des participants purgée. Les joueurs devront payer à nouveau.');
+
+    console.log('[CRON] Purge de l\'historique des questions pour le nouveau thème...');
+    questionHistory = [];
+    await saveQuestionHistory();
+    console.log('[CRON] Historique des questions purgé avec succès.');
+
+    const courseContent = await generateCourse(newTheme);
+    const courseData = { theme: newTheme, content: courseContent, generatedAt: new Date().toISOString() };
+    await fsp.writeFile('course.json', JSON.stringify(courseData, null, 2), 'utf8');
+    updateJsonCache('course.json', courseData);
+    console.log('[CRON] Nouveau cours sauvegardé.');
+
+    const allGeneratedInThisRun = [];
+    const fingerprints = new Set();
+
+    for (const sessionFile of sessionFiles) {
+      const sessionName = sessionFile.replace('.json', '');
+      const sessionNumber = parseInt(sessionName.replace('session', ''));
+      
+      let level = 'intermédiaire';
+      if (sessionNumber <= 3) level = 'facile';
+      if (sessionNumber >= 8) level = 'difficile';
+      
+      const targetCount = 15;
+      let finalQuestionsForSession = [];
+      let attempts = 0;
+      const MAX_ATTEMPTS = 5;
+
+      while (finalQuestionsForSession.length < targetCount && attempts < MAX_ATTEMPTS) {
+        attempts++;
+        const countToGenerate = (targetCount - finalQuestionsForSession.length) + 5;
+        const rawQuestions = await generateNewQuestions(newTheme, level, 'Français', countToGenerate, courseContent, allGeneratedInThisRun);
+        const correctedQuestions = await validateAndRefineQuestions(rawQuestions, newTheme, courseContent);
+
+        for (const q of correctedQuestions) {
+            if (isQuestionStructurallyValid(q)) {
+                const qText = q.text ? q.text.trim() : null;
+                const fingerprint = normalizeQuestionText(qText);
+                
+                if (qText && !fingerprints.has(fingerprint) && finalQuestionsForSession.length < targetCount) {
+                    finalQuestionsForSession.push(q);
+                    fingerprints.add(fingerprint);
+                    allGeneratedInThisRun.push(qText);
+                }
+            }
+        }
+      }
+
+      const questionsWithIds = finalQuestionsForSession.map(raw => {
+        const q = fixGeneratedQuestion({ ...raw });
+        return { ...q, id: crypto.randomBytes(8).toString('hex'), type: "standard" };
+      });
+
+      sessionQuestions[sessionName] = questionsWithIds;
+      await saveQuestions(sessionName);
+    }
+
+    questionHistory = allGeneratedInThisRun;
+    await saveQuestionHistory();
+    console.log('[CRON] Toutes les questions ont été régénérées et l\'historique global a été sauvegardé.');
+
+    themeData.currentIndex = newIndex;
+    await saveThemes();
+    console.log('[CRON] Rotation du thème terminée avec succès !');
+    
+  } catch (error) {
+    console.error('[CRON] ERREUR CRITIQUE pendant la rotation du thème :', error);
+  }
+}
+
+/**
+ * Planifie ou replanifie la tâche de rotation des thèmes.
+ */
+function scheduleDailyThemeRotation() {
+  // Si une tâche existe déjà, on l'arrête avant d'en créer une nouvelle.
+  if (themeRotationTask) {
+    themeRotationTask.stop();
+    console.log('[CRON] Ancienne tâche de rotation arrêtée.');
+  }
+
+  const scheduleTimezone = 'Indian/Antananarivo';
+  
+  // On utilise la configuration chargée depuis le fichier JSON.
+  themeRotationTask = cron.schedule(cronConfig.schedule, runThemeRotationLogic, {
     scheduled: true,
     timezone: scheduleTimezone
   });
+
+  console.log(`[CRON] Tâche de rotation des thèmes planifiée pour s'exécuter selon le schéma : "${cronConfig.schedule}" (Fuseau: ${scheduleTimezone})`);
 }
 
-// Lancer la planification
+// Lancer la planification au démarrage du serveur
 scheduleDailyThemeRotation();
 
 
@@ -960,12 +1097,19 @@ function cleanupInactiveUsers() {
 }
 setInterval(cleanupInactiveUsers, 10 * 60 * 1000); // 10 minutes en millisecondes
 app.post('/register', async (req, res) => {
-  const { username, password, paymentPhone } = req.body; // On récupère le numéro
+  const { username, password, paymentPhone, referralCode } = req.body;
   
-  // Vérifie si un utilisateur avec ce nom existe déjà
   const existingUser = users.find(user => user.username.toLowerCase() === username.toLowerCase());
   if (existingUser) {
     return res.status(400).json({ error: 'Ce nom d\'utilisateur est déjà pris.' });
+  }
+
+  let sponsor = null;
+  if (referralCode && referralCode.trim() !== '') {
+    sponsor = users.find(u => u.referralCode === referralCode.trim());
+    if (!sponsor) {
+      return res.status(400).json({ error: 'Le code de parrainage est invalide.' });
+    }
   }
 
   try {
@@ -975,8 +1119,7 @@ app.post('/register', async (req, res) => {
     const newUser = {
       username,
       password: hashedPassword,
-      paymentPhone: paymentPhone || null, // On ajoute le numéro ici
-      googleId: null,
+      paymentPhone: paymentPhone || null,
       scores: [],
       currentScore: 0,
       lastScoreUpdate: null,
@@ -984,17 +1127,35 @@ app.post('/register', async (req, res) => {
       xp: 0,
       level: 1,
       achievements: [],
-      streakCount: 0,
-      lastPlayDate: null,
+      streakCount: 1, // Commence avec un streak de 1 jour
+      lastPlayDate: new Date().toISOString().split('T')[0], // La date d'inscription compte comme première connexion
       consecutiveCorrectAnswers: 0,
       coins: 100, 
       competitionCoins: 0,
       completedSessions: [],
-      rewardedQuestionIds: []
+      rewardedQuestionIds: [],
+      referralCode: `${username.substring(0, 4)}${crypto.randomBytes(2).toString('hex')}`.toUpperCase(),
+      referredBy: sponsor ? sponsor.username : null
     };
+    
+    // Étape 1 : Sauvegarder le nouvel utilisateur
     users.push(newUser);
     saveUser(newUser);
-    res.json({ message: 'Inscription réussie.' });
+
+    if (sponsor) {
+      console.log(`[PARRAINAGE] ${username} a été parrainé par ${sponsor.username}.`);
+    }
+
+    // Étape 2 : Créer la session pour le nouvel utilisateur (connexion automatique)
+    const loginId = newLoginId();
+    req.session.user = newUser;
+    req.session.loginId = loginId;
+    userLoginIds.set(username, loginId);
+    activeUsers.set(username, Date.now());
+    userSessionIds.set(username, req.sessionID);
+
+    console.log(`[AUTH] Inscription réussie et connexion automatique pour ${username}.`);
+    res.json({ message: 'Inscription et connexion réussies.' });
 
   } catch (error) {
     console.error('[SERVER] Erreur lors du hachage du mot de passe :', error);
@@ -1118,16 +1279,12 @@ app.get('/check-session', (req, res) => {
         avatarType: user.avatarType || null,
         avatarUrl: user.avatarUrl || null,
         avatarKey: user.avatarKey || null,
-        paymentPhone: user.paymentPhone || null // <-- On s'assure que le numéro est bien envoyé
+        paymentPhone: user.paymentPhone || null,
+        referralCode: user.referralCode || null // NOUVEAU : On envoie le code de parrainage de l'utilisateur
       });
 
     } else {
-      console.warn(`[SESSIONS] Session orpheline détectée pour l'utilisateur "${req.session.user.username}". Destruction de la session.`);
-      req.session.destroy(err => {
-        if (err) {
-          console.error('[SESSIONS] Erreur lors de la destruction de la session orpheline:', err);
-          return res.status(500).json({ loggedIn: false }); 
-        }
+      req.session.destroy(() => {
         res.json({ loggedIn: false });
       });
     }
@@ -1255,65 +1412,45 @@ app.post('/reset-session-attempt', (req, res) => {
   }
 });
 app.use(['/quiz', '/chat'], (req, res, next) => {
-  // Ce code s'exécute à chaque fois que l'utilisateur navigue vers le quiz ou le chat.
-  if (req.session.user) {
-    // On récupère la session vers laquelle l'utilisateur TENTE d'aller.
-    const sessionQuery = req.query.session || (req.body && req.body.session) || 'session1';
-    const user = users.find(u => u.username === req.session.user.username);
+    if (req.session.user) {
+        const sessionQuery = req.query.session || (req.body && req.body.session) || 'session1';
+        const user = users.find(u => u.username === req.session.user.username);
 
-    // On vérifie si l'utilisateur existe et s'il essaie de changer de session.
-    if (user && isRequestFromActiveLogin(req) && user.activeSession !== sessionQuery) {
-      
-      const sessionNumber = parseInt(sessionQuery.replace('session', ''), 10);
-      let isAccessAllowed = true; // On part du principe que l'accès est autorisé...
+        if (user && isRequestFromActiveLogin(req) && user.activeSession !== sessionQuery) {
+            const sessionNumber = parseInt(sessionQuery.replace('session', ''), 10);
+            const isTournamentSession = sessionNumber >= 4;
 
-      // ====================================================================
-      // ===               CORRECTION AVEC L'EXCEPTION DEVTEST            ===
-      // ====================================================================
-      // On applique la règle de verrouillage UNIQUEMENT si l'utilisateur N'EST PAS 'devtest'.
-      if (user.username !== 'devtest') {
-        // ...et si c'est une session supérieure à 1.
-        if (sessionNumber > 1) {
-          const requiredSession = `session${sessionNumber - 1}`;
-          // On vérifie que la session précédente est bien dans la liste des sessions terminées.
-          if (!user.completedSessions || !user.completedSessions.includes(requiredSession)) {
-            isAccessAllowed = false; // L'accès est refusé pour un utilisateur normal !
-          }
+            let shouldUpdateStatus = false;
+
+            if (!isTournamentSession) {
+                // Pour les sessions 1-3 (gratuites), on met à jour le statut immédiatement.
+                shouldUpdateStatus = true;
+            } else {
+                // Pour les sessions 4-10 (payantes), on vérifie si le joueur a déjà payé.
+                const participant = db.prepare('SELECT * FROM competition_participants WHERE username = ?').get(user.username);
+                if (participant || user.username === 'devtest') { // Ajout de la condition pour devtest
+                    // S'il a déjà payé (ou est un dev), on peut mettre à jour son statut.
+                    shouldUpdateStatus = true;
+                }
+                // Si le joueur n'a pas encore payé, on ne fait RIEN.
+            }
+
+            if (shouldUpdateStatus) {
+                console.log(`[Middleware] Mise à jour du statut pour ${user.username} vers ${sessionQuery}.`);
+                user.activeSession = sessionQuery;
+                user.currentScore = user.scores
+                    .filter(s => s.session === sessionQuery)
+                    .reduce((total, score) => total + score.score, 0);
+                
+                // LA CORRECTION CRUCIALE EST ICI : On sauvegarde la modification !
+                saveUser(user);
+                
+                // On notifie tout le monde du changement de statut.
+                broadcastSessionStatus();
+            }
         }
-      }
-      // Pour 'devtest', isAccessAllowed restera toujours `true` par défaut.
-
-      // Si, et seulement si, l'accès est autorisé (valable pour tous ou pour devtest).
-      if (isAccessAllowed) {
-        console.log(`[SERVER] Accès autorisé pour ${user.username} à ${sessionQuery}. Mise à jour du statut.`);
-        user.activeSession = sessionQuery;
-        
-        // On recalcule le score actuel pour la nouvelle session.
-        user.currentScore = user.scores
-          .filter(s => s.session === sessionQuery)
-          .reduce((total, score) => total + score.score, 0);
-        
-        // On notifie tout le monde du changement de statut avec un léger debounce
-        try {
-          const key = `broadcast|${user.username}`;
-          const now = Date.now();
-          const last = sseThrottle.get(key) || 0;
-          if (now - last >= 500) { // au plus 2 diffusions par seconde par utilisateur
-            broadcastSessionStatus();
-            sseThrottle.set(key, now);
-          }
-        } catch (_) {
-          // En cas de problème avec le throttle, on diffuse quand même pour ne pas bloquer l'UX
-          try { broadcastSessionStatus(); } catch (_) {}
-        }
-      } else {
-        // Si l'accès est refusé, on ne fait RIEN.
-        console.log(`[SERVER] Accès refusé pour ${user.username} à ${sessionQuery}. Le statut reste sur ${user.activeSession || 'aucune session'}.`);
-      }
     }
-  }
-  // On passe à la suite, pour que la route /questions puisse quand même envoyer le message d'erreur officiel si besoin.
-  next();
+    next();
 });
 
 function findQuestionByText(query) {
@@ -1618,7 +1755,6 @@ app.post('/end-quiz-session', async (req, res) => {
     const user = users.find(u => u.username === req.session.user.username);
     if (!user) return res.status(404).json({ error: 'Utilisateur introuvable.' });
 
-    // ... (logique de validation de session inchangée)
     const totalQuestionsInSession = (sessionQuestions[session] || []).length;
     const sessionScores = user.scores.filter(s => s.session === session);
     const correctAnswers = sessionScores.filter(s => s.score > 0).length;
@@ -1640,14 +1776,13 @@ app.post('/end-quiz-session', async (req, res) => {
             if (competitionRules.prizeMode === 'manual') {
                 const prizeRule = (competitionRules.prizes || []).find(p => p.rank === newRank);
                 prizeAmount = prizeRule ? prizeRule.amount : 0;
-            } else { // Mode 'automatic'
+            } else {
                 const participantsCount = db.prepare('SELECT COUNT(*) as count FROM competition_participants').get().count;
                 const entryFee = competitionRules.price !== undefined ? competitionRules.price : 1000;
                 const totalPrizePool = participantsCount * entryFee;
                 const adminCommission = Math.floor(totalPrizePool * 0.15);
                 const prizesPool = totalPrizePool - adminCommission;
                 
-                // NOUVEAU : On utilise le pourcentage personnalisé
                 const percentageRule = (competitionRules.percentages || []).find(p => p.rank === newRank);
                 const percentage = percentageRule ? percentageRule.percentage : 0;
                 prizeAmount = Math.floor(prizesPool * (percentage / 100));
@@ -1659,14 +1794,43 @@ app.post('/end-quiz-session', async (req, res) => {
             });
             await saveWinners();
 
-            // Créditer le prix dans le solde des gains
             user.winningsBalance = (user.winningsBalance || 0) + prizeAmount;
+
+            // ==========================================================
+            // ==           NOUVEAU : BONUS DE PARRAINAGE (GAIN)         ==
+            // ==========================================================
+            if (user.referredBy) {
+                const sponsor = users.find(u => u.username === user.referredBy);
+                if (sponsor && prizeAmount > 0) {
+                    const bonusPercentage = competitionRules.referralWinBonusPercentage || 5; // 5% par défaut
+                    const bonusAmount = Math.floor(prizeAmount * (bonusPercentage / 100));
+
+                    if (bonusAmount > 0) {
+                        sponsor.winningsBalance = (sponsor.winningsBalance || 0) + bonusAmount;
+                        
+                        db.prepare(`
+                            INSERT INTO referral_bonuses (sponsorUsername, referralUsername, bonusAmount, sourceTransactionType, sourceTransactionInfo)
+                            VALUES (?, ?, ?, 'win', ?)
+                        `).run(sponsor.username, user.username, bonusAmount, `Gain ${newRank}e place de ${user.username}`);
+                        
+                        // Notifier le parrain
+                        if (userNotificationClients.has(sponsor.username)) {
+                           userNotificationClients.get(sponsor.username).write(`event: referral-bonus\ndata: ${JSON.stringify({ 
+                               amount: bonusAmount, 
+                               from: user.username, 
+                               reason: 'gain',
+                               // On inclut également le nouveau solde total ici
+                               newWinningsBalance: sponsor.winningsBalance
+                            })}\n\n`);
+                        }
+                    }
+                }
+            }
 
             if (winners.length >= competitionRules.maxWinners) {
                 competitionRules.competitionEnded = true;
                 competitionRules.competitionEndTime = new Date().toISOString();
                 await saveCompetitionRules();
-                // ... (notification SSE inchangée)
             }
         }
     }
@@ -1719,12 +1883,23 @@ app.post('/api/pay-entry-fee', (req, res) => {
     if (!user) {
         return res.status(404).json({ error: 'Utilisateur non trouvé.' });
     }
+    
+    // On récupère la session pour laquelle l'utilisateur paie
+    const { session } = req.body;
+    if (!session) {
+        return res.status(400).json({ error: 'Session non spécifiée pour le paiement.' });
+    }
 
     const tournamentEntryFee = competitionRules.price !== undefined ? competitionRules.price : 1000;
     const participant = db.prepare('SELECT * FROM competition_participants WHERE username = ?').get(user.username);
 
-    // Sécurité : ne rien faire si l'utilisateur a déjà payé.
     if (participant) {
+        // Si le joueur a déjà payé, on s'assure quand même que son statut est correct.
+        if (user.activeSession !== session) {
+            user.activeSession = session;
+            saveUser(user);
+            broadcastSessionStatus();
+        }
         return res.json({ success: true, message: 'Frais déjà payés.' });
     }
 
@@ -1735,17 +1910,21 @@ app.post('/api/pay-entry-fee', (req, res) => {
 
     try {
         const transaction = db.transaction(() => {
-            // On déduit les frais du solde de l'utilisateur
             user.balance = currentBalance - tournamentEntryFee;
+            // ÉTAPE CRUCIALE : On met à jour la session active du joueur ICI
+            user.activeSession = session;
             saveUser(user);
             
-            // On enregistre sa participation pour ne pas le facturer à nouveau
             const stmt = db.prepare('INSERT INTO competition_participants (username, entry_fee, participation_date) VALUES (?, ?, ?)');
             stmt.run(user.username, tournamentEntryFee, new Date().toISOString());
         });
         
         transaction();
-        console.log(`[PAIEMENT CONFIRMÉ] ${user.username} a payé ${tournamentEntryFee} Ar. Nouveau solde: ${user.balance} Ar.`);
+        
+        // On notifie tout le monde que le nombre de joueurs a changé
+        broadcastSessionStatus();
+
+        console.log(`[PAIEMENT CONFIRMÉ] ${user.username} a payé ${tournamentEntryFee} Ar. Nouveau solde: ${user.balance} Ar. Session active mise à jour : ${session}`);
         res.json({ success: true, message: `Paiement de ${tournamentEntryFee} Ar effectué avec succès !`, newBalance: user.balance });
 
     } catch (error) {
@@ -1832,22 +2011,6 @@ app.get('/leaderboard-stream', (req, res) => {
   const session = req.query.session || 'session1';
   const currentUser = req.session.user;
 
-  // ==========================================================
-  // ===           LA CORRECTION DÉFINITIVE EST ICI         ===
-  // ==========================================================
-  // On met à jour le statut de l'utilisateur dès qu'il se connecte au flux,
-  // ce qui garantit que son état est correct AVANT le premier calcul du classement.
-  if (currentUser) {
-    const user = users.find(u => u.username === currentUser.username);
-    if (user && user.activeSession !== session) {
-      console.log(`[Leaderboard Stream] Mise à jour forcée de la session pour ${user.username} vers ${session}.`);
-      user.activeSession = session;
-      activeUsers.set(user.username, Date.now()); // On s'assure qu'il est bien marqué comme actif
-      saveUser(user);
-      broadcastSessionStatus(); // On notifie tout le monde
-    }
-  }
-  // === FIN DE LA CORRECTION DÉFINITIVE ===
 
   if (!leaderboardClients.has(session)) leaderboardClients.set(session, new Set());
   leaderboardClients.get(session).add(res);
@@ -1990,43 +2153,55 @@ app.post('/chat/send', async (req, res) => {
     const { session, message } = req.body;
     if (!session || !message) return res.status(400).json({ error: 'Session et message requis.' });
     activeUsers.set(req.session.user.username, Date.now());
+
     const chat = sessionChats.get(session) || [];
     const messageId = chat.length > 0 ? chat[chat.length - 1].id + 1 : 1;
-    
+
+    // Étape 1 : On ajoute immédiatement le message de l'utilisateur.
     chat.push({ id: messageId, username: req.session.user.username, message: message, timestamp: new Date().toISOString() });
-
-    const sessionUsers = users.filter(u => activeUsers.has(u.username) && u.activeSession === session);
-
-    if (sessionUsers.length <= 1) {
-        try {
-            let geminiResponse;
-            const referencedQuestion = findQuestionByText(message);
-
-            if (referencedQuestion) {
-                 console.log(`[SERVER] Question pertinente trouvée pour le chat : ${referencedQuestion.text}`);
-                 const context = {
-                     userQuery: message,
-                     quizQuestion: referencedQuestion.text,
-                     quizOptions: referencedQuestion.options,
-                     quizCorrectAnswer: referencedQuestion.correctAnswer
-                 };
-                 geminiResponse = await generateChatResponse(null, [], context);
-            } else {
-                const chatHistory = chat.map(m => ({ username: m.username, message: m.message }));
-                geminiResponse = await generateChatResponse(message, chatHistory, null);
-            }
-
-            const geminiMessageId = chat.length > 0 ? chat[chat.length - 1].id + 1 : 1;
-            chat.push({ id: geminiMessageId, username: 'Gemini', message: geminiResponse, timestamp: new Date().toISOString() });
-        } catch (error) {
-            console.error('Erreur lors de la génération de la réponse Gemini :', error);
-        }
-    }
-
     if (chat.length > 100) chat.shift();
     sessionChats.set(session, chat);
 
+    // Étape 2 : On confirme IMMÉDIATEMENT au client que son message a été reçu.
     res.json({ success: true, messageId: messageId });
+
+    // Étape 3 : On lance la génération de la réponse de l'IA en arrière-plan ("fire and forget").
+    // La fonction ci-dessous s'exécutera de son côté sans bloquer la réponse au client.
+    (async () => {
+        const sessionUsers = users.filter(u => activeUsers.has(u.username) && u.activeSession === session);
+
+        // On ne déclenche Gemini que s'il est seul dans la session.
+        if (sessionUsers.length <= 1) {
+            try {
+                let geminiResponse;
+                const referencedQuestion = findQuestionByText(message);
+
+                if (referencedQuestion) {
+                     console.log(`[SERVER] Question pertinente trouvée pour le chat : ${referencedQuestion.text}`);
+                     const context = {
+                         userQuery: message,
+                         quizQuestion: referencedQuestion.text,
+                         quizOptions: referencedQuestion.options,
+                         quizCorrectAnswer: referencedQuestion.correctAnswer
+                     };
+                     geminiResponse = await generateChatResponse(null, [], context);
+                } else {
+                    const chatHistory = chat.map(m => ({ username: m.username, message: m.message }));
+                    geminiResponse = await generateChatResponse(message, chatHistory, null);
+                }
+
+                // On récupère le chat à jour (au cas où d'autres messages seraient arrivés)
+                const currentChat = sessionChats.get(session) || [];
+                const geminiMessageId = currentChat.length > 0 ? currentChat[currentChat.length - 1].id + 1 : 1;
+                currentChat.push({ id: geminiMessageId, username: 'Gemini', message: geminiResponse, timestamp: new Date().toISOString() });
+                if (currentChat.length > 100) currentChat.shift();
+                sessionChats.set(session, currentChat);
+
+            } catch (error) {
+                console.error('Erreur lors de la génération de la réponse Gemini en arrière-plan :', error);
+            }
+        }
+    })();
 });
 
 app.post('/chat/typing', (req, res) => {
@@ -2398,9 +2573,8 @@ app.post('/api/deposit/request', (req, res) => {
     }
 });
 app.get('/api/deposit/history', (req, res) => {
-  if (!req.session.user) {
-      return res.status(401).json({ error: 'Non connecté.' });
-  }
+  if (!req.session.user) return res.status(401).json({ error: 'Non connecté.' });
+  
   const username = req.session.user.username;
   try {
       const depositsStmt = db.prepare("SELECT id, amount, transaction_ref, status, requested_at as date FROM deposits WHERE username = ?");
@@ -2408,21 +2582,35 @@ app.get('/api/deposit/history', (req, res) => {
 
       const feeStmt = db.prepare("SELECT entry_fee as amount, participation_date as date FROM competition_participants WHERE username = ?");
       const fees = feeStmt.all(username).map(f => ({ ...f, type: 'competition_fee', status: 'approved', transaction_ref: "Frais Compétition" }));
-
-      // ==========================================================
-      // ===            LA CORRECTION EST APPLIQUÉE ICI         ===
-      // ==========================================================
-      // On récupère toutes les colonnes, y compris la transaction_ref, sans l'écraser.
+      
       const withdrawalsStmt = db.prepare("SELECT id, amount, status, requested_at as date, rejection_reason, transaction_ref FROM withdrawals WHERE username = ?");
       const withdrawals = withdrawalsStmt.all(username).map(w => ({ ...w, type: 'withdrawal' }));
+      
+      // NOUVEAU : Récupérer les bonus de parrainage
+      const bonusesStmt = db.prepare("SELECT id, bonusAmount as amount, referralUsername, sourceTransactionInfo, awardedAt as date FROM referral_bonuses WHERE sponsorUsername = ?");
+      const bonuses = bonusesStmt.all(username).map(b => ({
+          ...b,
+          type: 'referral_bonus',
+          status: 'approved',
+          transaction_ref: `${b.sourceTransactionInfo} (via ${b.referralUsername})`
+      }));
 
-      const combinedHistory = [...deposits, ...fees, ...withdrawals];
+      // NOUVEAU : Récupérer les transferts internes
+      const transfersStmt = db.prepare("SELECT id, amount, transferred_at as date FROM internal_transfers WHERE username = ?");
+      const transfers = transfersStmt.all(username).map(t => ({
+          ...t,
+          type: 'internal_transfer',
+          status: 'approved',
+          transaction_ref: 'Gains vers Solde de Dépôt'
+      }));
+
+      const combinedHistory = [...deposits, ...fees, ...withdrawals, ...bonuses, ...transfers];
       combinedHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
       
       res.json(combinedHistory);
 
   } catch (error) {
-      console.error('[DEPOSIT] Erreur lors de la récupération de l\'historique combiné:', error);
+      console.error('[HISTORY] Erreur lors de la récupération de l\'historique combiné:', error);
       res.status(500).json({ error: 'Impossible de charger l\'historique des transactions.' });
   }
 });
@@ -2466,6 +2654,55 @@ app.post('/api/withdrawal/request', (req, res) => {
     }
 });
 
+// NOUVELLE ROUTE POUR TRANSFÉRER LES GAINS VERS LE SOLDE DE JEU
+app.post('/api/wallet/transfer', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ error: 'Non connecté.' });
+    }
+
+    const { amount } = req.body;
+    const username = req.session.user.username;
+    const user = users.find(u => u.username === username);
+
+    if (!user) return res.status(404).json({ error: 'Utilisateur non trouvé.' });
+
+    const parsedAmount = parseFloat(amount);
+    if (!parsedAmount || parsedAmount <= 0) {
+        return res.status(400).json({ error: 'Le montant du transfert est invalide.' });
+    }
+
+    if ((user.winningsBalance || 0) < parsedAmount) {
+        return res.status(402).json({ error: 'Solde de gains insuffisant pour effectuer ce transfert.' });
+    }
+
+    try {
+        const transaction = db.transaction(() => {
+            // Mettre à jour les soldes de l'utilisateur
+            user.winningsBalance -= parsedAmount;
+            user.balance += parsedAmount;
+            saveUser(user);
+
+            // Enregistrer la transaction de transfert pour l'historique
+            const transferredAt = moment().tz('Indian/Antananarivo').format();
+            db.prepare('INSERT INTO internal_transfers (username, amount, transferred_at) VALUES (?, ?, ?)')
+              .run(username, parsedAmount, transferredAt);
+        });
+
+        transaction();
+        
+        console.log(`[TRANSFERT] ${username} a transféré ${parsedAmount} Ar de ses gains vers son solde de jeu.`);
+        res.json({ 
+            success: true, 
+            message: 'Transfert effectué avec succès.',
+            newBalance: user.balance,
+            newWinningsBalance: user.winningsBalance
+        });
+    } catch (error) {
+        console.error('[TRANSFERT] Erreur lors du transfert interne:', error);
+        res.status(500).json({ error: 'Une erreur est survenue durant le transfert.' });
+    }
+});
+
 // --- Middleware d'administration ---
 const protectAdmin = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -2498,77 +2735,87 @@ app.get('/admin/deposits/pending', protectAdmin, (req, res) => {
 app.post('/admin/deposits/:id/approve', protectAdmin, (req, res) => {
     const depositId = parseInt(req.params.id);
     
-    if (!depositId || isNaN(depositId)) {
-        return res.status(400).json({ error: 'ID de dépôt invalide.' });
-    }
-    
     try {
         let updateResult;
 
-        // Commencer une transaction pour garantir l'intégrité des données
         const transaction = db.transaction(() => {
             const deposit = db.prepare("SELECT * FROM deposits WHERE id = ? AND status = 'pending'").get(depositId);
-            if (!deposit) {
-                throw new Error('Demande non trouvée ou déjà traitée.');
-            }
+            if (!deposit) throw new Error('Demande non trouvée ou déjà traitée.');
 
-            const user = db.prepare("SELECT balance FROM users WHERE username = ?").get(deposit.username);
-            if (!user) {
-                throw new Error(`Utilisateur '${deposit.username}' non trouvé pour le dépôt.`);
-            }
+            // MISE À JOUR : On récupère l'utilisateur complet pour le parrainage
+            const referralUser = users.find(u => u.username === deposit.username);
+            if (!referralUser) throw new Error(`Utilisateur '${deposit.username}' non trouvé.`);
 
-            const newBalance = (user.balance || 0) + deposit.amount;
-
-            // Mettre à jour la base de données
-            db.prepare("UPDATE users SET balance = ? WHERE username = ?").run(newBalance, deposit.username);
+            referralUser.balance = (referralUser.balance || 0) + deposit.amount;
+            saveUser(referralUser);
             
-            // CORRECTION : Nous générons la date de traitement avec le bon fuseau horaire
             const processedAt = moment().tz('Indian/Antananarivo').format();
             db.prepare("UPDATE deposits SET status = 'approved', processed_at = ? WHERE id = ?").run(processedAt, depositId);
             
-            // On stocke le résultat pour l'utiliser après la transaction
             updateResult = { 
                 username: deposit.username, 
                 amount: deposit.amount, 
-                newBalance: newBalance 
+                newBalance: referralUser.balance 
             };
+            
+            // ==========================================================
+            // ==            NOUVEAU : LOGIQUE DE PARRAINAGE           ==
+            // ==========================================================
+            if (referralUser.referredBy) {
+                const sponsor = users.find(u => u.username === referralUser.referredBy);
+                if (sponsor) {
+                    const bonusPercentage = competitionRules.referralDepositBonusPercentage || 10; // 10% par défaut
+                    const bonusAmount = Math.floor(deposit.amount * (bonusPercentage / 100));
+
+                    if (bonusAmount > 0) {
+                        sponsor.winningsBalance = (sponsor.winningsBalance || 0) + bonusAmount;
+                        saveUser(sponsor);
+                        
+                        // Enregistrer la transaction de bonus
+                        db.prepare(`
+                            INSERT INTO referral_bonuses (sponsorUsername, referralUsername, bonusAmount, sourceTransactionType, sourceTransactionInfo)
+                            VALUES (?, ?, ?, 'deposit', ?)
+                        `).run(sponsor.username, referralUser.username, bonusAmount, `Dépôt de ${deposit.amount} Ar`);
+                        
+                        // On stocke l'info pour la notification
+                        updateResult.sponsorBonus = {
+                            username: sponsor.username,
+                            amount: bonusAmount
+                        };
+                    }
+                }
+            }
         });
         
-        // Exécuter la transaction
         transaction();
 
-        // ==========================================================
-        // ==                 CORRECTION APPLIQUÉE ICI             ==
-        // ==========================================================
-        // 1. Mettre à jour le tableau 'users' en mémoire pour que les
-        //    prochaines requêtes de l'utilisateur aient la bonne information.
         if (updateResult) {
             const userInMemory = users.find(u => u.username === updateResult.username);
-            if (userInMemory) {
-                userInMemory.balance = updateResult.newBalance;
-                console.log(`[ADMIN] Solde en mémoire mis à jour pour ${updateResult.username}: ${updateResult.newBalance} Ar`);
-            }
+            if (userInMemory) userInMemory.balance = updateResult.newBalance;
 
-            // 2. Notifier l'utilisateur en temps réel via SSE
             if (userNotificationClients.has(updateResult.username)) {
-                const clientRes = userNotificationClients.get(updateResult.username);
-                try {
-                    clientRes.write('event: balance-update\n');
-                    clientRes.write(`data: ${JSON.stringify({ newBalance: updateResult.newBalance, amount: updateResult.amount })}\n\n`);
-                    console.log(`[NOTIF] Notification de solde envoyée à ${updateResult.username}.`);
-                } catch (e) {
-                    console.warn(`[NOTIF] Impossible d'envoyer la notification de solde à ${updateResult.username}.`);
+                userNotificationClients.get(updateResult.username).write(`event: balance-update\ndata: ${JSON.stringify({ newBalance: updateResult.newBalance, amount: updateResult.amount })}\n\n`);
+            }
+            
+            // NOUVEAU : Notifier le parrain
+            if (updateResult.sponsorBonus && userNotificationClients.has(updateResult.sponsorBonus.username)) {
+                // On récupère l'objet complet du parrain pour avoir son nouveau solde
+                const sponsorUser = users.find(u => u.username === updateResult.sponsorBonus.username);
+                if (sponsorUser) {
+                    userNotificationClients.get(sponsorUser.username).write(`event: referral-bonus\ndata: ${JSON.stringify({
+                        amount: updateResult.sponsorBonus.amount,
+                        from: updateResult.username,
+                        reason: 'dépôt',
+                        // On inclut le nouveau solde total dans la notification
+                        newWinningsBalance: sponsorUser.winningsBalance
+                    })}\n\n`);
                 }
             }
         }
         
-        res.json({ 
-            success: true, 
-            message: `Dépôt de ${updateResult.amount} Ar approuvé pour ${updateResult.username}.`
-        });
+        res.json({ success: true, message: `Dépôt de ${updateResult.amount} Ar approuvé pour ${updateResult.username}.` });
         
     } catch (error) {
-        console.error('[ADMIN] Erreur lors de l\'approbation du dépôt:', error);
         res.status(400).json({ error: error.message });
     }
 });
@@ -2617,11 +2864,19 @@ app.post('/admin/deposits/:id/reject', protectAdmin, (req, res) => {
 app.get('/admin/users/download-all', protectAdmin, (req, res) => {
     try {
         console.log('[ADMIN] Exportation de toutes les données utilisateurs demandée.');
+        
+        // La commande 'SELECT *' récupère bien TOUTES les colonnes de la table.
         const allUsers = db.prepare('SELECT * FROM users').all();
         
+        // Log de vérification : Affichons le premier utilisateur pour confirmer que toutes les données sont là.
+        if (allUsers.length > 0) {
+            console.log('[ADMIN] Aperçu du premier utilisateur exporté :', allUsers[0]);
+        }
+
         res.setHeader('Content-Disposition', 'attachment; filename="frenchquest_users_backup.json"');
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(allUsers, null, 2)); // Le 'null, 2' formate joliment le JSON
+
     } catch (error) {
         console.error('[ADMIN] Erreur lors de l\'exportation des utilisateurs:', error);
         res.status(500).json({ error: 'Impossible de générer le fichier de sauvegarde.' });
@@ -3142,7 +3397,19 @@ app.post('/admin/competition-info', protectAdmin, async (req, res) => {
     await fsp.writeFile('competition.json', JSON.stringify(payload, null, 2), 'utf8');
     updateJsonCache('competition.json', payload);
     console.log('[ADMIN] Date de compétition mise à jour :', startTime);
-    res.json({ success: true, message: 'Date de compétition mise à jour avec succès.' });
+
+    // NOUVEAU : On diffuse la mise à jour à tous les clients connectés
+    console.log('[SSE] Diffusion de l\'événement competition-time-update...');
+    userNotificationClients.forEach((clientRes, username) => {
+      try {
+        clientRes.write('event: competition-time-update\n');
+        clientRes.write(`data: ${JSON.stringify({ startTime })}\n\n`);
+      } catch (e) {
+        console.warn(`[SSE] Impossible d'envoyer la mise à jour à ${username}, client déconnecté.`);
+      }
+    });
+
+    res.json({ success: true, message: 'Date de compétition mise à jour et diffusée aux clients.' });
   } catch (error) {
     console.error('[ADMIN] Erreur écriture competition.json:', error);
     res.status(500).json({ error: 'Impossible de sauvegarder la date de compétition.' });
@@ -3171,9 +3438,19 @@ app.post('/admin/competition-rules', protectAdmin, async (req, res) => {
       currentRules.prizes = req.body.prizes.filter(p => typeof p.rank === 'number' && typeof p.amount === 'number');
   }
   
-  // NOUVEAU : On sauvegarde les pourcentages
   if (req.body.percentages) {
       currentRules.percentages = req.body.percentages.filter(p => typeof p.rank === 'number' && typeof p.percentage === 'number');
+  }
+
+  // ==========================================================
+  // ==                L'AJOUT EST ICI                       ==
+  // ==========================================================
+  // On sauvegarde les pourcentages de bonus de parrainage.
+  if (req.body.referralDepositBonusPercentage !== undefined) {
+    currentRules.referralDepositBonusPercentage = parseInt(req.body.referralDepositBonusPercentage, 10);
+  }
+  if (req.body.referralWinBonusPercentage !== undefined) {
+    currentRules.referralWinBonusPercentage = parseInt(req.body.referralWinBonusPercentage, 10);
   }
   
   competitionRules = { ...competitionRules, ...currentRules };
@@ -3232,6 +3509,35 @@ app.get('/admin/prize-pool', protectAdmin, (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Erreur lors du calcul de la cagnotte.' });
     }
+});
+// NOUVEAU : Route pour obtenir les informations dynamiques pour la page des règles
+app.get('/api/rules-info', async (req, res) => {
+  if (!req.session.user) {
+      return res.status(401).json({ error: 'Non authentifié' });
+  }
+  try {
+      const competitionInfo = await readJsonCached('competition.json');
+      
+      // On combine les informations de plusieurs sources en s'assurant qu'il y a toujours une valeur par défaut
+      const rulesData = {
+          competitionStartTime: competitionInfo.startTime,
+          maxWinners: competitionRules.maxWinners || 3,
+          entryFee: competitionRules.price || 1000,
+          referralDepositBonusPercentage: competitionRules.referralDepositBonusPercentage || 10,
+          referralWinBonusPercentage: competitionRules.referralWinBonusPercentage || 5,
+      };
+      res.json(rulesData);
+  } catch (error) {
+      console.error('[SERVER] Erreur lors de la récupération des infos pour les règles:', error);
+      // En cas d'erreur critique (ex: fichier .json manquant), on renvoie quand même un objet avec des valeurs par défaut
+      res.status(500).json({ 
+          competitionStartTime: new Date().toISOString(), // Fallback à l'heure actuelle
+          maxWinners: 3,
+          entryFee: 1000,
+          referralDepositBonusPercentage: 10,
+          referralWinBonusPercentage: 5,
+      });
+  }
 });
 
 // Route publique pour récupérer les informations de base de la cagnotte
@@ -3438,99 +3744,91 @@ app.post('/admin/prompts', protectAdmin, (req, res) => {
     res.status(500).json({ error: 'Impossible de sauvegarder le fichier de prompts.' });
   }
 });
-// REMPLACEZ LA TOTALITÉ DE VOTRE ROUTE /admin/reset-user PAR CELLE-CI :
 app.post('/admin/reset-user', protectAdmin, async (req, res) => {
-  const { username, theme } = req.body;
-
-  if (!username) {
-      return res.status(400).json({ error: "Le nom d'utilisateur est requis." });
+const { username, theme } = req.body;
+if (!username) {
+return res.status(400).json({ error: "Le nom d'utilisateur est requis." });
+}
+// Fonction interne pour réinitialiser un utilisateur
+const resetUser = (user) => {
+if (user.username === 'devtest') return;
+console.log(`[ADMIN] Réinitialisation du compte pour l'utilisateur : ${user.username}`);
+user.scores = [];
+user.currentScore = 0;
+user.activeSession = null;
+user.xp = 0;
+user.level = 1;
+user.achievements = [];
+user.streakCount = 0;
+user.lastPlayDate = null;
+user.consecutiveCorrectAnswers = 0;
+user.coins = 100;
+user.competitionCoins = 0;
+user.completedSessions = [];
+user.rewardedQuestionIds = [];
+};
+// Fonction pour envoyer une notification de réinitialisation à un client connecté
+const notifyUserOfReset = (usernameToNotify) => {
+if (userNotificationClients.has(usernameToNotify)) {
+const clientRes = userNotificationClients.get(usernameToNotify);
+clientRes.write('event: account-reset\n');
+clientRes.write('data: Votre compte a été réinitialisé par un administrateur.\n\n');
+console.log(`[ADMIN] Notification de réinitialisation envoyée à ${usernameToNotify}`);
+}
+};
+let message = '';
+if (username === 'ALL_USERS') {
+console.log('[ADMIN] Réinitialisation de TOUS les comptes utilisateurs.');
+users.forEach(user => resetUser(user));
+saveUsers();
+    try {
+    db.exec('DELETE FROM competition_participants');
+    console.log('[ADMIN] Historique des paiements de compétition purgé pour TOUS les utilisateurs.');
+  } catch (error) {
+    console.error('[ADMIN] Erreur lors de la purge de competition_participants:', error);
   }
 
-  // Fonction interne pour réinitialiser un utilisateur
-  const resetUser = (user) => {
-      if (user.username === 'devtest') return;
-      console.log(`[ADMIN] Réinitialisation du compte pour l'utilisateur : ${user.username}`);
-      user.scores = [];
-      user.currentScore = 0;
-      user.activeSession = null;
-      user.xp = 0;
-      user.level = 1;
-      user.achievements = [];
-      user.streakCount = 0;
-      user.lastPlayDate = null;
-      user.consecutiveCorrectAnswers = 0;
-      user.coins = 100;
-      user.competitionCoins = 0;
-      user.completedSessions = [];
-      user.rewardedQuestionIds = [];
-  };
+  userNotificationClients.forEach((_res, usernameToNotify) => notifyUserOfReset(usernameToNotify));
+  message = 'Tous les comptes ont été réinitialisés (y compris leur accès payant à la compétition) et les utilisateurs en ligne notifiés.';
 
-  // Fonction pour envoyer une notification de réinitialisation à un client connecté
-  const notifyUserOfReset = (usernameToNotify) => {
-    if (userNotificationClients.has(usernameToNotify)) {
-      const clientRes = userNotificationClients.get(usernameToNotify);
-      clientRes.write('event: account-reset\n');
-      clientRes.write('data: Votre compte a été réinitialisé par un administrateur.\n\n');
-      console.log(`[ADMIN] Notification de réinitialisation envoyée à ${usernameToNotify}`);
-    }
-  };
-
-  let message = '';
-
-  if (username === 'ALL_USERS') {
-      console.log('[ADMIN] Réinitialisation de TOUS les comptes utilisateurs.');
-      users.forEach(user => resetUser(user));
-      saveUsers();
-      
-      // NOUVEAU : On purge l'historique de paiement pour TOUS les utilisateurs
+  const themeToTeach = theme?.trim();
+  if (themeToTeach) {
       try {
-        db.exec('DELETE FROM competition_participants');
-        console.log('[ADMIN] Historique des paiements de compétition purgé pour TOUS les utilisateurs.');
+          console.log(`[ADMIN] Déclenchement de la génération du cours pour le thème : "${themeToTeach}"`);
+          const courseContent = await generateCourse(themeToTeach);
+          const courseData = { theme: themeToTeach, content: courseContent, generatedAt: new Date().toISOString() };
+          fs.writeFileSync('course.json', JSON.stringify(courseData, null, 2), 'utf8');
+          message += ` ET un nouveau cours sur "${themeToTeach}" a été généré.`;
       } catch (error) {
-        console.error('[ADMIN] Erreur lors de la purge de competition_participants:', error);
+          message += ` Mais la génération du cours a échoué. Raison: ${error.message}`;
       }
-
-      userNotificationClients.forEach((_res, usernameToNotify) => notifyUserOfReset(usernameToNotify));
-      message = 'Tous les comptes ont été réinitialisés (y compris leur accès payant à la compétition) et les utilisateurs en ligne notifiés.';
-
-      const themeToTeach = theme?.trim();
-      if (themeToTeach) {
-          try {
-              console.log(`[ADMIN] Déclenchement de la génération du cours pour le thème : "${themeToTeach}"`);
-              const courseContent = await generateCourse(themeToTeach);
-              const courseData = { theme: themeToTeach, content: courseContent, generatedAt: new Date().toISOString() };
-              fs.writeFileSync('course.json', JSON.stringify(courseData, null, 2), 'utf8');
-              message += ` ET un nouveau cours sur "${themeToTeach}" a été généré.`;
-          } catch (error) {
-              message += ` Mais la génération du cours a échoué. Raison: ${error.message}`;
-          }
-      } else {
-          message += ' (Aucun cours généré car le thème n\'a pas été fourni.)';
-      }
-
-      return res.json({ success: true, message });
-
   } else {
-      const userIndex = users.findIndex(u => u.username === username);
-      if (userIndex === -1) {
-          return res.status(404).json({ error: 'Utilisateur non trouvé.' });
-      }
-      resetUser(users[userIndex]);
-      saveUser(users[userIndex]); // On utilise saveUser pour être plus performant
-      
-      // NOUVEAU : On supprime l'historique de paiement UNIQUEMENT pour cet utilisateur
-      try {
-        const stmt = db.prepare('DELETE FROM competition_participants WHERE username = ?');
-        stmt.run(username);
-        console.log(`[ADMIN] Historique des paiements de compétition purgé pour l'utilisateur : ${username}`);
-      } catch (error) {
-        console.error(`[ADMIN] Erreur lors de la suppression de l'entrée de competition_participants pour ${username}:`, error);
-      }
-
-      notifyUserOfReset(username);
-
-      return res.json({ success: true, message: `Le compte de "${username}" a été réinitialisé (y compris son accès payant à la compétition) et l'utilisateur notifié s'il est en ligne.` });
+      message += ' (Aucun cours généré car le thème n\'a pas été fourni.)';
   }
+
+  return res.json({ success: true, message });
+  
+} else {
+const userIndex = users.findIndex(u => u.username === username);
+if (userIndex === -1) {
+return res.status(404).json({ error: 'Utilisateur non trouvé.' });
+}
+resetUser(users[userIndex]);
+saveUser(users[userIndex]);
+    try {
+    const stmt = db.prepare('DELETE FROM competition_participants WHERE username = ?');
+    stmt.run(username);
+    console.log(`[ADMIN] Historique des paiements de compétition purgé pour l'utilisateur : ${username}`);
+  } catch (error) {
+    console.error(`[ADMIN] Erreur lors de la suppression de l'entrée de competition_participants pour ${username}:`, error);
+  }
+
+  notifyUserOfReset(username);
+
+  message = `Le compte de "${username}" a été réinitialisé (y compris son accès payant à la compétition) et l'utilisateur notifié.`;
+  return res.json({ success: true, message });
+  
+}
 });
 
 // NOUVEAU : Route pour purger l'historique des questions
@@ -3538,21 +3836,36 @@ app.post('/admin/reset-question-history', protectAdmin, async (req, res) => {
   try {
     questionHistory = []; // On vide le tableau en mémoire
     await saveQuestionHistory(); // On sauvegarde le tableau vide (ce qui vide le fichier)
-    console.log('[ADMIN] L\'historique des questions a été purgé.');
-    res.json({ success: true, message: 'L\'historique des questions générées a été purgé avec succès.' });
+    console.log('[ADMIN] Historique des questions purgé par l\'administrateur.');
+    res.json({ success: true, message: 'L\'historique des questions a été purgé avec succès.' });
   } catch (error) {
-    console.error('[ADMIN] Erreur lors de la purge de l\'historique des questions :', error);
-    res.status(500).json({ error: 'Une erreur est survenue lors de la suppression de l\'historique.' });
+    console.error('[ADMIN] Erreur lors de la purge de l\'historique des questions:', error);
+    res.status(500).json({ error: 'Une erreur interne est survenue.' });
   }
 });
 
-// Endpoint pour le ping de vérification de connexion réseau
-app.get('/api/ping', (req, res) => {
-    res.json({
-        status: 'ok',
-        timestamp: new Date().toISOString(),
-        server: 'french-quest'
-    });
+// NOUVELLES ROUTES POUR LA GESTION DU CRON
+app.get('/admin/cron-schedule', protectAdmin, (req, res) => {
+  res.json(cronConfig);
+});
+
+app.post('/admin/cron-schedule', protectAdmin, async (req, res) => {
+  const { schedule } = req.body;
+
+  // Validation cruciale pour éviter de crasher le serveur avec un format invalide
+  if (!schedule || !cron.validate(schedule)) {
+    return res.status(400).json({ error: 'Le format de la planification (CRON) est invalide.' });
+  }
+
+  try {
+    cronConfig.schedule = schedule;
+    await saveCronConfig(); // On sauvegarde la nouvelle heure dans le fichier
+    scheduleDailyThemeRotation(); // On arrête l'ancienne tâche et on la relance avec la nouvelle heure
+    res.json({ success: true, message: `L'heure de rotation a été mise à jour et replanifiée avec succès pour : ${schedule}` });
+  } catch (error) {
+    console.error('[ADMIN] Erreur lors de la mise à jour du CRON :', error);
+    res.status(500).json({ error: 'Une erreur interne est survenue.' });
+  }
 });
 
 // ==========================================================
@@ -3633,7 +3946,12 @@ app.post('/admin/withdrawals/:id/reject', protectAdmin, (req, res) => {
                 const clientRes = userNotificationClients.get(withdrawal.username);
                 try {
                     clientRes.write('event: withdrawal-rejected\n');
-                    clientRes.write(`data: ${JSON.stringify({ amount: withdrawal.amount, reason: reason || 'Aucune raison spécifiée' })}\n\n`);
+                    // CORRECTION : On envoie le nouveau solde mis à jour
+                    clientRes.write(`data: ${JSON.stringify({ 
+                        amount: withdrawal.amount, 
+                        reason: reason || 'Aucune raison spécifiée',
+                        newWinningsBalance: user.winningsBalance
+                    })}\n\n`);
                     console.log(`[NOTIF] Notification de retrait refusé envoyée à ${withdrawal.username}.`);
                 } catch (e) {
                     console.warn(`[NOTIF] Impossible d'envoyer la notification de retrait refusé à ${withdrawal.username}.`);
@@ -3719,18 +4037,19 @@ app.get('/wallet', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+
 // Endpoint pour le ping de vérification de connexion réseau
 app.get('/api/ping', (req, res) => {
-    res.json({ 
-        status: 'ok', 
-        timestamp: new Date().toISOString(),
-        server: 'french-quest'
-    });
+  res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      server: 'french-quest'
+  });
 });
 
 // Démarrage du serveur
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Serveur démarré sur http://localhost:${PORT}`);
-    console.log(`Panneau Admin disponible sur http://localhost:${PORT}/admin`);
+  console.log(`Serveur démarré sur http://localhost:${PORT}`);
+  console.log(`Panneau Admin disponible sur http://localhost:${PORT}/admin`);
 });

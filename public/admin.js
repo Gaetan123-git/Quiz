@@ -2024,16 +2024,95 @@ window.rejectWithdrawal = async function(id) {
     }
 };
 
-if (refreshWithdrawalsBtn) {
-    refreshWithdrawalsBtn.addEventListener('click', loadPendingWithdrawals);
-}
+    // NOUVELLES FONCTIONS POUR LA GESTION DU CRON
+    const timeScheduleInput = document.getElementById('time-schedule-input');
+    const updateCronBtn = document.getElementById('update-cron-btn');
+    const cronUpdateStatus = document.getElementById('cron-update-status');
 
-// Dans la section "Lancement initial"
-if (sessionStorage.getItem(API_TOKEN_KEY)) {
-    // ... autres appels de fonctions ...
-    loadPendingDeposits();
-    loadPendingWithdrawals(); // <-- AJOUTER CET APPEL
-    loadPrizePoolInfo();
-}
+    // Charger la configuration CRON actuelle
+    async function loadCronSchedule() {
+        const token = sessionStorage.getItem(API_TOKEN_KEY);
+        try {
+            const response = await fetch('/admin/cron-schedule', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) throw new Error('Impossible de charger la planification.');
+            
+            const config = await response.json();
+            
+            // Conversion du format CRON (ex: "30 23 * * *") en HH:MM (ex: "23:30")
+            const scheduleParts = config.schedule.split(' ');
+            if (scheduleParts.length >= 2) {
+                const minute = scheduleParts[0].padStart(2, '0');
+                const hour = scheduleParts[1].padStart(2, '0');
+                timeScheduleInput.value = `${hour}:${minute}`;
+            } else {
+                // Valeur par défaut si le format est inattendu
+                timeScheduleInput.value = "23:30";
+            }
+            
+        } catch (error) {
+            cronUpdateStatus.textContent = `Erreur: ${error.message}`;
+            cronUpdateStatus.className = 'text-red-500 text-sm mt-3 h-5';
+        }
+    }
+
+    // Mettre à jour la configuration CRON
+    if (updateCronBtn) {
+        updateCronBtn.addEventListener('click', async () => {
+            const timeValue = timeScheduleInput.value; // Ex: "23:30"
+            const token = sessionStorage.getItem(API_TOKEN_KEY);
+
+            if (!timeValue) {
+                alert("Veuillez sélectionner une heure valide.");
+                return;
+            }
+
+            // Conversion de l'heure HH:MM en format CRON "MM HH * * *"
+            const [hour, minute] = timeValue.split(':');
+            const newSchedule = `${minute} ${hour} * * *`;
+
+            if (!confirm(`Êtes-vous sûr de vouloir changer l'heure de rotation pour ${timeValue} chaque jour ?\n\nLe serveur redémarrera la tâche planifiée avec cette nouvelle configuration.`)) {
+                return;
+            }
+
+            cronUpdateStatus.textContent = 'Mise à jour de la planification...';
+            cronUpdateStatus.className = 'text-yellow-400 text-sm mt-3';
+
+            try {
+                const response = await fetch('/admin/cron-schedule', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ schedule: newSchedule })
+                });
+
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error);
+
+                cronUpdateStatus.textContent = `Rotation planifiée chaque jour à ${timeValue}.`;
+                cronUpdateStatus.className = 'text-green-400 text-sm mt-3';
+
+            } catch (error) {
+                cronUpdateStatus.textContent = `Erreur : ${error.message}`;
+                cronUpdateStatus.className = 'text-red-500 text-sm mt-3';
+            }
+        });
+    }
+
+    // Dans la section "Lancement initial"
+    if (sessionStorage.getItem(API_TOKEN_KEY)) {
+        adminLoginSection.classList.add('hidden');
+        adminPanelSection.classList.remove('hidden');
+        loadQuestionsForSelectedSession();
+        loadCompetitionInfo();
+        loadUsersForReset();
+        loadAdminBooks();
+        loadAndDisplayThemes();
+        loadCurrentCourse();
+        loadPendingDeposits();
+        loadPendingWithdrawals();
+        loadPrizePoolInfo();
+        loadCronSchedule(); // Charger la configuration CRON
+    }
 
 });

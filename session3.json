@@ -1,203 +1,213 @@
 {
   "questions": [
     {
-      "text": "Quel type de phrase, qui sert à affirmer quelque chose, se termine par un point (.) ?",
+      "text": "Dans la phrase 'Le célèbre écrivain est napoléon.', quel mot doit absolument prendre une majuscule ?",
       "options": [
-        "Une phrase déclarative",
-        "Une phrase interrogative",
-        "Une énumération",
-        "Une citation directe"
+        "Le",
+        "célèbre",
+        "écrivain",
+        "napoléon"
       ],
-      "correctAnswer": "Une phrase déclarative",
-      "englishHint": "What type of sentence, used to state something, ends with a period (.)?",
-      "explanation": "Le point (.) est utilisé pour marquer la fin d'une phrase déclarative, c'est-à-dire une phrase qui affirme ou déclare quelque chose.",
-      "id": "2611e5c36faec695",
+      "correctAnswer": "napoléon",
+      "englishHint": "In the sentence 'The famous writer is napoleon.', which word must absolutely be capitalized?",
+      "explanation": "Les noms de personnes, comme Napoléon, sont des noms propres qui prennent toujours une majuscule.",
+      "id": "911fc9b30d5b19b3",
       "type": "standard"
     },
     {
-      "text": "Complétez la phrase suivante avec le mot correctement accentué : « C'est la ___ fois que je viens. »",
+      "text": "Quelle est la règle correcte pour les jours de la semaine en français ?",
       "options": [
-        "première"
+        "Ils prennent toujours une majuscule.",
+        "Ils ne prennent jamais de majuscule.",
+        "Ils prennent une majuscule seulement au début d'une phrase.",
+        "Ils prennent une majuscule s'ils sont importants."
       ],
-      "correctAnswer": "première",
-      "englishHint": "Complete the following sentence with the correctly accented word: \"It's the ___ time I've come.\"",
-      "explanation": "L'accent grave (è) est nécessaire sur le mot « première » car le « e » accentué est suivi d'une syllabe contenant un « e » muet (le « e » final).",
-      "id": "718d53947209ecbf",
+      "correctAnswer": "Ils prennent une majuscule seulement au début d'une phrase.",
+      "englishHint": "What is the correct rule for the days of the week in French?",
+      "explanation": "Les jours de la semaine ne prennent pas de majuscule en français, sauf s'ils sont le premier mot d'une phrase.",
+      "id": "3f5920ca34dab460",
       "type": "standard"
     },
     {
-      "text": "L'accent circonflexe (ê) remplace souvent un ancien 's' qui a été conservé en anglais. Quel mot anglais correspond au mot français « bête » selon ce principe ?",
+      "text": "En appliquant l'astuce 'Est-ce un nom unique et spécifique ?', lequel de ces mots ne prend PAS systématiquement une majuscule ?",
       "options": [
-        "beast",
-        "best",
-        "boat",
-        "beat"
+        "Japon",
+        "Paris",
+        "ville",
+        "Juliette"
       ],
-      "correctAnswer": "beast",
-      "englishHint": "The circumflex accent (ê) often replaces an old 's' that has been kept in English. Which English word corresponds to the French word \"bête\" according to this principle?",
-      "explanation": "L'accent circonflexe dans « bête » a une origine historique, remplaçant un 's' qui a disparu du mot ancien *beste*. Ce 's' est souvent conservé dans le mot anglais équivalent, « beast ».",
-      "id": "677cde914c740e4e",
+      "correctAnswer": "ville",
+      "englishHint": "Applying the trick 'Is it a unique and specific name?', which of these words does NOT systematically take a capital letter?",
+      "explanation": "Le mot 'ville' est un nom commun, tandis que 'Japon', 'Paris' et 'Juliette' sont des noms propres uniques et spécifiques.",
+      "id": "bbf4cce00d1c7383",
       "type": "standard"
     },
     {
-      "text": "Quel signe de ponctuation marque une pause courte à l'intérieur d'une phrase, permettant de séparer des idées ou des éléments d'une liste ?",
+      "text": "Dans la phrase 'J'aimerais voir les Alpes un jour.', pourquoi 'Alpes' prend-il une majuscule ?",
+      "options": [
+        "Parce que c'est un mot d'origine étrangère.",
+        "Parce que c'est un nom propre désignant un lieu géographique.",
+        "Parce que le mot est au pluriel.",
+        "Parce que c'est le nom d'un peuple."
+      ],
+      "correctAnswer": "Parce que c'est un nom propre désignant un lieu géographique.",
+      "englishHint": "In the sentence 'I would like to see the Alps one day.', why is 'Alpes' capitalized?",
+      "explanation": "Les noms de montagnes, comme 'les Alpes', sont des noms propres et prennent toujours une majuscule.",
+      "id": "e1cd29c25b9b17a6",
+      "type": "standard"
+    },
+    {
+      "text": "Le sigle 'ONU' est en majuscules parce que c'est le nom...",
+      "options": [
+        "d'un pays.",
+        "d'une ville.",
+        "d'une organisation.",
+        "d'une marque."
+      ],
+      "correctAnswer": "d'une organisation.",
+      "englishHint": "The acronym 'ONU' is capitalized because it is the name of...",
+      "explanation": "Les sigles des organisations, comme 'ONU' pour l'Organisation des Nations Unies, s'écrivent en majuscules.",
+      "id": "eeb3d8df1f19aaa8",
+      "type": "standard"
+    },
+    {
+      "text": "Dans 'L'Afrique est un continent', pourquoi 'Afrique' prend une majuscule et 'continent' non ?",
+      "options": [
+        "Les deux devraient être en majuscules.",
+        "'Afrique' est un nom propre, mais 'continent' est un nom commun.",
+        "'Continent' est un adjectif qui décrit 'Afrique'.",
+        "Seul le premier mot d'une phrase prend une majuscule."
+      ],
+      "correctAnswer": "'Afrique' est un nom propre, mais 'continent' est un nom commun.",
+      "englishHint": "In 'Africa is a continent', why is 'Afrique' capitalized and 'continent' not?",
+      "explanation": "'Afrique' est le nom unique et spécifique d'un continent, c'est donc un nom propre, tandis que 'continent' est un nom commun.",
+      "id": "bb5a3bfac5dd83a2",
+      "type": "standard"
+    },
+    {
+      "text": "Dans la phrase 'J'ai passé mes vacances en bretagne.', quel mot doit être mis en majuscule ?",
+      "options": [
+        "vacances",
+        "en",
+        "bretagne",
+        "passé"
+      ],
+      "correctAnswer": "bretagne",
+      "englishHint": "In the sentence 'I spent my vacation in bretagne.', which word should be capitalized?",
+      "explanation": "Les noms de régions, comme 'Bretagne', sont des noms propres géographiques et doivent toujours commencer par une majuscule.",
+      "id": "426208cb1e0cbf5f",
+      "type": "standard"
+    },
+    {
+      "text": "Après lequel de ces signes de ponctuation une nouvelle phrase commence-t-elle toujours par une majuscule ?",
       "options": [
         "La virgule (,)",
-        "Le point (.)",
-        "Les guillemets (« »)",
-        "L'accent grave (è)"
+        "Le point-virgule (;)",
+        "Le point d'interrogation (?)",
+        "Les deux-points (:)"
       ],
-      "correctAnswer": "La virgule (,)",
-      "englishHint": "Which punctuation mark indicates a short pause inside a sentence, used to separate ideas or items in a list?",
-      "explanation": "La virgule (,) sert à marquer une pause brève dans une phrase, ce qui permet de la structurer et de séparer ses différents composants sans la terminer.",
-      "id": "441ceedfc50670db",
+      "correctAnswer": "Le point d'interrogation (?)",
+      "englishHint": "According to the course, after which of these punctuation marks do you always use a capital letter to start a new sentence?",
+      "explanation": "Une nouvelle phrase, qui commence par une majuscule, peut débuter après un point, un point d'interrogation ou un point d'exclamation.",
+      "id": "06806753283b2bd6",
       "type": "standard"
     },
     {
-      "text": "L'oubli d'un accent peut complètement changer le sens d'un mot. Quel est le sens du mot « salé » ?",
+      "text": "Dans le titre du célèbre tableau \"la joconde\", quel mot doit prendre une majuscule ?",
       "options": [
-        "Qui contient du sel",
-        "Qui n'est pas propre",
-        "Une grande pièce",
-        "Vendre quelque chose"
+        "la",
+        "joconde",
+        "célèbre",
+        "tableau"
       ],
-      "correctAnswer": "Qui contient du sel",
-      "englishHint": "Forgetting an accent can completely change a word's meaning. What is the meaning of the word \"salé\"?",
-      "explanation": "Le mot « salé » avec un accent aigu signifie 'qui contient du sel' (salty), tandis que le mot « sale » sans accent signifie 'qui n'est pas propre' (dirty). L'accent est donc crucial pour le sens.",
-      "id": "b1c29b1181db5789",
+      "correctAnswer": "joconde",
+      "englishHint": "In the title of the famous painting \"la joconde\", which word should be capitalized?",
+      "explanation": "Le premier mot d'un titre d'œuvre et les noms propres qu'il contient, comme 'Joconde', prennent toujours une majuscule.",
+      "id": "abd384768937264d",
       "type": "standard"
     },
     {
-      "text": "Quelle règle de ponctuation est violée dans la phrase : « Le chat, dort sur le canapé. » ?",
+      "text": "Laquelle de ces phrases utilise correctement la majuscule pour un adjectif de nationalité ?",
       "options": [
-        "On ne sépare jamais le sujet du verbe par une seule virgule",
-        "On doit toujours mettre une majuscule après une virgule",
-        "Un verbe ne peut jamais suivre une virgule",
-        "La virgule doit être placée après le verbe"
+        "J'ai acheté une voiture Allemande.",
+        "Ma mère prépare une recette italienne.",
+        "Il écoute de la musique Espagnole.",
+        "C'est un film Français."
       ],
-      "correctAnswer": "On ne sépare jamais le sujet du verbe par une seule virgule",
-      "englishHint": "Which punctuation rule is violated in the sentence: 'Le chat, dort sur le canapé.'?",
-      "explanation": "En français, il est incorrect de séparer le groupe sujet (« Le chat ») du groupe verbal (« dort sur le canapé ») par une seule virgule.",
-      "id": "6347b198dece10f8",
+      "correctAnswer": "Ma mère prépare une recette italienne.",
+      "englishHint": "Which of these sentences correctly uses capitalization for a nationality adjective?",
+      "explanation": "L'adjectif qui décrit une nationalité, comme 'italienne', ne prend jamais de majuscule.",
+      "id": "a1894b49becff6cf",
       "type": "standard"
     },
     {
-      "text": "Parmi ces options, quel mot est un exemple correct d'utilisation de l'accent aigu (é) en début de mot ?",
+      "text": "Dans la phrase \"Le fleuve qui traverse la ville est la loire.\", quel mot est incorrectement écrit ?",
       "options": [
-        "école",
-        "être",
-        "espace"
+        "fleuve",
+        "ville",
+        "est",
+        "loire"
       ],
-      "correctAnswer": "école",
-      "englishHint": "Among these options, which word is a correct example of using the acute accent (é) at the beginning of a word?",
-      "explanation": "Le mot « école » commence par un « é » (son fermé [e]) et est un exemple classique de l'utilisation de l'accent aigu en début de mot.",
-      "id": "8469760f3fcf6674",
+      "correctAnswer": "loire",
+      "englishHint": "In the sentence \"The river that crosses the city is the loire.\", which word is incorrectly written?",
+      "explanation": "Les noms propres de lieux géographiques, comme le fleuve 'Loire', doivent toujours commencer par une majuscule.",
+      "id": "10cf382a8c5a07e9",
       "type": "standard"
     },
     {
-      "text": "Dans quelle forme conjuguée trouve-t-on un accent circonflexe (ê) ?",
+      "text": "Quel est l'un des rôles principaux des majuscules en français ?",
       "options": [
-        "vous êtes",
-        "nous aimons",
-        "je suis",
-        "ils ont"
+        "Rendre le texte plus joli",
+        "Guider le lecteur et marquer une nouvelle idée",
+        "Montrer que l'auteur est intelligent",
+        "Uniquement pour les noms de pays"
       ],
-      "correctAnswer": "vous êtes",
-      "englishHint": "In which conjugated form can you find a circumflex accent (ê)?",
-      "explanation": "L'accent circonflexe (ê) est utilisé dans certaines formes de conjugaison, notamment dans « vous êtes », la forme du verbe 'être' à la deuxième personne du pluriel au présent de l'indicatif.",
-      "id": "5a234bd44bd95c63",
+      "correctAnswer": "Guider le lecteur et marquer une nouvelle idée",
+      "englishHint": "What is one of the main roles of capital letters in French?",
+      "explanation": "Les majuscules agissent comme des panneaux de signalisation pour guider le lecteur et indiquer le début d'une phrase ou d'un nom propre.",
+      "id": "e331570afb43efac",
       "type": "standard"
     },
     {
-      "text": "Laquelle de ces phrases utilise correctement les guillemets français pour rapporter une parole ?",
+      "text": "Dans la phrase \"j'ai lu un livre d'albert camus\", quels mots doivent prendre une majuscule ?",
       "options": [
-        "Il a dit : « C'est décidé ! »",
-        "Il a dit : \"C'est décidé !\"",
-        "Il a dit : «C'est décidé !»",
-        "Il a dit : (C'est décidé !)"
+        "J'ai / livre",
+        "J'ai / Albert / Camus",
+        "Livre / Albert / Camus",
+        "J'ai / Camus"
       ],
-      "correctAnswer": "Il a dit : « C'est décidé ! »",
-      "englishHint": "Which of these sentences correctly uses French quotation marks to report speech?",
-      "explanation": "En typographie française, on utilise les guillemets en chevrons (« ») et on insère une espace (insécable) entre les guillemets et le texte qu'ils encadrent.",
-      "id": "8a991e7c96501bcd",
+      "correctAnswer": "J'ai / Albert / Camus",
+      "englishHint": "In the sentence \"i read a book by albert camus\", which words should be capitalized?",
+      "explanation": "Le premier mot de la phrase ('Je') et les noms propres de personnes ('Albert Camus') doivent commencer par une majuscule.",
+      "id": "49493551b0783ca4",
       "type": "standard"
     },
     {
-      "text": "Quelle est la principale différence de prononciation entre la lettre « é » et la lettre « è » ?",
+      "text": "Pourquoi le mot \"montagnes\" ne prend-il généralement pas de majuscule, alors que le mot \"Alpes\" en prend une ?",
       "options": [
-        "« é » a un son fermé, « è » a un son ouvert",
-        "« é » a un son ouvert, « è » a un son fermé",
-        "« é » est toujours muet à la fin d'un mot",
-        "Il n'y a pas de différence de prononciation"
+        "Parce que 'montagnes' est un mot long",
+        "Parce que 'montagnes' est un nom commun, alors que 'Alpes' est un nom propre",
+        "Parce que 'montagnes' est un adjectif",
+        "Il n'y a aucune différence, c'est une erreur"
       ],
-      "correctAnswer": "« é » a un son fermé, « è » a un son ouvert",
-      "englishHint": "What is the main pronunciation difference between the letter 'é' and the letter 'è'?",
-      "explanation": "La lettre « é » (accent aigu) correspond au son fermé [e], comme dans « thé ». La lettre « è » (accent grave) correspond au son ouvert [ɛ], comme dans « mère ».",
-      "id": "edb5fa9598921f00",
+      "correctAnswer": "Parce que 'montagnes' est un nom commun, alors que 'Alpes' est un nom propre",
+      "englishHint": "Why doesn't \"montagnes\" (mountains) usually get a capital letter, unlike \"Alpes\" (Alps)?",
+      "explanation": "Le mot 'montagnes' est un nom commun, tandis que 'les Alpes' est le nom unique et spécifique d'une chaîne de montagnes.",
+      "id": "0e39775d1575b92b",
       "type": "standard"
     },
     {
-      "text": "Choisissez l'orthographe correcte pour compléter la phrase : « Mon oncle est ___. »",
+      "text": "La phrase \"Les Allemands sont connus pour leurs voitures, comme bmw.\" contient une erreur. Quel mot doit être corrigé ?",
       "options": [
-        "médecin"
+        "Allemands",
+        "connus",
+        "voitures",
+        "bmw"
       ],
-      "correctAnswer": "médecin",
-      "englishHint": "Choose the correct spelling to complete the sentence: 'My uncle is a ___.'",
-      "explanation": "Le mot « médecin » s'écrit avec un accent aigu (é) car il est placé devant une syllabe qui ne contient pas de « e » muet.",
-      "id": "c44bf442a47ee259",
-      "type": "standard"
-    },
-    {
-      "text": "Dans quelle phrase la virgule est-elle utilisée correctement pour marquer une séparation logique ?",
-      "options": [
-        "S'il pleut, nous resterons à la maison.",
-        "Si il pleut nous resterons, à la maison.",
-        "S'il pleut nous resterons à la maison.",
-        "S'il, pleut, nous resterons à la maison."
-      ],
-      "correctAnswer": "S'il pleut, nous resterons à la maison.",
-      "englishHint": "In which sentence is the comma correctly used to mark a logical separation?",
-      "explanation": "La virgule est utilisée pour séparer la proposition subordonnée conditionnelle (« S'il pleut ») de la proposition principale (« nous resterons à la maison »).",
-      "id": "a11dbad9068ceb41",
-      "type": "standard"
-    },
-    {
-      "text": "Complétez la phrase suivante avec le mot correctement accentué : « Ma ___ est très gentille. »",
-      "options": [
-        "mère"
-      ],
-      "correctAnswer": "mère",
-      "englishHint": "Complete the following sentence with the correctly accented word: 'My ___ is very kind.'",
-      "explanation": "Le mot « mère » prend un accent grave (è) car il est suivi d'une syllabe contenant un 'e' muet (le 'e' final), ce qui produit un son ouvert [ɛ].",
-      "id": "9731fdeca3d3f778",
-      "type": "standard"
-    },
-    {
-      "text": "Laquelle de ces phrases contient une erreur d'accentuation ?",
-      "options": [
-        "Ma mêre est ici.",
-        "C'est une fête.",
-        "Mon frère est passionné.",
-        "J'ai bu un café."
-      ],
-      "correctAnswer": "Ma mêre est ici.",
-      "englishHint": "Which of these sentences contains an accentuation error?",
-      "explanation": "Le mot « mère » doit s'écrire avec un accent grave (è), et non un accent circonflexe (ê), car il précède une syllabe avec un « e » muet.",
-      "id": "5ae42b64daee6466",
-      "type": "standard"
-    },
-    {
-      "text": "Laquelle de ces phrases utilise correctement la virgule dans une énumération ?",
-      "options": [
-        "Je vois un chien, un chat et un oiseau.",
-        "Je vois un chien un chat et un oiseau.",
-        "Je vois, un chien, un chat, et un oiseau.",
-        "Je vois un chien. un chat. et un oiseau."
-      ],
-      "correctAnswer": "Je vois un chien, un chat et un oiseau.",
-      "englishHint": "Which of these sentences correctly uses a comma in an enumeration?",
-      "explanation": "Pour une énumération, on utilise la virgule pour séparer chaque élément de la liste. On ne met généralement pas de virgule avant la conjonction finale « et ».",
-      "id": "562a2f3f75ff87bf",
+      "correctAnswer": "bmw",
+      "englishHint": "The sentence \"The Germans are known for their cars, like bmw.\" contains an error. Which word must be corrected?",
+      "explanation": "Les noms de marques, comme 'BMW', sont des noms propres et doivent toujours commencer par une majuscule.",
+      "id": "f789196aded12b01",
       "type": "standard"
     }
   ]

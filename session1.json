@@ -1,206 +1,213 @@
 {
   "questions": [
     {
-      "text": "Quel type de son l'accent aigu (é) indique-t-il en français ?",
+      "text": "Quelle phrase commence correctement ?",
       "options": [
-        "Un son ouvert [ɛ]",
-        "Un son fermé [e]",
-        "Un son nasal",
-        "Un son muet"
+        "le chat dort sur le canapé.",
+        "Le chat dort sur le canapé.",
+        "le Chat dort sur le canapé.",
+        "Le Chat dort sur le canapé."
       ],
-      "correctAnswer": "Un son fermé [e]",
-      "englishHint": "What type of sound does the acute accent (é) indicate in French?",
-      "explanation": "L'accent aigu (é) indique un son fermé [e], comme dans le mot 'été'. Il se prononce avec la bouche relativement fermée.",
-      "id": "49c61bf419cc377f",
+      "correctAnswer": "le chat dort sur le canapé.",
+      "englishHint": "Which sentence starts correctly?",
+      "explanation": "On met toujours une majuscule au premier mot d'une phrase.",
+      "id": "c16e72355e1d7ac0",
       "type": "standard"
     },
     {
-      "text": "Quelle est la fonction principale de la virgule (,) dans une phrase ?",
+      "text": "Comment faut-il écrire le nom de cet écrivain célèbre ?",
       "options": [
-        "Marquer la fin d'une idée complète",
-        "Indiquer une pause courte à l'intérieur d'une phrase",
-        "Introduire les paroles de quelqu'un",
-        "Remplacer une lettre disparue"
+        "victor Hugo",
+        "Victor hugo",
+        "Victor Hugo",
+        "victor hugo"
       ],
-      "correctAnswer": "Indiquer une pause courte à l'intérieur d'une phrase",
-      "englishHint": "What is the main function of the comma (,)?",
-      "explanation": "La virgule (,) sert à marquer une pause brève à l'intérieur d'une phrase, par exemple pour séparer les éléments d'une liste ou isoler une information.",
-      "id": "dfaa84ee2cffbd27",
+      "correctAnswer": "victor Hugo",
+      "englishHint": "How should you write the name of this famous writer?",
+      "explanation": "Les prénoms et les noms de famille sont des noms propres qui prennent une majuscule.",
+      "id": "f907968cfd1cd828",
       "type": "standard"
     },
     {
-      "text": "Quelle est la bonne orthographe pour compléter la phrase : \"J'aimerais boire un ___ chaud\" ?",
+      "text": "Dans la phrase \"La capitale de la France est Paris\", quel mot est un nom propre ?",
       "options": [
-        "cafè"
+        "capitale",
+        "France",
+        "est",
+        "la"
       ],
-      "correctAnswer": "cafè",
-      "englishHint": "What is the correct spelling to complete the sentence: 'I'd like to drink a hot ___'?",
-      "explanation": "Le mot 'café' prend un accent aigu (é) sur le 'e' final pour indiquer un son fermé [e].",
-      "id": "fa7c2c159e3f72d8",
+      "correctAnswer": "France",
+      "englishHint": "In the sentence \"The capital of France is Paris\", which word is a proper noun?",
+      "explanation": "Les noms de pays, comme la France, sont des noms propres et prennent une majuscule.",
+      "id": "c06df7e1c5e923f3",
       "type": "standard"
     },
     {
-      "text": "Laquelle de ces phrases utilise incorrectement la virgule selon les règles de la grammaire française ?",
+      "text": "Choisissez la phrase correcte concernant les jours de la semaine.",
       "options": [
-        "Mon voisin, qui est sympathique, m'a aidé.",
-        "Le chat, dort sur le canapé.",
-        "J'ai acheté du pain, du fromage et du vin.",
-        "S'il pleut, nous resterons à la maison."
+        "Le rendez-vous est Mardi.",
+        "Le rendez-vous est mardi.",
+        "le rendez-vous est Mardi.",
+        "Le Rendez-vous est Mardi."
       ],
-      "correctAnswer": "Le chat, dort sur le canapé.",
-      "englishHint": "Which of these sentences uses the comma incorrectly according to French grammar rules?",
-      "explanation": "En français, il est interdit de séparer le sujet ('Le chat') du verbe ('dort') par une seule virgule.",
-      "id": "7e202cdaaeae879d",
+      "correctAnswer": "Le rendez-vous est Mardi.",
+      "englishHint": "Choose the correct sentence regarding the days of the week.",
+      "explanation": "Les jours de la semaine ne prennent pas de majuscule, sauf s'ils sont au début d'une phrase.",
+      "id": "20cb980e36353c35",
       "type": "standard"
     },
     {
-      "text": "Historiquement, l'accent circonflexe (ê) dans un mot comme 'forêt' remplace souvent quelle lettre qui a disparu de l'ancien français ?",
+      "text": "Comment compléter la phrase : \"Je parle ______ couramment.\" ?",
       "options": [
-        "la lettre 'a'",
-        "la lettre 'e'",
-        "la lettre 't'",
-        "la lettre 's'"
+        "Français",
+        "français",
+        "Francais",
+        "francais"
       ],
-      "correctAnswer": "la lettre 's'",
-      "englishHint": "Historically, the circumflex accent (ê) in a word like 'forêt' often replaces which letter that disappeared from Old French?",
-      "explanation": "L'accent circonflexe (ê) marque souvent la disparition d'une ancienne lettre, le plus souvent un 's'. C'est pourquoi 'forêt' correspond au mot anglais 'forest'.",
-      "id": "6d2cb91081f40a7d",
+      "correctAnswer": "Français",
+      "englishHint": "How to complete the sentence: \"I speak ______ fluently.\"?",
+      "explanation": "Le nom d'une langue s'écrit avec une minuscule.",
+      "id": "5b2bae624230a73d",
       "type": "standard"
     },
     {
-      "text": "Dans quel cas l'accent grave (è) est-il le plus souvent utilisé ?",
+      "text": "Complétez la phrase suivante : \"Mon voisin est un ______.\"",
       "options": [
-        "À la fin d'un mot pour un son fermé",
-        "Au début d'un mot",
-        "Devant une syllabe contenant un 'e' muet",
-        "Pour remplacer une lettre historique"
+        "Allemand",
+        "allemand",
+        "alleMand",
+        "Allemande"
       ],
-      "correctAnswer": "Devant une syllabe contenant un 'e' muet",
-      "englishHint": "In which case is the grave accent (è) most often used?",
-      "explanation": "L'accent grave (è) est principalement utilisé pour marquer un son ouvert [ɛ] devant une syllabe contenant un 'e' qui n'est pas prononcé (un 'e' muet), comme dans 'père' ou 'mère'.",
-      "id": "01712a6876f03cba",
+      "correctAnswer": "Allemand",
+      "englishHint": "Complete the following sentence: \"My neighbor is a ______.\"",
+      "explanation": "Le nom qui désigne un habitant d'un pays prend une majuscule.",
+      "id": "6000cacf3b0e8514",
       "type": "standard"
     },
     {
-      "text": "Quels guillemets typographiques sont utilisés en français standard pour encadrer une citation ?",
+      "text": "Quelle phrase est correctement écrite ?",
       "options": [
-        "\" \"",
-        "« »",
-        "< >"
+        "mon ami Pierre habite en Italie.",
+        "Mon ami pierre habite en Italie.",
+        "Mon ami Pierre habite en italie.",
+        "Mon ami Pierre habite en Italie."
       ],
-      "correctAnswer": "« »",
-      "englishHint": "Which typographical quotation marks are used in standard French to enclose a quote?",
-      "explanation": "Les guillemets typographiques français standards sont les chevrons « », toujours séparés du texte cité par une espace insécable.",
-      "id": "527571d8a7bf7dfd",
+      "correctAnswer": "mon ami Pierre habite en Italie.",
+      "englishHint": "Which sentence is written correctly?",
+      "explanation": "La phrase commence par une majuscule, et les noms propres comme 'Pierre' et 'Italie' aussi.",
+      "id": "a11405ebaf3171e2",
       "type": "standard"
     },
     {
-      "text": "Que marque le point (.) à la fin d'une phrase ?",
+      "text": "Comment s'écrit correctement cette marque de voiture ?",
       "options": [
-        "Une pause pour respirer",
-        "La conclusion d'une pensée complète",
-        "Le début d'une énumération",
-        "Une information complémentaire"
+        "renault",
+        "Renault",
+        "RenauLt",
+        "renaud"
       ],
-      "correctAnswer": "La conclusion d'une pensée complète",
-      "englishHint": "What does the period (.) mark at the end of a sentence?",
-      "explanation": "Le point (.) marque la fin d'une phrase déclarative. Il signale une pause longue et la fin d'une idée complète.",
-      "id": "be71ed1ad6c7a410",
+      "correctAnswer": "renault",
+      "englishHint": "How is this car brand written correctly?",
+      "explanation": "Les noms de marques sont des noms propres et commencent par une majuscule.",
+      "id": "44fe430801962941",
       "type": "standard"
     },
     {
-      "text": "Choisissez la bonne orthographe pour compléter la phrase : \"C'est l'anniversaire de ma ___, elle est très contente.\"",
+      "text": "Quelle est la forme correcte pour un mois de l'année ?",
       "options": [
-        "mére"
+        "Nous partons en vacances en Juillet.",
+        "Nous partons en vacances en juillet.",
+        "nous partons en vacances en Juillet.",
+        "Nous partons en Vacances en juillet."
       ],
-      "correctAnswer": "mére",
-      "englishHint": "Choose the correct spelling to complete the sentence: 'It's my ___'s birthday, she is very happy.'",
-      "explanation": "Le mot 'mère' s'écrit avec un accent grave (è) car le 'e' accentué est suivi d'une syllabe avec un 'e' muet, ce qui produit un son ouvert [ɛ].",
-      "id": "156db3d143d8468d",
+      "correctAnswer": "Nous partons en vacances en Juillet.",
+      "englishHint": "What is the correct form for a month of the year?",
+      "explanation": "Les mois de l'année ne prennent pas de majuscule au milieu d'une phrase.",
+      "id": "f1311ec1571ae5ba",
       "type": "standard"
     },
     {
-      "text": "En français, pourquoi les accents et la ponctuation sont-ils fondamentaux à l'écrit ?",
+      "text": "Comment faut-il s'adresser à une directrice dans un contexte formel ?",
       "options": [
-        "Parce qu'ils sont purement décoratifs",
-        "Parce qu'ils changent la prononciation des mots et clarifient le sens des phrases",
-        "Parce qu'ils sont optionnels",
-        "Parce qu'ils ne concernent que la poésie"
+        "madame la Directrice",
+        "Madame la directrice",
+        "madame la directrice",
+        "Madame la Directrice"
       ],
-      "correctAnswer": "Parce qu'ils changent la prononciation des mots et clarifient le sens des phrases",
-      "englishHint": "In French, why are accents and punctuation essential in writing?",
-      "explanation": "Les accents modifient la prononciation (et parfois le sens) des mots, tandis que la ponctuation structure les phrases pour en clarifier le sens. Ils sont donc cruciaux pour une communication écrite précise.",
-      "id": "127ae8571c78695a",
+      "correctAnswer": "madame la Directrice",
+      "englishHint": "How should one address a female director in a formal context?",
+      "explanation": "Dans une formule de politesse, les titres de civilité et de fonction prennent une majuscule.",
+      "id": "f84a792cf8fa31f1",
       "type": "standard"
     },
     {
-      "text": "Le mot français 'hôpital' contient un accent circonflexe (ô). Quel mot anglais partage la même origine et aide à se souvenir de l'orthographe ?",
+      "text": "Laquelle de ces phrases est correcte ?",
       "options": [
-        "hope",
-        "hospital",
-        "hotel",
-        "host"
+        "Le Président Macron a fait un discours.",
+        "Le président Macron a fait un discours.",
+        "le président Macron a fait un discours.",
+        "Le président macron a fait un discours."
       ],
-      "correctAnswer": "hospital",
-      "englishHint": "The French word 'hôpital' has a circumflex accent (ô). Which English word shares the same origin and helps to remember the spelling?",
-      "explanation": "L'accent circonflexe dans 'hôpital' remplace un ancien 's', qui a été conservé dans le mot anglais apparenté 'hospital'.",
-      "id": "33c9b79c30bf5008",
+      "correctAnswer": "Le Président Macron a fait un discours.",
+      "englishHint": "Which of these sentences is correct?",
+      "explanation": "Un titre comme 'président' reste en minuscule lorsqu'il est suivi du nom de la personne.",
+      "id": "4cc676e5928dc687",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase \"J'ai acheté du pain, du fromage et du vin\", pourquoi la virgule est-elle utilisée ?",
+      "text": "Pourquoi le mot \"Lundi\" prend-il une majuscule dans \"Lundi, je vais à l'école.\" ?",
       "options": [
-        "Pour séparer le sujet du verbe",
-        "Pour indiquer une citation",
-        "Pour marquer une pause longue",
-        "Pour séparer les éléments d'une énumération"
+        "Parce que c'est le début de la semaine.",
+        "C'est une exception pour ce jour.",
+        "Parce que c'est le premier mot de la phrase.",
+        "C'est une erreur."
       ],
-      "correctAnswer": "Pour séparer les éléments d'une énumération",
-      "englishHint": "In the sentence 'I bought bread, cheese and wine', why is the comma used?",
-      "explanation": "Dans cette phrase, la virgule est utilisée pour séparer les différents articles achetés ('pain', 'fromage'). C'est l'un des rôles principaux de la virgule : structurer une énumération.",
-      "id": "ffac9a8be9f8c0a7",
+      "correctAnswer": "Parce que c'est le premier mot de la phrase.",
+      "englishHint": "Why is the word \"Lundi\" capitalized in \"Lundi, je vais à l'école.\"?",
+      "explanation": "Même un jour de la semaine prend une majuscule s'il est le premier mot d'une phrase.",
+      "id": "134aa94f89a04e2b",
       "type": "standard"
     },
     {
-      "text": "Quel type de son les accents grave (è) et circonflexe (ê) produisent-ils ?",
+      "text": "Choisissez la phrase qui utilise correctement les majuscules.",
       "options": [
-        "Un son ouvert [ɛ]",
-        "Un son fermé [e]",
-        "Un son qui monte",
-        "Un son nasal"
+        "La Tour Eiffel est à paris.",
+        "la tour Eiffel est à Paris.",
+        "La tour Eiffel est à Paris.",
+        "la tour eiffel est à paris."
       ],
-      "correctAnswer": "Un son ouvert [ɛ]",
-      "englishHint": "What type of sound do the grave (è) and circumflex (ê) accents produce?",
-      "explanation": "Bien qu'ils aient des origines différentes, l'accent grave (è) et l'accent circonflexe (ê) indiquent tous deux le même son ouvert [ɛ], comme dans les mots 'père' ou 'tête'.",
-      "id": "880a598316e77d8e",
+      "correctAnswer": "La Tour Eiffel est à paris.",
+      "englishHint": "Choose the sentence that uses capitalization correctly.",
+      "explanation": "La phrase doit commencer par une majuscule et les noms propres 'Eiffel' et 'Paris' aussi.",
+      "id": "ff52e4092e889e22",
       "type": "standard"
     },
     {
-      "text": "Lequel de ces mots commence par un 'e' avec un accent aigu (é) ?",
+      "text": "D'après l'astuce \"Est-ce que c'est unique ?\", pourquoi \"Seine\" prend une majuscule ?",
       "options": [
-        "mère",
-        "fête",
-        "étudiant",
-        "très"
+        "Parce que c'est un mot court.",
+        "Parce que tous les fleuves prennent une majuscule.",
+        "Parce que c'est LE nom d'un fleuve spécifique.",
+        "Parce que le mot commence par un 'S'."
       ],
-      "correctAnswer": "étudiant",
-      "englishHint": "Which of these words starts with an 'e' with an acute accent (é)?",
-      "explanation": "Le mot 'étudiant' commence par un 'é', qui indique un son fermé [e]. Les autres options utilisent un accent grave (è), circonflexe (ê) ou n'ont pas d'accent.",
-      "id": "7cd5f3914b76c00f",
+      "correctAnswer": "Parce que c'est LE nom d'un fleuve spécifique.",
+      "englishHint": "According to the \"Is it unique?\" tip, why is \"Seine\" capitalized?",
+      "explanation": "Le nom 'Seine' est un nom propre car il désigne un fleuve unique et spécifique.",
+      "id": "d52fa8146ea1ae02",
       "type": "standard"
     },
     {
-      "text": "Selon les règles typographiques françaises, quel élément doit séparer les guillemets en chevrons (« ») du texte qu'ils citent ?",
+      "text": "Quelle phrase est juste ?",
       "options": [
-        "Rien de particulier",
-        "Une virgule",
-        "Un point-virgule",
-        "Une espace insécable"
+        "J'ai vu une voiture Allemande.",
+        "J'ai vu une voiture allemande.",
+        "j'ai vu une voiture allemande.",
+        "J'ai vu une Voiture allemande."
       ],
-      "correctAnswer": "Une espace insécable",
-      "englishHint": "According to French typography rules, what must separate the chevrons (« ») from the text they quote?",
-      "explanation": "La règle typographique en français est d'insérer une espace insécable entre les guillemets chevrons et le début et la fin de la citation. Exemple : « Citation ».",
-      "id": "1e6f18380ed3c5ad",
+      "correctAnswer": "J'ai vu une voiture Allemande.",
+      "englishHint": "Which sentence is correct?",
+      "explanation": "L'adjectif de nationalité, comme 'allemande', s'écrit avec une minuscule.",
+      "id": "c8210844f7851554",
       "type": "standard"
     }
   ]

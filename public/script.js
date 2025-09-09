@@ -102,11 +102,14 @@ const TAB_COMMUNICATION_KEY = 'frenchquest_active_tab';
 const myTabId = `${Date.now()}-${Math.random()}`;
 // Intervalle pour le "heartbeat" (battement de cœur) qui indique que l'onglet est actif.
 let tabHeartbeatInterval = null;
+// NOUVEAU : Intervalle pour vérifier si la place se libère.
+let ownershipCheckInterval = null;
 // Indique si cet onglet est l'onglet principal.
 let isPrimaryTab = false;
 
 /**
- * Affiche l'écran de blocage et coupe toutes les communications réseau de cet onglet.
+ * Affiche l'écran de blocage et coupe les communications réseau de cet onglet.
+ * NOUVEAU : Lance une vérification périodique pour tenter de devenir l'onglet principal.
  */
 function showMultiTabBlocker() {
     console.warn('[Multi-Tab] Un autre onglet est actif. Cet onglet est bloqué et ses connexions réseau sont coupées.');
@@ -120,7 +123,11 @@ function showMultiTabBlocker() {
     if (chatEventSource) chatEventSource.close();
     if (sessionStatusEventSource) sessionStatusEventSource.close();
     if (userStatusEventSource) userStatusEventSource.close();
-    stopKeepAlive(); // Arrête le ping d'activité
+    stopKeepAlive();
+
+    // NOUVEAU : L'onglet bloqué va maintenant vérifier toutes les 2 secondes si la place s'est libérée.
+    clearInterval(ownershipCheckInterval); // Nettoyer l'ancien intervalle au cas où
+    ownershipCheckInterval = setInterval(checkTabOwnership, 2000);
 }
 
 /**
@@ -179,21 +186,25 @@ function checkTabOwnership() {
 
 /**
  * Fait de cet onglet l'onglet principal et lance l'initialisation de l'application si nécessaire.
+ * NOUVEAU : Arrête la vérification périodique une fois que l'onglet est devenu principal.
  */
 function becomePrimaryTab() {
     if (!isPrimaryTab) {
         console.log('[Multi-Tab] Cet onglet est maintenant l\'onglet principal.');
     }
     isPrimaryTab = true;
-    window.isPrimaryTab = true; // Exposer globalement pour le network-monitor
+    window.isPrimaryTab = true;
     hideMultiTabBlocker();
-    tabHeartbeat(); // On envoie un premier heartbeat immédiatement.
     
-    // On relance l'intervalle au cas où il aurait été arrêté.
-    clearInterval(tabHeartbeatInterval);
-    tabHeartbeatInterval = setInterval(tabHeartbeat, 3000); // Envoie un heartbeat toutes les 3 secondes.
+    // NOUVEAU : Une fois que cet onglet est le maître, il n'a plus besoin de vérifier.
+    clearInterval(ownershipCheckInterval);
+    ownershipCheckInterval = null;
 
-    // Si l'application n'a pas encore été lancée, on le fait maintenant.
+    tabHeartbeat();
+    
+    clearInterval(tabHeartbeatInterval);
+    tabHeartbeatInterval = setInterval(tabHeartbeat, 3000);
+
     if (!isAppInitialized) {
         initializeApp();
     }
@@ -310,44 +321,6 @@ function shuffleArray(array) {
     return shuffled;
 }
 
-// NOUVELLE FONCTION AMÉLIORÉE (remplace l'ancienne showNotification)
-function showToast(title, message, type = 'info', duration = 5000) {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
-
-    // Création de l'élément toast
-    const toastElement = document.createElement('div');
-    toastElement.className = `toast ${type}`;
-
-    // Icônes pour chaque type
-    const icons = {
-        info: 'ℹ️',
-        success: '✅',
-        error: '❌'
-    };
-    const icon = icons[type] || '🔔';
-
-    // Structure HTML du toast
-    toastElement.innerHTML = `
-        <div class="toast__icon">${icon}</div>
-        <div class="toast__content">
-            <p class="toast__title">${title}</p>
-            <p class="toast__message">${message}</p>
-        </div>
-    `;
-
-    // Ajout du toast au conteneur
-    container.appendChild(toastElement);
-
-    // Suppression automatique après la durée spécifiée
-    setTimeout(() => {
-        toastElement.classList.add('toast--exit');
-        // Attendre la fin de l'animation de sortie pour supprimer l'élément
-        toastElement.addEventListener('animationend', () => {
-            toastElement.remove();
-        });
-    }, duration);
-}
 
 // New navigation function
 function navigateTo(route) {
@@ -744,16 +717,23 @@ async function checkSessionAndShowCourse() {
         return;
     }
 
-    // APPEL DE NOTRE NOUVELLE FONCTION CENTRALISÉE
     updateHeaderWithUserData(result);
 
     const coursePage = document.getElementById('course-page');
     const titleEl = document.getElementById('course-page-title');
     const contentEl = document.getElementById('course-content-container');
     const returnBtn = document.getElementById('course-return-menu-button');
+    // NOUVEAU : On récupère notre nouveau bouton
+    const viewHistoryBtn = document.getElementById('course-view-history-button');
 
     if (coursePage) coursePage.style.display = 'flex';
     if (returnBtn) returnBtn.addEventListener('click', () => navigateTo('/menu'));
+
+    // NOUVEAU : On attache l'événement au bouton des archives
+    if (viewHistoryBtn && !viewHistoryBtn._listenerAttached) {
+        viewHistoryBtn.addEventListener('click', () => navigateTo('/course-history'));
+        viewHistoryBtn._listenerAttached = true;
+    }
 
     try {
         const courseResponse = await fetch('/api/course');
@@ -763,10 +743,8 @@ async function checkSessionAndShowCourse() {
         }
         const courseData = await courseResponse.json();
         
-        // Stocker la date du cours actuel
         currentCourseDate = courseData.generatedAt;
         
-        // Marquer ce cours comme "vu" dans le sessionStorage
         if (currentCourseDate) {
             sessionStorage.setItem(`course_viewed_${currentCourseDate}`, 'true');
         }
@@ -1086,7 +1064,7 @@ async function sendChatMessage() {
   const input = document.getElementById('chat-input');
   const message = input.value.trim();
   if (!message) {
-    showToast('Le message ne peut pas être vide.', 'error'); // CHANGEMENT : Utilisez showToast
+    showToast('Le message ne peut pas être vide.', 'error');
     return;
   }
 
@@ -1101,18 +1079,24 @@ async function sendChatMessage() {
     });
 
     if (response.ok) {
+      // La réponse du serveur est maintenant quasi-instantanée.
+      // On affiche le message de l'utilisateur dans le chat.
+      // La réponse de Gemini arrivera plus tard via le flux SSE.
       const result = await response.json();
-      addChatMessage(currentUsername, message, new Date().toISOString(), result.messageId, false); 
       input.value = '';
-      notifyTyping(false);
       document.getElementById('send-message').disabled = true;
+      notifyTyping(false); // On arrête d'indiquer qu'on écrit.
+      
+      // NOTE : Le message de l'utilisateur est maintenant ajouté au chat par le flux SSE,
+      // ce qui garantit un ordre parfait. Nous n'avons plus besoin de l'ajouter manuellement ici.
+      
     } else {
       const errorResult = await response.json();
-      showToast(errorResult.error || 'Erreur lors de l\'envoi du message.', 'error'); // CHANGEMENT : Utilisez showToast
+      showToast('Erreur d\'envoi', errorResult.error || 'Une erreur est survenue.', 'error');
     }
   } catch (error) {
     console.error('[CLIENT] Erreur lors de l\'envoi du message:', error);
-    showToast('Erreur réseau lors de l\'envoi du message.', 'error'); // CHANGEMENT : Utilisez showToast
+    // Cette erreur est maintenant gérée par notre intercepteur, qui affiche déjà un toast.
   }
 }
 
@@ -1159,107 +1143,100 @@ function handleTyping() {
     }
 }
 function setupUserNotificationStream() {
-    // Si une connexion existe déjà, on ne fait rien pour éviter les doublons
-    if (userNotificationEventSource) {
-      return;
-    }
+    if (userNotificationEventSource) return;
   
     console.log('[CLIENT] Tentative de connexion au canal de notifications utilisateur.');
-    
     userNotificationEventSource = new EventSource('/api/user-notifications');
   
+    // --- FONCTION CENTRALISÉE POUR METTRE À JOUR LE PORTEFEUILLE ---
+    const updateWalletUI = (data) => {
+        const isOnWalletPage = window.location.pathname === '/wallet';
+        
+        // Mettre à jour le solde de dépôt si l'info est présente
+        const depositBalanceDisplay = document.getElementById('deposit-balance-display');
+        if (depositBalanceDisplay && data.newBalance !== undefined) {
+            depositBalanceDisplay.textContent = `${data.newBalance.toLocaleString('fr-FR')} Ar`;
+            depositBalanceDisplay.parentElement.classList.add('balance-updated');
+            setTimeout(() => depositBalanceDisplay.parentElement.classList.remove('balance-updated'), 1500);
+        }
+
+        // Mettre à jour le solde des gains si l'info est présente
+        const winningsBalanceDisplay = document.getElementById('winnings-balance-display');
+        if (winningsBalanceDisplay && data.newWinningsBalance !== undefined) {
+            winningsBalanceDisplay.textContent = `${data.newWinningsBalance.toLocaleString('fr-FR')} Ar`;
+            winningsBalanceDisplay.parentElement.classList.add('balance-updated');
+            setTimeout(() => winningsBalanceDisplay.parentElement.classList.remove('balance-updated'), 1500);
+        }
+
+        // Si on est sur la page du portefeuille, on recharge UNIQUEMENT l'historique.
+        if (isOnWalletPage) {
+            loadWalletHistory();
+        }
+    };
+
+    // --- GESTION DES ÉVÉNEMENTS ---
+
     userNotificationEventSource.addEventListener('account-reset', (event) => {
-      console.log('[CLIENT] Notification de réinitialisation reçue !', event.data);
       showToast('Action de l\'Administrateur', 'Votre compte a été réinitialisé. La page va maintenant s\'actualiser.', 'error', 3800);
       setTimeout(() => { window.location.href = '/menu'; }, 4000);
     });
+
+    // NOUVEAU : Gérer la mise à jour de l'heure de la compétition en temps réel
+    userNotificationEventSource.addEventListener('competition-time-update', (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        const newStartTime = new Date(data.startTime).getTime();
+        
+        console.log('[SSE] Nouvelle heure de compétition reçue :', new Date(newStartTime).toLocaleString());
+        
+        // Mettre à jour la variable globale et relancer le compte à rebours
+        competitionStartTime = newStartTime;
+        startCountdown(competitionStartTime);
+        
+        // Rafraîchir l'affichage du menu des sessions pour mettre à jour les cadenas, etc.
+        if (window.location.pathname === '/menu') {
+          showSongSelection();
+        }
+
+        showToast('Mise à Jour', 'L\'heure de début de la compétition a été modifiée par l\'administrateur.', 'info');
+
+      } catch (e) {
+        console.error("Erreur lors de la mise à jour de l'heure de la compétition :", e);
+      }
+    });
   
     userNotificationEventSource.addEventListener('balance-update', (event) => {
-        try {
-            const data = JSON.parse(event.data);
-            showToast(
-                'Dépôt Approuvé !',
-                `Votre dépôt de ${data.amount.toLocaleString('fr-FR')} Ar a été validé.`,
-                'success'
-            );
-            if (window.location.pathname === '/wallet') {
-                checkSessionAndShowWallet(); // Recharge toute la page du portefeuille
-            }
-        } catch (e) {
-            console.error('Erreur lors du traitement de la mise à jour du solde:', e);
-        }
+        const data = JSON.parse(event.data);
+        showToast('Dépôt Approuvé !', `Votre dépôt de ${data.amount.toLocaleString('fr-FR')} Ar a été validé.`, 'success');
+        updateWalletUI(data);
     });
 
-    // ==========================================================
-    // ===          NOUVEL ÉCOUTEUR D'ÉVÉNEMENT AJOUTÉ        ===
-    // ==========================================================
-    // Événement reçu lorsque l'admin a APPROUVÉ un retrait
     userNotificationEventSource.addEventListener('withdrawal-approved', (event) => {
-        try {
-            const data = JSON.parse(event.data);
-            console.log('[CLIENT] Notification de retrait approuvé reçue !', data);
-            showToast(
-                'Retrait Approuvé !',
-                `Votre demande de retrait de ${data.amount.toLocaleString('fr-FR')} Ar a été validée et payée.`,
-                'success'
-            );
-            // Si l'utilisateur est sur la page du portefeuille, on la rafraîchit
-            if (window.location.pathname === '/wallet') {
-                checkSessionAndShowWallet();
-            }
-        } catch (e) {
-            console.error('Erreur lors du traitement de l\'approbation du retrait:', e);
-        }
+        const data = JSON.parse(event.data);
+        showToast('Retrait Approuvé !', `Votre demande de retrait de ${data.amount.toLocaleString('fr-FR')} Ar a été validée et payée.`, 'success');
+        updateWalletUI(data);
     });
 
-    // ==========================================================
-    // ===          NOUVEL ÉCOUTEUR D'ÉVÉNEMENT AJOUTÉ        ===
-    // ==========================================================
-    // Événement reçu lorsque l'admin a REFUSÉ un retrait
     userNotificationEventSource.addEventListener('withdrawal-rejected', (event) => {
-        try {
-            const data = JSON.parse(event.data);
-            console.log('[CLIENT] Notification de retrait refusé reçue !', data);
-            showToast(
-                'Retrait Refusé',
-                `Votre demande de ${data.amount.toLocaleString('fr-FR')} Ar a été refusée. Raison : ${data.reason}`,
-                'error',
-                10000 // On laisse plus de temps pour lire la raison
-            );
-            // Si l'utilisateur est sur la page du portefeuille, on la rafraîchit pour voir le solde et le statut mis à jour
-            if (window.location.pathname === '/wallet') {
-                checkSessionAndShowWallet();
-            }
-        } catch (e) {
-            console.error('Erreur lors du traitement du refus de retrait:', e);
-        }
+        const data = JSON.parse(event.data);
+        showToast('Retrait Refusé', `Votre demande de ${data.amount.toLocaleString('fr-FR')} Ar a été refusée. Raison : ${data.reason}`, 'error', 10000);
+        updateWalletUI(data);
+    });
+
+    userNotificationEventSource.addEventListener('referral-bonus', (event) => {
+        const data = JSON.parse(event.data);
+        showToast('Bonus de Parrainage !', `Vous avez reçu ${data.amount.toLocaleString('fr-FR')} Ar grâce à votre filleul ${data.from} !`, 'success', 8000);
+        updateWalletUI(data);
     });
 
     userNotificationEventSource.addEventListener('account-modified', (event) => {
-        console.log('[CLIENT] Notification de modification de compte reçue !', event.data);
-        showToast(
-            'Mise à jour du Compte', 
-            'Vos données ont été mises à jour par un administrateur. Veuillez actualiser la page pour voir les changements.', 
-            'info', 
-            10000
-        );
+        showToast('Mise à jour du Compte', 'Vos données ont été mises à jour par un administrateur. Veuillez actualiser la page.', 'info', 10000);
     });
 
     userNotificationEventSource.addEventListener('account-deleted', async (event) => {
-        console.log('[CLIENT] Notification de suppression de compte reçue !', event.data);
-        showToast(
-            'Compte Supprimé', 
-            'Votre compte a été supprimé. Vous allez être redirigé vers la page d\'inscription.', 
-            'error', 
-            4800
-        );
-        
+        showToast('Compte Supprimé', 'Votre compte a été supprimé. Vous allez être redirigé.', 'error', 4800);
         setTimeout(async () => {
-            try {
-                await fetch('/logout', { method: 'POST' });
-            } finally {
-                window.location.href = '/inscription';
-            }
+            try { await fetch('/logout', { method: 'POST' }); } finally { window.location.href = '/inscription'; }
         }, 5000);
     });
   
@@ -1269,7 +1246,7 @@ function setupUserNotificationStream() {
       userNotificationEventSource = null;
       setTimeout(setupUserNotificationStream, 10000);
     };
-  }
+}
 async function notifyTyping(isTyping) {
     if (!currentUsername) {
         return;
@@ -1523,6 +1500,50 @@ function updateDynamicContent() {
 // (supprimé) Ancienne implémentation du flux SSE pour éviter les doublons
 
 /**
+ * Récupère les règles dynamiques depuis le serveur et met à jour le contenu de la modale "Comment Jouer ?".
+ * C'est une fonction centralisée pour éviter la duplication de code.
+ */
+async function updateHowToPlayModalContent() {
+    // Liste des éléments HTML à mettre à jour
+    const placeholders = {
+        'rules-start-time': document.getElementById('rules-start-time'),
+        'rules-entry-fee': document.getElementById('rules-entry-fee'),
+        'rules-max-winners': document.getElementById('rules-max-winners'),
+        'rules-ref-deposit-bonus': document.getElementById('rules-ref-deposit-bonus'),
+        'rules-ref-win-bonus': document.getElementById('rules-ref-win-bonus')
+    };
+
+    // Affiche "..." le temps du chargement
+    Object.values(placeholders).forEach(el => { if (el) el.textContent = '...'; });
+
+    try {
+        const response = await fetch('/api/rules-info');
+        const data = await response.json();
+
+        if (!response.ok || !data) {
+            throw new Error('Les données de compétition n\'ont pas pu être chargées.');
+        }
+
+        // Formate et affiche les données reçues
+        const startTime = new Date(data.competitionStartTime);
+        const timeString = startTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        
+        placeholders['rules-start-time'].textContent = `Tous les jours à ${timeString}`;
+        placeholders['rules-entry-fee'].textContent = `${data.entryFee.toLocaleString('fr-FR')} Ar`;
+        placeholders['rules-max-winners'].textContent = `${data.maxWinners} gagnants`;
+        placeholders['rules-ref-deposit-bonus'].textContent = `${data.referralDepositBonusPercentage}%`;
+        placeholders['rules-ref-win-bonus'].textContent = `${data.referralWinBonusPercentage}%`;
+
+    } catch (error) {
+        console.error("Erreur lors du chargement des règles dynamiques :", error);
+        // En cas d'échec, affiche un message clair
+        Object.values(placeholders).forEach(el => { 
+            if (el) el.textContent = 'Indisponible'; 
+        });
+    }
+}
+
+/**
  * Initialise tous les composants principaux de l'application.
  * Cette fonction ne doit être appelée qu'UNE SEULE FOIS par l'onglet principal.
  */
@@ -1632,11 +1653,16 @@ async function initializeApp() {
     if (howToPlayLink && howToPlayModal) {
         howToPlayLink.addEventListener('click', (e) => {
             e.preventDefault();
+
+            // Affiche la modale
             howToPlayModal.style.display = 'flex';
             if (menuToggle && dropdownMenu) {
                 menuToggle.classList.remove('active');
                 dropdownMenu.classList.remove('active');
             }
+
+            // Appelle la fonction centralisée pour charger le contenu
+            updateHowToPlayModalContent();
         });
     }
     const closeModalFunction = () => { if (howToPlayModal) { howToPlayModal.style.display = 'none'; } };
@@ -1648,8 +1674,8 @@ async function initializeApp() {
 
     setupUserStatusStream(); 
     
-    // Démarrer les mises à jour de la cagnotte
-    startPrizePoolUpdates();
+    // Afficher la modale "Comment Jouer ?" si nécessaire (après login/inscription)
+    showHowToPlayIfNeeded();
 
     const courseHistoryList = document.getElementById('course-history-list');
     if (courseHistoryList) {
@@ -1661,6 +1687,26 @@ async function initializeApp() {
                 if (selectedCourse) { displayCourseInModal(selectedCourse); }
             }
         });
+    }
+}
+
+// Fonction pour afficher la modale "Comment Jouer ?" si nécessaire
+function showHowToPlayIfNeeded() {
+    const shouldShowHowToPlay = sessionStorage.getItem('showHowToPlay');
+    if (shouldShowHowToPlay === 'true') {
+        // Supprimer le flag pour ne pas l'afficher à nouveau
+        sessionStorage.removeItem('showHowToPlay');
+        
+        // Attendre un petit délai pour s'assurer que la page est complètement chargée
+        setTimeout(() => {
+            const howToPlayModal = document.getElementById('how-to-play-modal');
+            if (howToPlayModal) {
+                console.log('[CLIENT] Affichage automatique de la modale "Comment Jouer ?"');
+                howToPlayModal.style.display = 'flex';
+                // On appelle notre nouvelle fonction pour charger les données dynamiques
+                updateHowToPlayModalContent();
+            }
+        }, 500);
     }
 }
 
@@ -2089,7 +2135,11 @@ async function nextQuestion() {
                             'Confirmer et Payer',
                             'Annuler',
                             () => {
-                                fetch('/api/pay-entry-fee', { method: 'POST' })
+                                fetch('/api/pay-entry-fee', { 
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ session: selectedSession }) // On envoie la session
+                                 })
                                     .then(payRes => {
                                         if (!payRes.ok) {
                                             return payRes.json().then(errData => {
@@ -2227,17 +2277,13 @@ function updatePlayerStats(xp, level, streakCount, coins, competitionCoins) {
 }
 
 function displayAchievementNotification(achievementName) {
-    const notificationElement = document.getElementById('achievement-notification');
-    if (notificationElement) {
-        notificationElement.textContent = `Succès débloqué : ${achievementName} !`;
-        notificationElement.style.display = 'block';
-        notificationElement.classList.remove('fadeOutUp');
-        void notificationElement.offsetWidth;
-        notificationElement.classList.add('fadeOutUp');
-        setTimeout(() => {
-            notificationElement.style.display = 'none';
-        }, 5000);
-    }
+    // Affiche une notification "toast" en bas à gauche de l'écran.
+    // C'est plus propre et évite les superpositions sur mobile.
+    showToast(
+        "Succès Débloqué !",  // Titre du toast
+        achievementName,        // Message principal (le nom du succès)
+        'success'               // Type de toast (pour l'icône et la couleur)
+    );
 }
 async function submitAnswer(selectedOption) {
     const feedback = document.getElementById('feedback');
@@ -3535,9 +3581,6 @@ function showWalletPage(userData, paymentInfo) {
     const phoneNumberSpan = document.getElementById('payment-phone-number');
     if (phoneNumberSpan) phoneNumberSpan.textContent = paymentInfo.paymentNumber || "Numéro indisponible";
 
-    // ==========================================================
-    // ===        NOUVELLE LOGIQUE DE GESTION DU NUMÉRO       ===
-    // ==========================================================
     const phoneDisplayContainer = document.getElementById('phone-display-container');
     const editPhoneContainer = document.getElementById('edit-phone-container');
     const withdrawalPhoneDisplay = document.getElementById('withdrawal-phone-display');
@@ -3546,14 +3589,12 @@ function showWalletPage(userData, paymentInfo) {
     const savePhoneBtn = document.getElementById('save-phone-btn');
     const cancelEditPhoneBtn = document.getElementById('cancel-edit-phone-btn');
 
-    // Afficher le numéro actuel de l'utilisateur
     if (userData.paymentPhone) {
         withdrawalPhoneDisplay.textContent = userData.paymentPhone;
     } else {
         withdrawalPhoneDisplay.textContent = "Aucun numéro enregistré";
     }
 
-    // Gérer l'affichage du formulaire de modification
     const toggleEditMode = (isEditing) => {
         phoneDisplayContainer.style.display = isEditing ? 'none' : 'block';
         editPhoneContainer.style.display = isEditing ? 'block' : 'none';
@@ -3563,35 +3604,24 @@ function showWalletPage(userData, paymentInfo) {
     if (editPhoneBtn) editPhoneBtn.addEventListener('click', () => toggleEditMode(true));
     if (cancelEditPhoneBtn) cancelEditPhoneBtn.addEventListener('click', () => toggleEditMode(false));
 
-    // Gérer la sauvegarde du nouveau numéro
     if (savePhoneBtn && !savePhoneBtn._listenerAttached) {
         savePhoneBtn.addEventListener('click', async () => {
             const newPhone = newPhoneInput.value.trim();
-            if (!newPhone) {
-                showToast('Erreur', 'Le numéro ne peut pas être vide.', 'error');
-                return;
-            }
             try {
                 const res = await fetch('/api/profile/update-phone', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ paymentPhone: newPhone })
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ paymentPhone: newPhone })
                 });
                 const result = await res.json();
                 if (!res.ok) throw new Error(result.error);
-
                 showToast('Succès', 'Votre numéro de paiement a été mis à jour.', 'success');
-                userData.paymentPhone = result.newPhone; // Mettre à jour les données locales
+                userData.paymentPhone = result.newPhone;
                 withdrawalPhoneDisplay.textContent = result.newPhone;
-                toggleEditMode(false); // Revenir à l'affichage normal
-            } catch (err) {
-                showToast('Erreur', err.message, 'error');
-            }
+                toggleEditMode(false);
+            } catch (err) { showToast('Erreur', err.message, 'error'); }
         });
         savePhoneBtn._listenerAttached = true;
     }
     
-    // Logique des formulaires de dépôt et de retrait (inchangée)
     const depositForm = document.getElementById('deposit-request-form');
     if (depositForm && !depositForm._listenerAttached) {
         depositForm.addEventListener('submit', async (e) => {
@@ -3600,20 +3630,63 @@ function showWalletPage(userData, paymentInfo) {
             const refInput = document.getElementById('deposit-ref');
             try {
                 const res = await fetch('/api/deposit/request', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ amount: amountInput.value, transactionRef: refInput.value })
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: amountInput.value, transactionRef: refInput.value })
                 });
                 const result = await res.json();
                 if (!res.ok) throw new Error(result.error);
                 showToast('Succès', result.message, 'success');
                 amountInput.value = ''; refInput.value = '';
                 checkSessionAndShowWallet();
-            } catch (err) {
-                showToast('Erreur de soumission', err.message, 'error');
-            }
+            } catch (err) { showToast('Erreur de soumission', err.message, 'error'); }
         });
         depositForm._listenerAttached = true;
+    }
+
+    // NOUVEAU : Gérer le formulaire de transfert interne
+    const transferForm = document.getElementById('transfer-form');
+    if (transferForm && !transferForm._listenerAttached) {
+        transferForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const amountInput = document.getElementById('transfer-amount');
+            const transferStatus = document.getElementById('transfer-status');
+            const amount = parseFloat(amountInput.value);
+
+            if (!amount || amount <= 0) {
+                showToast('Erreur', 'Veuillez entrer un montant valide.', 'error');
+                return;
+            }
+
+            transferStatus.textContent = 'Transfert en cours...';
+            transferStatus.className = 'text-yellow-400 text-sm mt-3 h-5';
+
+            try {
+                const response = await fetch('/api/wallet/transfer', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount })
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error);
+
+                showToast('Succès', 'Le transfert a été effectué !', 'success');
+                amountInput.value = '';
+                transferStatus.textContent = '';
+                
+                // Mettre à jour les soldes affichés en temps réel
+                const depositBalanceDisplay = document.getElementById('deposit-balance-display');
+                const winningsBalanceDisplay = document.getElementById('winnings-balance-display');
+                if(depositBalanceDisplay) depositBalanceDisplay.textContent = `${result.newBalance.toLocaleString('fr-FR')} Ar`;
+                if(winningsBalanceDisplay) winningsBalanceDisplay.textContent = `${result.newWinningsBalance.toLocaleString('fr-FR')} Ar`;
+                
+                // Recharger l'historique des transactions
+                loadWalletHistory();
+
+            } catch (err) {
+                transferStatus.textContent = '';
+                showToast('Échec du transfert', err.message, 'error');
+            }
+        });
+        transferForm._listenerAttached = true;
     }
     
     const withdrawalForm = document.getElementById('withdrawal-request-form');
@@ -3622,18 +3695,11 @@ function showWalletPage(userData, paymentInfo) {
             e.preventDefault();
             const amountInput = document.getElementById('withdrawal-amount');
             const amount = amountInput.value;
-
             if (!userData.paymentPhone) {
                 showToast('Action requise', 'Veuillez d\'abord enregistrer un numéro de paiement.', 'error');
                 toggleEditMode(true);
                 return;
             }
-
-            if (!amount || parseFloat(amount) <= 0) {
-                showToast('Erreur', 'Veuillez entrer un montant de retrait valide.', 'error');
-                return;
-            }
-
             showConfirmationModal(
                 'Confirmation de Retrait',
                 `Vous demandez un retrait de ${amount} Ar vers le numéro ${userData.paymentPhone}. Continuer ?`,
@@ -3641,19 +3707,14 @@ function showWalletPage(userData, paymentInfo) {
                 async () => {
                     try {
                         const res = await fetch('/api/withdrawal/request', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ amount: parseFloat(amount) })
+                            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: parseFloat(amount) })
                         });
                         const result = await res.json();
                         if (!res.ok) throw new Error(result.error);
-                        
                         showToast('Demande Envoyée', result.message, 'success');
                         amountInput.value = '';
                         checkSessionAndShowWallet(); 
-                    } catch (err) {
-                        showToast('Erreur de Demande', err.message, 'error');
-                    }
+                    } catch (err) { showToast('Erreur de Demande', err.message, 'error'); }
                 }
             );
         });
@@ -3664,6 +3725,44 @@ function showWalletPage(userData, paymentInfo) {
     if (returnBtn && !returnBtn._listenerAttached) {
         returnBtn.addEventListener('click', () => navigateTo('/menu'));
         returnBtn._listenerAttached = true;
+    }
+    
+    // NOUVEAU : Logique pour les DEUX options de parrainage
+    const referralCodeDisplay = document.getElementById('referral-code-display');
+    const copyReferralCodeBtn = document.getElementById('copy-referral-code-btn');
+    const referralLinkDisplay = document.getElementById('referral-link-display');
+    const copyReferralLinkBtn = document.getElementById('copy-referral-link-btn');
+
+    if (userData.referralCode) {
+        const referralCode = userData.referralCode;
+        const referralUrl = `${window.location.origin}/inscription?ref=${referralCode}`;
+        
+        // Remplir les deux champs
+        if (referralCodeDisplay) referralCodeDisplay.value = referralCode;
+        if (referralLinkDisplay) referralLinkDisplay.value = referralUrl;
+
+        // Attacher l'écouteur pour copier le CODE
+        if (copyReferralCodeBtn && !copyReferralCodeBtn._listenerAttached) {
+            copyReferralCodeBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(referralCode)
+                    .then(() => showToast('Copié !', 'Le code de parrainage a été copié.', 'success'))
+                    .catch(() => showToast('Erreur', 'Impossible de copier le code.', 'error'));
+            });
+            copyReferralCodeBtn._listenerAttached = true;
+        }
+
+        // Attacher l'écouteur pour copier le LIEN
+        if (copyReferralLinkBtn && !copyReferralLinkBtn._listenerAttached) {
+            copyReferralLinkBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(referralUrl)
+                    .then(() => showToast('Copié !', 'Le lien de parrainage a été copié.', 'success'))
+                    .catch(() => showToast('Erreur', 'Impossible de copier le lien.', 'error'));
+            });
+            copyReferralLinkBtn._listenerAttached = true;
+        }
+    } else {
+        if (referralCodeDisplay) referralCodeDisplay.value = 'N/A';
+        if (referralLinkDisplay) referralLinkDisplay.value = 'N/A';
     }
     
     loadWalletHistory();
@@ -3693,37 +3792,32 @@ async function loadWalletHistory() {
             switch (tx.type) {
                 case 'deposit':
                     icon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>`;
-                    title = 'Dépôt reçu';
-                    amountClass = 'positive';
-                    amountPrefix = '+';
+                    title = 'Dépôt reçu'; amountClass = 'positive'; amountPrefix = '+';
                     statusText = tx.status === 'approved' ? 'Approuvé' : (tx.status === 'rejected' ? 'Rejeté' : 'En attente');
-                    statusClass = `status-${tx.status}`;
-                    refText = tx.transaction_ref;
+                    statusClass = `status-${tx.status}`; refText = tx.transaction_ref;
                     break;
                 case 'withdrawal':
                     icon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>`;
-                    title = 'Demande de retrait';
-                    amountClass = 'negative';
-                    amountPrefix = '-';
+                    title = 'Demande de retrait'; amountClass = 'negative'; amountPrefix = '-';
                     statusText = tx.status === 'approved' ? 'Payé' : (tx.status === 'rejected' ? 'Refusé' : 'En attente');
-                    statusClass = `status-${tx.status}`;
-                    // ==========================================================
-                    // ===            LA CORRECTION EST APPLIQUÉE ICI         ===
-                    // ==========================================================
-                    // On affiche la référence fournie par l'admin, ou l'ID si elle est en attente
-                    refText = tx.status === 'approved' ? tx.transaction_ref : `Retrait ID ${tx.id}`;
-                    if (tx.status === 'rejected' && tx.rejection_reason) {
-                        reasonHTML = `<div class="rejection-reason">Raison : ${tx.rejection_reason}</div>`;
-                    }
+                    statusClass = `status-${tx.status}`; refText = tx.status === 'approved' ? tx.transaction_ref : `Retrait ID ${tx.id}`;
+                    if (tx.status === 'rejected' && tx.rejection_reason) reasonHTML = `<div class="rejection-reason">Raison : ${tx.rejection_reason}</div>`;
                     break;
                 case 'competition_fee':
                     icon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 21h16"/><path d="M6 21v-9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9"/><path d="M12 17.5v-11"/><path d="M8 17.5V14"/><path d="M16 17.5V14"/></svg>`;
-                    title = 'Frais de compétition';
-                    amountClass = 'negative';
-                    amountPrefix = '-';
-                    statusText = 'Validé';
-                    statusClass = 'status-approved';
-                    refText = tx.transaction_ref;
+                    title = 'Frais de compétition'; amountClass = 'negative'; amountPrefix = '-';
+                    statusText = 'Validé'; statusClass = 'status-approved'; refText = tx.transaction_ref;
+                    break;
+                case 'referral_bonus':
+                    icon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`;
+                    title = 'Bonus de parrainage'; amountClass = 'positive'; amountPrefix = '+';
+                    statusText = 'Crédité'; statusClass = 'status-approved'; refText = tx.transaction_ref;
+                    break;
+                // NOUVEAU : Gérer l'affichage des transferts internes
+                case 'internal_transfer':
+                    icon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`;
+                    title = 'Transfert interne'; amountClass = 'neutral'; amountPrefix = ''; // Ni positif, ni négatif
+                    statusText = 'Effectué'; statusClass = 'status-approved'; refText = tx.transaction_ref;
                     break;
             }
 
@@ -3732,7 +3826,7 @@ async function loadWalletHistory() {
                     <div class="transaction-icon ${tx.type}">${icon}</div>
                     <div class="transaction-details">
                         <div class="title">${title}</div>
-                        <div class="ref">Référence : ${refText}</div>
+                        <div class="ref">Détail : ${refText}</div>
                         ${reasonHTML}
                     </div>
                     <div class="transaction-meta">
@@ -3749,51 +3843,8 @@ async function loadWalletHistory() {
     }
 }
 
-// ---- GESTION DE LA CAGNOTTE ----
-async function displayPrizePoolBanner() {
-    try {
-        const response = await fetch('/api/prize-pool');
-        
-        if (!response.ok) {
-            console.error('Erreur lors du chargement de la cagnotte');
-            return;
-        }
-        
-        const data = await response.json();
-        
-        // Mettre à jour les éléments d'affichage
-        const prizePoolDisplay = document.getElementById('prize-pool-display');
-        const participantsDisplay = document.getElementById('participants-display');
-        const prizePoolBanner = document.getElementById('prize-pool-banner');
-        
-        if (prizePoolDisplay) {
-            prizePoolDisplay.textContent = `${data.prizesPool} Ar`;
-        }
-        
-        if (participantsDisplay) {
-            participantsDisplay.textContent = data.participantsCount;
-        }
-        
-        // Afficher la bannière si la cagnotte existe et qu'il y a des participants
-        if (prizePoolBanner && data.participantsCount > 0) {
-            prizePoolBanner.style.display = 'block';
-        }
-        
-    } catch (error) {
-        console.error('Erreur lors du chargement de la cagnotte:', error);
-    }
-}
 
-// Fonction pour mettre à jour périodiquement la cagnotte
-function startPrizePoolUpdates() {
-    // Charger la cagnotte immédiatement
-    displayPrizePoolBanner();
-    
-    // Mettre à jour toutes les 30 secondes
-    setInterval(displayPrizePoolBanner, 30000);
-}
 
 // Exposer les fonctions sur window pour compatibilité SPA
 window.showUserErrorsPage = showUserErrorsPage;
 window.startReplayErrorQuestions = startReplayErrorQuestions;
-window.displayPrizePoolBanner = displayPrizePoolBanner;

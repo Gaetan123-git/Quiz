@@ -1,204 +1,213 @@
 {
   "questions": [
     {
-      "text": "Sur quelle lettre l'accent aigu (é) peut-il être placé en français ?",
+      "text": "Quel mot complète correctement la phrase : \"______ chat dort sur le canapé.\" ?",
       "options": [
-        "Uniquement sur la lettre 'e'",
-        "Sur toutes les voyelles (a, e, i, o, u)",
-        "Sur les lettres 'e' et 'a'",
-        "Sur les lettres 'e' et 'u'"
+        "le",
+        "Le",
+        "lE",
+        "LE"
       ],
-      "correctAnswer": "Uniquement sur la lettre 'e'",
-      "englishHint": "On which letter can the acute accent (é) be placed in French?",
-      "explanation": "En français, l'accent aigu (é) ne se place que sur la voyelle 'e' pour indiquer un son fermé [e].",
-      "id": "b94f3989ecc7aa1f",
+      "correctAnswer": "le",
+      "englishHint": "Which word correctly completes the sentence: '______ cat is sleeping on the sofa.'?",
+      "explanation": "On met toujours une majuscule au premier mot d'une phrase.",
+      "id": "944f2d1d9e360784",
       "type": "standard"
     },
     {
-      "text": "Parmi les phrases suivantes, laquelle contient une erreur de ponctuation majeure en français ?",
+      "text": "Quelle est la graphie correcte pour le nom de la scientifique Marie Curie ?",
       "options": [
-        "Le chat, dort sur le canapé.",
-        "Le chat, qui est fatigué, dort sur le canapé.",
-        "J'aime le pain, le fromage et le vin.",
-        "S'il fait beau, nous sortirons."
+        "marie Curie",
+        "Marie curie",
+        "Marie Curie",
+        "marie curie"
       ],
-      "correctAnswer": "Le chat, dort sur le canapé.",
-      "englishHint": "Among the following sentences, which one contains a major punctuation error in French?",
-      "explanation": "Il est interdit de séparer le sujet ('Le chat') du verbe ('dort') par une seule virgule. C'est une erreur très courante à éviter.",
-      "id": "ac4cfb0b51541195",
+      "correctAnswer": "marie Curie",
+      "englishHint": "How do you correctly write the name of the famous scientist mentioned in the course?",
+      "explanation": "Les prénoms et les noms de famille, qui sont des noms propres, prennent toujours une majuscule.",
+      "id": "fbbefa26f1de9ef7",
       "type": "standard"
     },
     {
-      "text": "Quel mot français avec un accent circonflexe (ê) a un équivalent en anglais qui a conservé un 's' historique ?",
+      "text": "Dans la phrase \"J'aime visiter la ______\", quel est le bon choix pour cette région française ?",
       "options": [
-        "la forêt (forest)",
-        "la mère (mother)",
-        "le café (coffee)",
-        "l'école (school)"
+        "bretagne",
+        "Bretagne",
+        "bRetagne",
+        "BRETAGNE"
       ],
-      "correctAnswer": "la forêt (forest)",
-      "englishHint": "Which French word with a circumflex accent (ê) has an English equivalent that kept a historical 's'?",
-      "explanation": "L'accent circonflexe remplace souvent un 's' qui a disparu de l'ancien français mais qui est parfois resté en anglais, comme dans 'forêt' (forest), 'hôpital' (hospital) ou 'bête' (beast).",
-      "id": "eda8d9cc62f6bee5",
+      "correctAnswer": "bretagne",
+      "englishHint": "In the sentence 'I like to visit ______', what is the correct choice for this French region?",
+      "explanation": "Les noms de régions géographiques sont des noms propres et commencent par une majuscule.",
+      "id": "c2367afd9ba0f5d1",
       "type": "standard"
     },
     {
-      "text": "Comment appelle-t-on l'utilisation des guillemets (« ») pour rapporter les paroles exactes de quelqu'un ?",
+      "text": "Complétez la phrase : \"Mon anniversaire est en ______.\"",
       "options": [
-        "Le discours direct",
-        "La phrase déclarative",
-        "L'énumération",
-        "L'information complémentaire"
+        "Juillet",
+        "juillet",
+        "jUillet",
+        "juilleT"
       ],
-      "correctAnswer": "Le discours direct",
-      "englishHint": "What is the term for using quotation marks (« ») to report someone's exact words?",
-      "explanation": "Les guillemets sont utilisés pour encadrer le discours direct, c'est-à-dire les paroles rapportées telles qu'elles ont été prononcées.",
-      "id": "9b71a35135748b35",
+      "correctAnswer": "Juillet",
+      "englishHint": "Complete the sentence: 'My birthday is in ______.'",
+      "explanation": "Les mois de l'année ne prennent pas de majuscule, sauf s'ils sont au début d'une phrase.",
+      "id": "f09541378c28b824",
       "type": "standard"
     },
     {
-      "text": "Choisissez la bonne orthographe pour compléter la phrase : \"Mon ___ est très gentil.\"",
+      "text": "Quelle phrase est correcte pour décrire la nationalité d'un objet ?",
       "options": [
-        "frère"
+        "C'est une voiture Allemande.",
+        "C'est une voiture allemande.",
+        "C'est une voiture Allemand.",
+        "C'est une voiture allemand."
       ],
-      "correctAnswer": "frère",
-      "englishHint": "Choose the correct spelling to complete the sentence: \"My ___ is very kind.\"",
-      "explanation": "Le mot 'frère' prend un accent grave (è) car le 'e' est suivi d'une syllabe contenant un 'e' muet. L'accent aigu (frére) est incorrect.",
-      "id": "a5ae0ec38452d293",
+      "correctAnswer": "C'est une voiture Allemande.",
+      "englishHint": "Which sentence is correct to describe the nationality of an object?",
+      "explanation": "L'adjectif de nationalité qui décrit un objet s'écrit toujours avec une minuscule.",
+      "id": "e371e873616de1b8",
       "type": "standard"
     },
     {
-      "text": "Quel signe de ponctuation utilise-t-on pour marquer la fin d'une idée complète et indiquer une pause longue ?",
+      "text": "Comment désigner correctement les habitants de la France en tant que groupe ?",
       "options": [
-        "Le point (.)",
-        "La virgule (,)",
-        "Les deux-points (:)",
-        "Le point-virgule (;)"
+        "les français",
+        "les Français",
+        "des Francais",
+        "le Français"
       ],
-      "correctAnswer": "Le point (.)",
-      "englishHint": "Which punctuation mark is used to mark the end of a complete idea and indicate a long pause?",
-      "explanation": "Le point termine une phrase déclarative ou impérative, signalant la fin d'une pensée et une pause importante dans la lecture.",
-      "id": "0099d213cc985158",
+      "correctAnswer": "les français",
+      "englishHint": "How do you correctly refer to the inhabitants of France as a group?",
+      "explanation": "Le nom désignant un habitant ou un peuple prend une majuscule.",
+      "id": "886a1e453abe662a",
       "type": "standard"
     },
     {
-      "text": "Quelle est l'orthographe correcte du mot manquant dans la phrase : \"J'aimerais manger une ___ au sucre.\"",
+      "text": "Pour parler de la marque de boisson Coca-Cola, quelle est la bonne orthographe ?",
       "options": [
-        "crêpe"
+        "coca-cola",
+        "Coca-cola",
+        "Coca-Cola",
+        "coca-Cola"
       ],
-      "correctAnswer": "crêpe",
-      "englishHint": "What is the correct spelling for the missing word in the sentence: \"I would like to eat a sugar ___.\"",
-      "explanation": "Le mot 'crêpe' s'écrit avec un accent circonflexe. Cet accent indique un son ouvert [ɛ].",
-      "id": "b6873d6e7a76dbb1",
+      "correctAnswer": "coca-cola",
+      "englishHint": "To talk about the drink brand, what is the correct spelling?",
+      "explanation": "Les noms de marques sont des noms propres et prennent une majuscule.",
+      "id": "df2087e27817d687",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase \"S'il pleut, nous resterons à la maison\", pourquoi utilise-t-on une virgule ?",
+      "text": "Dans la suite de phrases \"Avez-vous vu le film ? ... est incroyable.\", quel mot commence la deuxième phrase ?",
       "options": [
-        "Pour marquer une séparation logique entre une condition et son résultat",
-        "Pour séparer les éléments d'une liste",
-        "Pour isoler une information non essentielle",
-        "Pour indiquer une citation"
+        "il",
+        "Il",
+        "iL",
+        "IL"
       ],
-      "correctAnswer": "Pour marquer une séparation logique entre une condition et son résultat",
-      "englishHint": "In the sentence \"If it rains, we will stay home,\" why is a comma used?",
-      "explanation": "La virgule est utilisée ici pour séparer la proposition subordonnée de condition ('S'il pleut') de la proposition principale ('nous resterons à la maison').",
-      "id": "9625ecd641b7e2a4",
+      "correctAnswer": "il",
+      "englishHint": "In the sequence of sentences 'Have you seen the movie? ... is incredible.', which word starts the second sentence?",
+      "explanation": "Chaque nouvelle phrase, même courte, doit commencer par une majuscule.",
+      "id": "699b82ea822144b6",
       "type": "standard"
     },
     {
-      "text": "Quelle est la conséquence principale de l'oubli d'un accent, comme dans la différence entre 'salé' et 'sale' ?",
+      "text": "Comment compléter la phrase suivante : \"Le rendez-vous est ______ prochain.\" ?",
       "options": [
-        "Changer la prononciation et le sens du mot",
-        "Rendre la phrase plus formelle",
-        "Commettre une erreur de style mineure",
-        "Améliorer la lisibilité"
+        "Mardi",
+        "mardi",
+        "MARDI",
+        "marDi"
       ],
-      "correctAnswer": "Changer la prononciation et le sens du mot",
-      "englishHint": "What is the main consequence of forgetting an accent, as in the difference between 'salé' and 'sale'?",
-      "explanation": "L'oubli ou l'erreur d'accent est une faute d'orthographe qui peut modifier complètement la prononciation et le sens d'un mot (ex: salé [salty] vs. sale [dirty]).",
-      "id": "f2ba8fa4dcceb191",
+      "correctAnswer": "Mardi",
+      "englishHint": "How do you complete the following sentence: 'The appointment is next ______.'?",
+      "explanation": "Un jour de la semaine placé au milieu d'une phrase ne prend pas de majuscule.",
+      "id": "ec7ca1ff78c3df90",
       "type": "standard"
     },
     {
-      "text": "Dans lequel de ces mots l'accent aigu (é) est-il utilisé correctement pour indiquer un son fermé ?",
+      "text": "Quelle est la graphie correcte pour désigner le continent africain ?",
       "options": [
-        "un été",
-        "ma mère",
-        "la forêt",
-        "très"
+        "l'afrique",
+        "L'afrique",
+        "l'Afrique",
+        "L'Afrique"
       ],
-      "correctAnswer": "un été",
-      "englishHint": "In which of these words is the acute accent (é) used correctly to indicate a closed sound?",
-      "explanation": "L'accent aigu (é) est utilisé pour le son fermé [e], comme dans 'été' ou 'école'. Les mots 'mère', 'forêt' et 'très' utilisent des accents pour un son ouvert [ɛ].",
-      "id": "577683587e5ecef4",
+      "correctAnswer": "l'afrique",
+      "englishHint": "What is the correct way to write the name of the continent mentioned in the course?",
+      "explanation": "Les noms de continents sont des noms propres et doivent commencer par une majuscule.",
+      "id": "a1add08582133a6a",
       "type": "standard"
     },
     {
-      "text": "Dans quelle situation est-il correct de placer des virgules entre le sujet et le verbe d'une phrase ?",
+      "text": "Pourquoi le mot \"Alpes\" prend-il une majuscule ?",
       "options": [
-        "Quand elles encadrent une information complémentaire",
-        "Jamais, c'est toujours une erreur",
-        "Quand le sujet est un pronom personnel (je, tu, il...)",
-        "Dans les phrases très longues pour aider la respiration"
+        "Parce que c'est un mot long",
+        "Parce que c'est une chaîne de montagnes spécifique",
+        "Parce que c'est toujours au pluriel",
+        "Parce que c'est un mot d'origine latine"
       ],
-      "correctAnswer": "Quand elles encadrent une information complémentaire",
-      "englishHint": "In which situation is it correct to place commas between the subject and the verb of a sentence?",
-      "explanation": "La seule exception est lorsqu'une paire de virgules isole une information additionnelle, par exemple : 'Mon chat, qui est noir, dort beaucoup'.",
-      "id": "5d43baa9188d1af2",
+      "correctAnswer": "Parce que c'est une chaîne de montagnes spécifique",
+      "englishHint": "Following the 'Is it unique?' tip, why does 'Alpes' take a capital letter?",
+      "explanation": "\"Alpes\" désigne un massif montagneux unique, c'est donc un nom propre qui prend une majuscule.",
+      "id": "4f65d0fa5ec552a7",
       "type": "standard"
     },
     {
-      "text": "Choisissez le verbe correctement accentué pour compléter la phrase : \"Elle ___ le thé au café.\"",
+      "text": "Comment compléter la phrase : \"Mon ami ______ habite à ______.\" ?",
       "options": [
-        "préfère"
+        "pierre / paris",
+        "Pierre / paris",
+        "pierre / Paris",
+        "Pierre / Paris"
       ],
-      "correctAnswer": "préfère",
-      "englishHint": "Choose the correctly accented verb to complete the sentence: \"She ___ tea over coffee.\"",
-      "explanation": "Le premier 'e' prend un accent aigu (é) car il est suivi d'une syllabe sans 'e' muet. Le second prend un accent grave (è) car il est suivi d'une syllabe avec un 'e' muet.",
-      "id": "b1b20d9d7af15da9",
+      "correctAnswer": "pierre / paris",
+      "englishHint": "How to complete the sentence: 'My friend ______ lives in ______.'?",
+      "explanation": "Le prénom \"Pierre\" et le nom de la ville \"Paris\" sont des noms propres et prennent une majuscule.",
+      "id": "aa3e72cdbf163430",
       "type": "standard"
     },
     {
-      "text": "Dans quel mot l'accent grave (è) est-il utilisé correctement ?",
+      "text": "Dans la phrase \"J'ai parlé au ______\", comment s'écrit la fonction ?",
       "options": [
-        "très",
-        "téléphone",
-        "fête",
-        "déjà"
+        "Directeur",
+        "directeur",
+        "DIRECTEUR",
+        "diRecteur"
       ],
-      "correctAnswer": "très",
-      "englishHint": "In which word is the grave accent (è) used correctly?",
-      "explanation": "L'accent grave est utilisé dans certains mots courts comme 'très', 'dès' ou 'là'. 'Téléphone' et 'déjà' utilisent un accent aigu (é), et 'fête' un accent circonflexe (ê).",
-      "id": "e1c4beeb3c2a81fb",
+      "correctAnswer": "Directeur",
+      "englishHint": "In the sentence 'I spoke to the ______', how is the function written?",
+      "explanation": "Un titre de fonction utilisé seul, sans nom de personne, reste en minuscule.",
+      "id": "2622b8a591cfd672",
       "type": "standard"
     },
     {
-      "text": "Dans la phrase \"Mon voisin, qui est très sympathique, m'a aidé\", quelle est la fonction des virgules ?",
+      "text": "Quelle phrase distingue correctement la langue et l'habitant ?",
       "options": [
-        "Isoler une information complémentaire",
-        "Séparer les éléments d'une énumération",
-        "Marquer la fin de l'idée",
-        "Indiquer un discours direct"
+        "L'allemand parle Allemand.",
+        "L'Allemand parle allemand.",
+        "L'Allemand parle Allemand.",
+        "L'allemand parle allemand."
       ],
-      "correctAnswer": "Isoler une information complémentaire",
-      "englishHint": "In the sentence \"My neighbor, who is very nice, helped me,\" what is the function of the commas?",
-      "explanation": "Les virgules encadrent ici la proposition 'qui est très sympathique', qui donne une information supplémentaire mais non essentielle sur le voisin.",
-      "id": "e6156532d0e5f5f6",
+      "correctAnswer": "L'allemand parle Allemand.",
+      "englishHint": "Which sentence correctly distinguishes between the language and the inhabitant?",
+      "explanation": "Le nom de l'habitant (\"Allemand\") prend une majuscule, mais le nom de la langue (\"allemand\") reste en minuscule.",
+      "id": "67267d1c22327276",
       "type": "standard"
     },
     {
-      "text": "Quel type de son la lettre 'é' (avec un accent aigu) représente-t-elle le plus souvent en français ?",
+      "text": "Comment s'écrit correctement le nom du fleuve qui traverse Paris ?",
       "options": [
-        "Un son fermé, comme dans 'thé'",
-        "Un son ouvert, comme dans 'père'",
-        "Un son nasal, comme dans 'vent'",
-        "Un son muet, comme à la fin de 'porte'"
+        "la seine",
+        "La seine",
+        "la Seine",
+        "La Seine"
       ],
-      "correctAnswer": "Un son fermé, comme dans 'thé'",
-      "englishHint": "What type of sound does the letter 'é' (with an acute accent) most often represent in French?",
-      "explanation": "L'accent aigu (é) indique un son fermé [e], que l'on retrouve dans des mots comme 'café', 'été' ou 'parler'.",
-      "id": "dcc1dfe5ac9864a7",
+      "correctAnswer": "la seine",
+      "englishHint": "Which river that flows through Paris is a proper noun that must be capitalized?",
+      "explanation": "Le nom spécifique d'un fleuve comme \"la Seine\" est un nom propre et prend une majuscule.",
+      "id": "0d1f9489def6d628",
       "type": "standard"
     }
   ]

@@ -208,6 +208,32 @@
             <p id="prize-pool-status" class="text-sm mt-4 h-5"></p>
         </div>
 
+            <!-- NOUVELLE SECTION : Gestion de l'historique des questions -->
+            <div class="mt-6 border-t border-red-900 pt-4">
+                <label class="block mb-2 text-sm font-medium">Historique des questions générées</label>
+                <p class="text-xs text-gray-400 mb-2">Pour garantir la fraîcheur des questions, le système mémorise les dernières questions générées. Si vous souhaitez repartir de zéro, vous pouvez purger cet historique.</p>
+                <button id="reset-history-btn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                    Purger l'historique des questions
+                </button>
+                <p id="history-reset-status" class="text-sm mt-3 h-5"></p>
+            </div>
+
+            <!-- NOUVELLE SECTION : GESTION DE LA PLANIFICATION CRON -->
+            <div class="mt-6 border-t border-red-900 pt-4">
+                <h3 class="text-lg font-semibold text-orange-400 mb-2">Planification de la Rotation Journalière</h3>
+                <label for="time-schedule-input" class="block mb-2 text-sm font-medium">Heure de la réinitialisation journalière</label>
+                <p class="text-xs text-gray-400 mb-2">Choisissez l'heure à laquelle le thème, les questions et la progression des joueurs seront réinitialisés chaque jour.</p>
+                <div class="flex items-center gap-4">
+                    <input type="time" id="time-schedule-input" class="w-48 p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-orange-500" style="color-scheme: dark;">
+                    <button id="update-cron-btn" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg">
+                        Mettre à jour l'heure
+                    </button>
+                </div>
+                <p id="cron-update-status" class="text-sm mt-3 h-5"></p>
+            </div>
+
+        <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
+
         <div class="my-8 p-6 bg-gray-800 rounded-lg border border-gray-700 shadow-md">
             <h2 class="text-xl font-semibold text-purple-400 mb-4">File d'Attente des Thèmes Journaliers</h2>
             <p class="text-sm text-gray-400 mb-4">Gérez la liste des thèmes qui tourneront automatiquement chaque jour à minuit. Le système réinitialisera la progression des joueurs et générera un nouveau cours et de nouvelles questions basées sur le thème suivant de la liste.</p>

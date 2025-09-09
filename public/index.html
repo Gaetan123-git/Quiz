@@ -78,10 +78,6 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
         <span data-i18n="navigation.course">Cours</span>
     </a>
-    <a href="#" id="course-history-link">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 3v18"/><path d="M11 3v18"/><path d="M15 3v18"/><path d="M19 3v18"/></svg>
-        <span data-i18n="navigation.courseHistory">Archives des Cours</span>
-    </a>
     <a href="#" id="livres-link">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         <span data-i18n="navigation.freeBooks">Livres Gratuits</span>
@@ -111,28 +107,10 @@
         </div>
     </header>
 
-    <!-- Bannière de cagnotte de la compétition -->
-    <div id="prize-pool-banner" class="prize-pool-banner" style="display: none;">
-        <div class="prize-pool-content">
-            <div class="prize-pool-icon">💰</div>
-            <div class="prize-pool-text">
-                <span class="prize-pool-title" data-i18n="prizePool.title">Cagnotte de la Compétition</span>
-                <span class="prize-pool-amount" id="prize-pool-display">0 Ar</span>
-            </div>
-            <div class="prize-pool-participants">
-                <span id="participants-display">0</span>
-                <span data-i18n="prizePool.participants">participants</span>
-            </div>
-        </div>
-    </div>
 
     <!-- Conteneur principal pour les différentes vues -->
     <main class="main-container">
 
-        <!-- Notification partagée -->
-        <div id="notification" class="notification"></div>
-        <div id="achievement-notification" class="achievement-notification"></div>
-        <div id="toast-container"></div>
         
         <!-- Section Sélection de Session -->
         <div id="song-selection" class="view-section" style="display: none;">
@@ -439,32 +417,58 @@
  </div>
 
 <!-- DANS LE <main>, AJOUTEZ CETTE NOUVELLE SECTION À LA FIN, JUSTE AVANT LA BALISE DE FERMETURE </main> -->
-<div id="how-to-play-modal" class="modal-overlay" style="display: none;">
+    <div id="how-to-play-modal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 data-i18n="howToPlay.title">Les Règles de FrenchQuest</h2>
+            <h2 data-i18n="howToPlay.title"></h2>
             <button id="close-how-to-play-modal" class="modal-close-button">&times;</button>
         </div>
         <div class="modal-body">
-            <h3 data-i18n="howToPlay.objective">Votre Objectif</h3>
-            <p data-i18n="howToPlay.objectiveText">Bienvenue dans FrenchQuest ! Votre mission est de prouver votre maîtrise du français en terminant 10 sessions de quiz. Chaque bonne réponse vous rapporte des points, de l'expérience (XP) et des pièces. Montez en niveau et débloquez tous les succès !</p>
+            <h3 data-i18n="howToPlay.objectiveTitle"></h3>
+            <p data-i18n="howToPlay.objectiveText"></p>
 
-            <h3 data-i18n="howToPlay.phase1">Phase 1 : L'Entraînement (Sessions 1 à 3)</h3>
-            <p data-i18n="howToPlay.phase1Text">Ces premières sessions sont là pour vous échauffer. Vous pouvez les refaire autant de fois que vous voulez. Les pièces 💰 que vous gagnez ici sont des <strong>pièces d'entraînement</strong>. Utilisez-les pour acheter des indices !</p>
-            <p data-i18n="howToPlay.phase1Requirement">Vous devez terminer une session avec au moins <strong>70% de bonnes réponses</strong> pour débloquer la suivante.</p>
-
-            <h3 data-i18n="howToPlay.phase2">Phase 2 : La Compétition (Sessions 4 à 10)</h3>
-            <p data-i18n="howToPlay.phase2Text">Après avoir terminé la session 3, vous accédez à la compétition officielle ! Les règles changent :</p>
+            <h3 data-i18n="howToPlay.walletTitle"></h3>
+            <p data-i18n="howToPlay.walletText"></p>
             <ul>
-                <li><strong>Début Programmé :</strong> La Session 4 est verrouillée pour tous les joueurs jusqu'à une heure précise. Un compte à rebours vous indiquera le début. En attendant, un salon de chat spécial est disponible pour discuter avec les autres compétiteurs !</li>
-                <li><strong>Récompense Unique :</strong> Dans la compétition, vous ne pouvez être récompensé (XP et pièces) pour une question <strong>qu'une seule fois</strong>. L'équité avant tout !</li>
-                <li><strong>Pièces de Compétition :</strong> Les pièces gagnées ici sont des <strong>pièces de compétition</strong>, séparées de celles de l'entraînement.</li>
-                <li><strong>Déverrouillage :</strong> Comme pour l'entraînement, un score de 70% est requis pour débloquer la session suivante.</li>
+                <li data-i18n="howToPlay.depositBalanceDesc"></li>
+                <li data-i18n="howToPlay.winningsBalanceDesc"></li>
             </ul>
 
-            <h3 data-i18n="howToPlay.coinsAndHints">Pièces et Indices</h3>
-            <p data-i18n="howToPlay.coinsAndHintsText">Les pièces 💰 sont votre monnaie. Coincé sur une question ? Achetez un indice grâce à l'IA pour 25 pièces. Gérez bien votre portefeuille pour aller au bout de l'aventure !</p>
-            <p class="final-word" data-i18n="howToPlay.goodLuck">Bonne chance, et que le meilleur gagne !</p>
+            <h3 data-i18n="howToPlay.phasesTitle"></h3>
+            <p><strong data-i18n="howToPlay.phase1Title"></strong></p>
+            <p data-i18n="howToPlay.phase1Text"></p>
+            
+            <p><strong data-i18n="howToPlay.phase2Title"></strong></p>
+            <p data-i18n="howToPlay.phase2Text"></p>
+
+            <!-- NOUVELLE SECTION POUR LES DÉTAILS DYNAMIQUES -->
+            <div class="rules-details-box">
+                <h4 data-i18n="howToPlay.competitionDetailsTitle"></h4>
+                <ul>
+                    <li><span data-i18n="howToPlay.detailStartTime"></span> <strong id="rules-start-time" class="rules-highlight">...</strong></li>
+                    <li><span data-i18n="howToPlay.detailEntryFee"></span> <strong id="rules-entry-fee" class="rules-highlight">...</strong></li>
+                    <li><span data-i18n="howToPlay.detailMaxWinners"></span> <strong id="rules-max-winners" class="rules-highlight">...</strong></li>
+                </ul>
+            </div>
+
+            <h3 data-i18n="howToPlay.referralTitle"></h3>
+            <p>
+                <span data-i18n="howToPlay.referralText1"></span>
+                <strong id="rules-ref-deposit-bonus" class="rules-highlight">...%</strong>
+                <span data-i18n="howToPlay.referralText2"></span>
+                <strong id="rules-ref-win-bonus" class="rules-highlight">...%</strong>
+                <span data-i18n="howToPlay.referralText3"></span>
+            </p>
+
+            <!-- NOUVELLE SECTION POUR LES RÈGLES DE TRANSACTION -->
+            <h3 data-i18n="howToPlay.transactionsTitle"></h3>
+            <p data-i18n="howToPlay.transactionsText"></p>
+            <ul>
+                <li data-i18n="howToPlay.depositTime"></li>
+                <li data-i18n="howToPlay.withdrawalTime"></li>
+            </ul>
+
+            <p class="final-word" data-i18n="howToPlay.goodLuck"></p>
         </div>
     </div>
 </div>
@@ -477,7 +481,10 @@
                  <div id="course-content-container" class="course-content">
                      <p data-i18n="course.loading">Chargement du cours en cours...</p>
                  </div>
-                 <button id="course-return-menu-button" class="button-primary mt-6" data-i18n="course.returnToMenu">Retour au menu</button>
+                 <div class="course-actions-container">
+                     <button id="course-view-history-button" class="button-secondary" data-i18n="navigation.courseHistory">Archives des Cours</button>
+                     <button id="course-return-menu-button" class="button-primary" data-i18n="course.returnToMenu">Retour au menu</button>
+                 </div>
             </div>
         </div>
         <div id="livres-page" class="view-section" style="display: none;">
@@ -525,6 +532,54 @@
                     </div>
                 </div>
 
+                <!-- ========================================================== -->
+                <!-- ===        NOUVEAU : SECTION DE TRANSFERT INTERNE      === -->
+                <!-- ========================================================== -->
+                <div class="settings-group">
+                    <h2 class="card-title flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 16 4-4-4-4"/><path d="M8 12h8"/></svg>
+                        Transférer pour Jouer
+                    </h2>
+                    <p class="settings-description">Utilisez vos gains pour recharger votre solde de jeu et participer aux compétitions.</p>
+                    <form id="transfer-form" class="wallet-form">
+                        <input id="transfer-amount" type="number" placeholder="Montant à transférer (Ar)" required>
+                        <button type="submit" class="button-primary">Transférer vers le Solde de Dépôt</button>
+                    </form>
+                    <p id="transfer-status" class="text-sm mt-3 h-5"></p>
+                </div>
+
+                <!-- NOUVEAU : Section Parrainage V2 avec double option -->
+                <div class="settings-group">
+                    <h2 class="card-title flex items-center gap-2" data-i18n="wallet.referralTitle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+                        Parrainez vos amis
+                    </h2>
+                    <p class="settings-description" data-i18n="wallet.referralDescription">Partagez votre code unique. Vous recevrez des bonus sur votre solde retirable à chaque dépôt et victoire de vos filleuls !</p>
+                    
+                    <!-- Conteneur principal pour les deux options de partage -->
+                    <div class="flex flex-col gap-4 p-4 bg-gray-900 rounded-lg border border-dashed border-gray-600">
+                        
+                        <!-- Option 1 : Copier le CODE seul -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2" data-i18n="wallet.referralCodeLabel">Votre code de parrainage :</label>
+                            <div class="flex items-center gap-3">
+                                <input type="text" id="referral-code-display" class="w-full p-2 rounded bg-gray-800 border border-gray-700 text-yellow-400 font-mono tracking-widest" readonly>
+                                <button id="copy-referral-code-btn" class="button-secondary whitespace-nowrap !p-2">Copier le code</button>
+                            </div>
+                        </div>
+
+                        <!-- Option 2 : Copier le LIEN complet -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2" data-i18n="wallet.referralLinkLabel">Votre lien de parrainage :</label>
+                            <div class="flex items-center gap-3">
+                                <input type="text" id="referral-link-display" class="w-full p-2 rounded bg-gray-800 border border-gray-700 text-cyan-400 font-mono" readonly>
+                                <button id="copy-referral-link-btn" class="button-secondary whitespace-nowrap !p-2">Copier le lien</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
                 <!-- NOUVEAU : Grille pour les actions de dépôt et de retrait -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <!-- Section Dépôt -->
@@ -539,6 +594,8 @@
                                 <strong><span id="payment-phone-number">...</span> (Nom: Francial)</strong>
                             </p>
                             <p data-i18n="wallet.depositInstruction2">2. Après le paiement, remplissez et validez le formulaire ci-dessous.</p>
+                            <!-- NOUVELLE LIGNE POUR LE DÉLAI -->
+                            <p class="text-sm text-yellow-400 mt-2" data-i18n="wallet.depositProcessingTime"></p>
                         </div>
                         <form id="deposit-request-form" class="wallet-form">
                             <input id="deposit-amount" type="number" placeholder="Montant envoyé (Ar)" required>
@@ -554,10 +611,10 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6"/><path d="m15 11-3-3-3 3"/><path d="M3.45 13.71A9 9 0 1 0 20.55 13.71"/><path d="m12 22 3-5h-6l3 5z"/></svg>
                             Faire un retrait
                         </h2>
+                        
+                        <!-- NOUVELLE LIGNE POUR LA DESCRIPTION -->
+                        <p class="settings-description" data-i18n="wallet.withdrawalDescription"></p>
 
-                        <!-- ========================================================== -->
-                        <!-- ===        NOUVELLE SECTION D'AFFICHAGE DU NUMÉRO        === -->
-                        <!-- ========================================================== -->
                         <div id="phone-display-container" class="mb-4">
                             <p class="settings-description">
                                 Le retrait sera envoyé au numéro de paiement suivant :
@@ -568,9 +625,6 @@
                             </div>
                         </div>
 
-                        <!-- ========================================================== -->
-                        <!-- === NOUVEAU FORMULAIRE DE MODIFICATION (caché) === -->
-                        <!-- ========================================================== -->
                         <div id="edit-phone-container" class="hidden mb-4 p-4 border border-dashed border-gray-600 rounded-lg">
                              <p class="settings-description text-sm">Entrez votre nouveau numéro de téléphone Mobile Money.</p>
                              <div class="flex items-center gap-3 mt-2">
@@ -584,6 +638,8 @@
                             <input id="withdrawal-amount" type="number" placeholder="Montant à retirer (Ar)" required>
                             <button type="submit" class="button-primary" data-i18n="wallet.submitWithdrawal">Soumettre la demande</button>
                         </form>
+                        <!-- NOUVELLE LIGNE POUR LE DÉLAI -->
+                        <p class="text-sm text-yellow-400 mt-3 text-center" data-i18n="wallet.withdrawalProcessingTime"></p>
                     </div>
                 </div>
 
@@ -622,8 +678,13 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg>
     </button>
     
+    <!-- Le conteneur de notifications est maintenant ici, au niveau supérieur, pour s'afficher au-dessus de tout. -->
+    <div id="toast-container"></div>
+
     <!-- Chargement du système i18n -->
     <script src="i18n.js" type="module"></script>
+    <!-- Chargement du système de notifications unifié -->
+    <script src="toast.js"></script>
     <!-- CORRECTION FINALE : On charge notre script comme un module -->
     <script src="script.js" type="module"></script>
 </body>

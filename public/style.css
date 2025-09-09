@@ -457,27 +457,6 @@ body.font-large { font-size: 18px; }
     color: var(--text-color);
 }
 
-.notification {
-    position: fixed; top: 90px; left: 50%;
-    transform: translateX(-50%);
-    padding: 1rem 1.5rem; border-radius: 8px;
-    color: white; font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 9999; display: none;
-}
-.notification.show { display: block; }
-.notification.info { background-color: var(--color-primary); }
-.notification.success { background-color: var(--color-success); }
-.notification.error { background-color: var(--color-error); }
-
-.achievement-notification {
-    position: fixed; top: 90px; right: 20px;
-    padding: 1rem 1.5rem; border-radius: 8px;
-    background-color: var(--color-accent);
-    color: #1a2238; font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 9999; display: none;
-}
 
 /* ==== PAGE DE CONNEXION ==== */
 .auth-card {
@@ -1381,7 +1360,7 @@ main.main-container, .container {
     }
 
     .game-main {
-        order: 2; /* Mettre le jeu en premier */
+        order: 1; /* Mettre le jeu en premier */
     }
 }
 /* ======================================================== */
@@ -2934,103 +2913,173 @@ display: inline-block;
   color: var(--color-dark-muted);
 }
 
-/* ==== BANNIÈRE DE CAGNOTTE ==== */
-.prize-pool-banner {
-  background: linear-gradient(135deg, #ffd700, #ffb347);
-  border-bottom: 3px solid #ff8c00;
-  padding: 12px 20px;
-  box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
-  animation: prizePoolPulse 2s ease-in-out infinite alternate;
+/* ==== STYLES POUR LE SYSTÈME DE PARRAINAGE ==== */
+
+/* Section parrainage dans le portefeuille */
+.referral-section {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  margin: 15px 0;
+  color: white;
+  box-shadow: var(--card-shadow);
 }
 
-.prize-pool-content {
+.referral-section h3 {
+  margin: 0 0 15px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 15px;
-  max-width: 1200px;
-  margin: 0 auto;
+  gap: 8px;
 }
 
-.prize-pool-icon {
-  font-size: 2rem;
-  animation: bounce 1s ease-in-out infinite alternate;
-}
-
-.prize-pool-text {
+.referral-code-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--button-radius);
+  padding: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.referral-code-display {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-dark-text);
+  padding: 8px 12px;
+  border-radius: var(--button-radius);
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 1rem;
+  letter-spacing: 1px;
   text-align: center;
 }
 
-.prize-pool-title {
+.copy-referral-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 12px;
+  border-radius: var(--button-radius);
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
   font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.copy-referral-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.copy-referral-btn:active {
+  transform: translateY(0);
+}
+
+/* Icône de bonus de parrainage dans l'historique */
+.transaction-icon.referral-bonus {
+  background: linear-gradient(135deg, #32ff7e 0%, #18d26e 100%);
+  color: white;
+}
+
+.transaction-icon.referral-bonus svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Styles pour les montants de bonus de parrainage */
+.transaction-amount.positive {
+  color: var(--color-success);
   font-weight: 600;
-  color: #8b4513;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
-.prize-pool-amount {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #b8860b;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+.transaction-amount.positive::before {
+  content: '+';
 }
 
-.prize-pool-participants {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 0.8rem;
-  color: #8b4513;
-  font-weight: 600;
+/* Animation pour les notifications de bonus */
+@keyframes referralBonusGlow {
+  0% { box-shadow: 0 0 5px rgba(50, 255, 126, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(50, 255, 126, 0.6); }
+  100% { box-shadow: 0 0 5px rgba(50, 255, 126, 0.3); }
 }
 
-.prize-pool-participants span:first-child {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #b8860b;
+.referral-bonus-notification {
+  animation: referralBonusGlow 2s ease-in-out infinite;
 }
 
-@keyframes prizePoolPulse {
-  0% { box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3); }
-  100% { box-shadow: 0 4px 16px rgba(255, 140, 0, 0.6); }
-}
-
-@keyframes bounce {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-3px); }
-}
-
-/* Responsive design pour la bannière */
+/* Responsive pour les styles de parrainage */
 @media (max-width: 768px) {
-  .prize-pool-banner {
-    padding: 10px 15px;
+  .referral-section {
+    padding: 15px;
+    margin: 10px 0;
   }
   
-  .prize-pool-content {
-    gap: 10px;
+  .referral-code-container {
+    flex-direction: column;
+    gap: 8px;
   }
   
-  .prize-pool-icon {
-    font-size: 1.5rem;
+  .referral-code-display {
+    font-size: 0.9rem;
+    padding: 6px 10px;
   }
   
-  .prize-pool-title {
-    font-size: 0.8rem;
+  .copy-referral-btn {
+    width: 100%;
+    padding: 10px;
   }
-  
-  .prize-pool-amount {
-    font-size: 1.4rem;
-  }
-  
-  .prize-pool-participants {
-    font-size: 0.7rem;
-  }
-  
-  .prize-pool-participants span:first-child {
-    font-size: 1rem;
-  }
+}
+
+/* ======================================================== */
+/* ==       STYLES POUR LES ACTIONS DE LA PAGE COURS     == */
+/* ======================================================== */
+
+.course-actions-container {
+    display: flex;
+    justify-content: center; /* Centre les boutons horizontalement */
+    gap: 1rem; /* Espace entre les boutons */
+    margin-top: 1.5rem; /* Espace par rapport au contenu du cours */
+    flex-wrap: wrap; /* Permet aux boutons de passer à la ligne sur mobile */
+}
+
+/* ======================================================== */
+/* ==   STYLES POUR LES RÈGLES DYNAMIQUES (HOW TO PLAY)  == */
+/* ======================================================== */
+
+.rules-details-box {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--color-primary);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.rules-details-box h4 {
+    font-size: 1.1em;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.75rem 0;
+}
+
+.rules-details-box ul {
+    padding-left: 0;
+    list-style: none;
+    margin: 0;
+}
+
+.rules-details-box li {
+    color: var(--muted-color);
+    margin-bottom: 0.5rem;
+}
+.rules-details-box li:last-child {
+    margin-bottom: 0;
+}
+
+.rules-highlight {
+    color: var(--color-accent);
+    font-size: 1.1em;
 }

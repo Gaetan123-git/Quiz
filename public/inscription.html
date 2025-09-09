@@ -21,18 +21,23 @@
         <div class="mb-4 relative">
           <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-game-primary text-xl">👤</span>
           <input type="text" id="register-username" placeholder="Nom d'utilisateur" required
-                 class="w-full p-3 pl-10 rounded-lg bg-input text-foreground border-2 border-border focus:border-primary transition-colors">
+                 class="w-full p-3 pl-10 rounded-lg bg-slate-200 text-slate-900 placeholder-slate-500 border-2 border-border focus:border-primary transition-colors">
         </div>
         <div class="mb-4 relative">
           <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-game-primary text-xl">🔒</span>
           <input type="password" id="register-password" placeholder="Mot de passe" required
-                 class="w-full p-3 pl-10 pr-10 rounded-lg bg-input text-foreground border-2 border-border focus:border-primary transition-colors">
+                 class="w-full p-3 pl-10 pr-10 rounded-lg bg-slate-200 text-slate-900 placeholder-slate-500 border-2 border-border focus:border-primary transition-colors">
           <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-game-muted cursor-pointer" onclick="togglePasswordVisibility('register-password')">👁️</span>
         </div>
-        <div class="mb-6 relative"> <!-- Margin bottom augmentée pour espacer le bouton -->
+        <div class="mb-4 relative">
           <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-game-primary text-xl">📞</span>
           <input type="tel" id="register-phone" placeholder="Numéro de téléphone pour le paiement" required
-                 class="w-full p-3 pl-10 rounded-lg bg-input text-foreground border-2 border-border focus:border-primary transition-colors">
+                 class="w-full p-3 pl-10 rounded-lg bg-slate-200 text-slate-900 placeholder-slate-500 border-2 border-border focus:border-primary transition-colors">
+        </div>
+        <div class="mb-6 relative">
+          <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-game-primary text-xl">🤝</span>
+          <input type="text" id="register-referral" placeholder="Code de parrainage (Optionnel)"
+                 class="w-full p-3 pl-10 rounded-lg bg-slate-200 text-slate-900 placeholder-slate-500 border-2 border-border focus:border-primary transition-colors">
         </div>
         <button id="register-button" type="button" onclick="register()"
                 class="w-full p-3 rounded-lg button-gradient text-primary-foreground font-bold hover:opacity-90 transition-opacity">
@@ -41,9 +46,10 @@
       </form>
       <p class="mt-4 text-center text-game-muted text-sm">Déjà un compte ? <a href="/login" class="text-accent hover:underline">Connectez-vous !</a></p>
     </div>
-    <!-- Conteneur pour les Toasts -->
-    <div id="toast-container"></div>
   </div>
+  
+  <!-- Le conteneur de notifications est maintenant ici, au niveau supérieur. -->
+  <div id="toast-container"></div>
   <script>
     function togglePasswordVisibility(id) {
       const input = document.getElementById(id);
@@ -54,6 +60,7 @@
       }
     }
   </script>
+  <script src="toast.js"></script>
   <script src="inscription.js"></script>
 </body>
 </html>

@@ -124,17 +124,31 @@
     "returnToMenu": "Return to menu"
   },
   "howToPlay": {
-    "title": "FrenchQuest Rules",
-    "objective": "Your Objective",
-    "objectiveText": "Welcome to FrenchQuest! Your mission is to prove your French mastery by completing 10 quiz sessions. Each correct answer earns you points, experience (XP) and coins. Level up and unlock all achievements!",
-    "phase1": "Phase 1: Training (Sessions 1 to 3)",
-    "phase1Text": "These first sessions are here to warm you up. You can redo them as many times as you want. The coins 💰 you earn here are training coins. Use them to buy hints!",
-    "phase1Requirement": "You must complete a session with at least 70% correct answers to unlock the next one.",
-    "phase2": "Phase 2: Competition (Sessions 4 to 10)",
-    "phase2Text": "After completing session 3, you access the official competition! The rules change:",
-    "coinsAndHints": "Coins and Hints",
-    "coinsAndHintsText": "Coins  are your currency. Stuck on a question? Buy a hint from AI for 25 coins. Manage your wallet well to complete the adventure!",
-    "goodLuck": "Good luck, and may the best win!"
+    "title": "The Rules of FrenchQuest",
+    "objectiveTitle": "🌟 Your Objective",
+    "objectiveText": "Prove your French mastery by completing 10 quiz sessions. Each correct answer earns you XP to level up and coins to buy hints.",
+    "walletTitle": "💰 Understanding Your Wallet",
+    "walletText": "Your wallet is split into two distinct balances:",
+    "depositBalanceDesc": "<strong>Deposit Balance (for playing):</strong> This is the money you deposit. It's used to pay entry fees for competition sessions.",
+    "winningsBalanceDesc": "<strong>Winnings Balance (withdrawable):</strong> This is the money you earn. You can withdraw it or transfer it to your playing balance!",
+    "phasesTitle": "🕹️ The Two Phases of the Game",
+    "phase1Title": "1. Training (Sessions 1-3): Free and unlimited!",
+    "phase1Text": "These sessions are here to warm you up. Replay them as much as you want. You must get 70% correct answers to unlock the next session.",
+    "phase2Title": "2. The Competition (Sessions 4-10): For champions!",
+    "phase2Text": "After paying the one-time entry fee, you access the competition. Each correct answer earns you rewards only once, and your winnings are added to your withdrawable balance.",
+    "competitionDetailsTitle": "Current Competition Details",
+    "detailStartTime": "Competition starts:",
+    "detailEntryFee": "One-time entry fee:",
+    "detailMaxWinners": "Number of winners:",
+    "referralTitle": "🤝 Referrals: Your Earning Leverage",
+    "referralText1": "Share your unique code! You receive a",
+    "referralText2": "bonus on your referrals' first deposit, and a",
+    "referralText3": "bonus on their competition winnings, directly into your withdrawable balance!",
+    "goodLuck": "Good luck, and may the best win!",
+    "transactionsTitle": "📜 Transaction Rules",
+    "transactionsText": "To ensure security and fairness, all financial transactions are processed manually.",
+    "depositTime": "<strong>Deposits:</strong> Your balance is credited within a maximum of 24 hours after your payment is verified.",
+    "withdrawalTime": "<strong>Withdrawals:</strong> Your winnings are sent to your Mobile Money number within 24 business hours after your request."
   },
   "competition": {
     "liveCompetition": "Live Competition",
@@ -169,6 +183,7 @@
     "depositTitle": "Make a Deposit",
     "depositInstruction1": "1. Send your payment via Mobile Money to the number:",
     "depositInstruction2": "2. After payment, complete and submit the form below.",
+    "depositProcessingTime": "Deposits are processed manually and may take up to 24 hours.",
     "submitDeposit": "Submit for Validation",
     "historyTitle": "Transaction History",
     "historyLoading": "Loading history...",
@@ -178,6 +193,16 @@
       "approved": "Approved",
       "rejected": "Rejected"
     },
-    "returnToMenu": "Return to menu"
+    "returnToMenu": "Return to menu",
+    "withdrawalTitle": "Make a Withdrawal",
+    "withdrawalDescription": "Request a withdrawal of your earnings. The amount will be sent to your Mobile Money number.",
+    "withdrawalProcessingTime": "Withdrawals are validated and paid within 24 business hours.",
+    "submitWithdrawal": "Submit Withdrawal Request",
+    "winningsBalance": "Winnings Balance (Withdrawable)",
+    "depositBalance": "Deposit Balance (For playing)",
+    "referralTitle": "Refer your friends",
+    "referralDescription": "Share your unique code. You'll receive bonuses on your withdrawable balance for each of your referrals' deposits and wins!",
+    "referralLinkLabel": "Your referral link:",
+    "referralCodeLabel": "Your referral code:"
   }
 }
